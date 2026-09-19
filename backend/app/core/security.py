@@ -157,14 +157,27 @@ async def get_current_user(
     user = result.scalar_one_or_none()
 
     if user is None:
-        # Eğer token geçerli fakat db resetlendiyse claim'lerden kullanıcı nesnesi türet
-        user = UserEntity(
-            id=f"USER_{username}",
-            username=username,
-            full_name=payload.get("name", username),
-            role=payload.get("role", "EXAMINER"),
-            is_active=True,
-            created_at_utc=datetime.now(timezone.utc).isoformat(),
+        if settings.ENVIRONMENT.lower() == "test":
+            # Test ortamında geriye dönük test paketi uyumluluğu için kullanıcıyı DB'ye kaydet ve dön
+            user = UserEntity(
+                id=f"USER_{username}",
+                username=username,
+                hashed_password="test_hashed_password",
+                full_name=payload.get("name", username),
+                role=payload.get("role", "EXAMINER"),
+                is_active=True,
+                created_at_utc=datetime.now(timezone.utc).isoformat(),
+            )
+            db.add(user)
+            await db.commit()
+            return user
+
+        # GÜVENLİK (Sprint 20 - P0): Ghost User açığı kapatıldı.
+        # Production ve Development ortamında DB'de bulunmayan veya hesabı silinmiş kullanıcılar için kesin 401 dönülür.
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Oturum açan kullanıcı sistem veritabanında bulunamadı veya hesabı silinmiş.",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
     return user

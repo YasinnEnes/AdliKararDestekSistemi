@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.app.core.config import settings
 from backend.app.core.logger import log_audit_event, logger
 from backend.app.core.rate_limiter import check_login_rate_limit, get_client_ip, limiter
 from backend.app.core.security import (
@@ -103,8 +104,8 @@ async def login(
     res = await db.execute(stmt)
     user = res.scalar_one_or_none()
 
-    # Varsayılan test hesabı kontrolü (Veritabanında henüz tohumlanmadıysa dinamik oluştur)
-    if user is None and username in ["admin", "bilirkisi_uzman"]:
+    # GÜVENLİK (Sprint 20 - P0): Varsayılan test hesabı kontrolü yalnızca TEST ortamında geçerlidir
+    if user is None and username in ["admin", "bilirkisi_uzman"] and settings.ENVIRONMENT.lower() == "test":
         default_pwd = "password123"
         if password == default_pwd:
             user = UserEntity(
@@ -358,7 +359,10 @@ async def register_user(
             detail=f"'{payload.username}' kullanıcı adı zaten mevcut.",
         )
 
-    valid_roles = ["EXAMINER", "SENIOR_REVIEWER", "ADMIN"]
+    # GÜVENLİK (Sprint 20 - P0): Genel kayıt olan kullanıcılar için ADMIN yetki yükseltmesi engellendi.
+    # Public kayıt olan kullanıcılar yalnızca 'EXAMINER' veya 'SENIOR_REVIEWER' olabilir.
+    # 'ADMIN' rolü yalnızca mevcut yetkili yönetici tarafından atanabilir.
+    valid_roles = ["EXAMINER", "SENIOR_REVIEWER"]
     assigned_role = payload.role.upper() if payload.role.upper() in valid_roles else "EXAMINER"
 
     new_user = UserEntity(

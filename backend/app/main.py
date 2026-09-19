@@ -60,6 +60,31 @@ if settings.BACKEND_CORS_ORIGINS:
 from backend.app.core.observability import StructuredLoggingMiddleware, check_system_readiness
 app.add_middleware(StructuredLoggingMiddleware)
 
+# Sprint 20: Global Hata Yakalayıcı (Merkezi Exception Handler)
+from fastapi import Request, status, HTTPException
+from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
+@app.exception_handler(Exception)
+async def global_unhandled_exception_handler(request: Request, exc: Exception):
+    if isinstance(exc, (HTTPException, StarletteHTTPException)):
+        raise exc
+    request_id = getattr(request.state, "request_id", "req-unknown")
+    logger.error(
+        f"[GlobalExceptionHandler] Unhandled Exception [Request: {request_id}] {request.method} {request.url.path}: {exc}",
+        exc_info=True,
+    )
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={
+            "detail": {
+                "message": "Sunucu tarafında beklenmeyen bir işlem hatası meydana geldi.",
+                "error_code": "INTERNAL_SERVER_ERROR",
+                "request_id": request_id,
+            }
+        },
+    )
+
 # Ana Router Entegrasyonu
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
