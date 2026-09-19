@@ -64,7 +64,7 @@ htmlcov/
 *.sqlite
 
 # ==============================================================================
-# Datasets (Large Data Files - Keep directories via .gitkeep)
+# Datasets (Large Data Files - Keep directories via .gitkeep and manifests)
 # ==============================================================================
 datasets/raw/*
 !datasets/raw/.gitkeep
@@ -74,6 +74,13 @@ datasets/processed/*
 !datasets/processed/.gitkeep
 datasets/splits/*
 !datasets/splits/.gitkeep
+!datasets/splits/*.json
+datasets/DS_Downloaded/
+datasets/**/*.png
+datasets/**/*.jpg
+datasets/**/*.jpeg
+datasets/**/*.tif
+datasets/**/*.tiff
 
 # ==============================================================================
 # ML / DL Models, Weights & Checkpoints
