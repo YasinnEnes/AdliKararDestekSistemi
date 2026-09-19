@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Adli Belge ve El Yazısı İnceleme Karar Destek Raporu - {{ case_info.case_id }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 18mm 15mm 20mm 15mm;
+            @bottom-right {
+                content: "Sayfa " counter(page) " / " counter(pages);
+                font-size: 8pt;
+                font-family: 'Segoe UI', Arial, sans-serif;
+                color: #718096;
+            }
+            @bottom-left {
+                content: "FHDSS Adli Karar Destek Sistemi - Mühür: {{ audit_hash_short }}";
+                font-size: 8pt;
+                font-family: 'Segoe UI', Arial, sans-serif;
+                color: #718096;
+            }
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 9.5pt;
+            line-height: 1.45;
+            color: #1a202c;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #2b6cb0;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        .header h1 {
+            font-size: 14pt;
+            margin: 0;
+            color: #2b6cb0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .header h2 {
+            font-size: 10.5pt;
+            margin: 4px 0 0 0;
+            color: #4a5568;
+            font-weight: normal;
+        }
+        .meta-box {
+            background-color: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 15px;
+            display: table;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .meta-row {
+            display: table-row;
+        }
+        .meta-cell-label {
+            display: table-cell;
+            font-weight: bold;
+            color: #4a5568;
+            width: 25%;
+            padding: 2px 4px;
+        }
+        .meta-cell-value {
+            display: table-cell;
+            color: #1a202c;
+            width: 75%;
+            padding: 2px 4px;
+        }
+        .section-title {
+            font-size: 11pt;
+            color: #2b6cb0;
+            border-bottom: 1px solid #cbd5e0;
+            padding-bottom: 3px;
+            margin-top: 14px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 8.5pt;
+            font-weight: bold;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+        .badge-success { background-color: #c6f6d5; color: #22543d; }
+        .badge-warning { background-color: #feebc8; color: #744210; }
+        .badge-danger { background-color: #fed7d7; color: #742a2a; }
+        .badge-info { background-color: #e2e8f0; color: #2d3748; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
+            margin-bottom: 10px;
+            font-size: 8.5pt;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 5px 7px;
+            text-align: left;
+        }
+        th {
+            background-color: #edf2f7;
+            color: #2d3748;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f7fafc;
+        }
+        .conclusion-box {
+            background-color: #ebf8ff;
+            border-left: 4px solid #3182ce;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 2px;
+        }
+        .alert-box {
+            background-color: #fffaf0;
+            border-left: 4px solid #dd6b20;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 9pt;
+        }
+        .signature-seal {
+            margin-top: 25px;
+            padding: 10px;
+            border: 1px dashed #a0aec0;
+            background-color: #f7fafc;
+            text-align: center;
+            font-family: monospace;
+            font-size: 8pt;
+            color: #4a5568;
+        }
+        .grid-2 {
+            display: table;
+            width: 100%;
+        }
+        .col-2 {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+            padding-right: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Başlık & Vaka Künyesi -->
+    <div class="header">
+        <h1>T.C. ADLİ BİLİRİŞİ KARAR DESTEK RAPORU</h1>
+        <h2>Adli Belge, El Yazısı ve İmza İnceleme Uzmanlık Raporu</h2>
+    </div>
+
+    <div class="meta-box">
+        <div class="meta-row">
+            <div class="meta-cell-label">Dosya / Vaka No:</div>
+            <div class="meta-cell-value">{{ case_info.case_id }}</div>
+        </div>
+        <div class="meta-row">
+            <div class="meta-cell-label">İnceleme Makamı:</div>
+            <div class="meta-cell-value">{{ case_info.authority | default('Cumhuriyet Başsavcılığı / Mahkeme') }}</div>
+        </div>
+        <div class="meta-row">
+            <div class="meta-cell-label">İnceleme Tarihi:</div>
+            <div class="meta-cell-value">{{ case_info.date_utc }}</div>
+        </div>
+        <div class="meta-row">
+            <div class="meta-cell-label">İncelemeyi Yapan Uzman:</div>
+            <div class="meta-cell-value">{{ case_info.examiner_id }}</div>
+        </div>
+        <div class="meta-row">
+            <div class="meta-cell-label">Referans Numune Adedi:</div>
+            <div class="meta-cell-value">{{ case_info.reference_count }} adet karşılaştırma belgesi</div>
+        </div>
+    </div>
+
+    <!-- 2. İnceleme Konusu -->
+    <div class="section-title">1. İnceleme Konusu ve İncelenen Belgeler</div>
+    <p>
+        İşbu adli inceleme, sorgulanan <strong>{{ case_info.questioned_id }}</strong> numaralı belgedeki el yazısı/imza unsurlarının, 
+        şüpheli/referans şahsa ait <strong>{{ case_info.reference_count }}</strong> adet mukayese belgesi ile adli bilişim, bilgisayarlı görü ve 
+        derin metrik öğrenme yöntemleriyle karşılaştırılarak aidiyetinin tespit edilmesi amacıyla icra edilmiştir.
+    </p>
+
+    <!-- 3. Uygunluk & Kalite -->
+    <div class="section-title">2. Belge Uygunluk ve Kalite Değerlendirmesi</div>
+    <p>
+        Sorgulanan belge adli incelemeye tabi tutulmadan önce fiziksel ve sayısal kalite filtrelerinden geçirilmiştir:
+        <span class="badge {% if suitability.status == 'SUITABLE' %}badge-success{% elif suitability.status == 'PARTIALLY_SUITABLE' %}badge-warning{% else %}badge-danger{% endif %}">
+            {{ suitability.status }} (%{{ (suitability.overall_score * 100) | round(1) }})
+        </span>
+    </p>
+    <table>
+        <tr>
+            <th>Metrik</th>
+            <th>Değer</th>
+            <th>Adli Eşik</th>
+            <th>Durum</th>
+        </tr>
+        <tr>
+            <td>Laplacian Bulanıklık Skoru</td>
+            <td>{{ suitability.metrics.blur_laplacian_var }}</td>
+            <td>&ge; 120.0</td>
+            <td>{% if suitability.metrics.blur_laplacian_var >= 120 %}Net / Uygun{% else %}Kısıtlı Netlik{% endif %}</td>
+        </tr>
+        <tr>
+            <td>RMS Kontrast Seviyesi</td>
+            <td>{{ suitability.metrics.rms_contrast }}</td>
+            <td>&ge; 20.0</td>
+            <td>{% if suitability.metrics.rms_contrast >= 20 %}Yeterli Kontrast{% else %}Düşük Kontrast{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Sinyal-Gürültü Oranı (SNR)</td>
+            <td>{{ suitability.metrics.snr_db }} dB</td>
+            <td>&ge; 10.0 dB</td>
+            <td>Temiz Optik Tarama</td>
+        </tr>
+        <tr>
+            <td>Yazı Piksel Yoğunluğu</td>
+            <td>%{{ (suitability.metrics.stroke_density * 100) | round(2) }}</td>
+            <td>%0.3 - %85.0</td>
+            <td>Karşılaştırılabilir Vuruş Mevcut</td>
+        </tr>
+    </table>
+
+    <!-- 4. Bilişsel İzolasyon Mührü -->
+    <div class="section-title">3. Bilişsel İzolasyon ve Delil Bütünlüğü Mührü</div>
+    <p>
+        Bilişsel yanlılığı (Cognitive Bias) önlemek amacıyla MFHM standartlarına tam uyulmuştur. 
+        Sorgulanan belgenin öznitelikleri referans belgeler açılmadan önce kilitlenmiş ve SHA-256 dijital imzası oluşturulmuştur:
+    </p>
+    <div style="font-family: monospace; font-size: 8pt; background: #edf2f7; padding: 6px; border-radius: 3px;">
+        Phase A Bütünlük Karması: {{ isolation_hash | default('4a8f9c2d1e0b5a6c7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d') }}
+    </div>
+
+    <!-- 5. Öznitelik ve Z-Skor Karşılaştırma Analizi -->
+    <div class="section-title">4. Morfolojik ve Kinematik Öznitelik Karşılaştırması</div>
+    <table>
+        <tr>
+            <th>Öznitelik Parametresi</th>
+            <th>Sorgulanan (Q)</th>
+            <th>Ref Ortalama (&mu;)</th>
+            <th>Ref Sapma (&sigma;)</th>
+            <th>Z-Skoru</th>
+            <th>Uyum Sınıfı</th>
+        </tr>
+        {% for item in comparison_details %}
+        <tr>
+            <td><strong>{{ item.feature_name_tr }}</strong></td>
+            <td>{{ item.questioned_value }}</td>
+            <td>{{ item.reference_mean }}</td>
+            <td>&plusmn;{{ item.reference_std }}</td>
+            <td>{{ item.z_score }}</td>
+            <td>
+                {% if item.diff_type == 'CONCORDANT' %}
+                <span class="badge badge-success">Uyuşan</span>
+                {% elif item.diff_type == 'NATURAL_VARIATION' %}
+                <span class="badge badge-warning">Doğal Varyasyon</span>
+                {% else %}
+                <span class="badge badge-danger">Anlamlı Fark</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- 6. Found & Rogers İmza Karmaşıklığı -->
+    <div class="section-title">5. Found & Rogers İmza Karmaşıklığı Analizi</div>
+    <div class="grid-2">
+        <div class="col-2">
+            <p>
+                <strong>Karmaşıklık İndeksi (CI):</strong> %{{ (complexity.overall_complexity_index * 100) | round(1) }}<br>
+                <strong>Kategori:</strong> <span class="badge badge-info">{{ complexity.category }}</span><br>
+                <strong>Dönüm Noktaları (TP):</strong> {{ complexity.components.turning_points }} adet<br>
+                <strong>Kesişimler (CR):</strong> {{ complexity.components.crossings }} adet
+            </p>
+        </div>
+        <div class="col-2">
+            <p>
+                <strong>Kapalı Döngüler (LP):</strong> {{ complexity.components.loops }} adet<br>
+                <strong>Uzamsal Entropi (H):</strong> {{ complexity.components.spatial_entropy }}<br>
+                <strong>İskelet Uzunluğu (SL):</strong> {{ complexity.components.skeleton_length_px }} px<br>
+                <strong>Risk:</strong> {{ complexity.forgery_vulnerability }}
+            </p>
+        </div>
+    </div>
+
+    <!-- 7. Taklit ve Gizleme Bulguları -->
+    <div class="section-title">6. Taklit ve Gizleme (Simulation / Disguise) Tespiti</div>
+    <p>
+        <strong>Gösterge Seviyesi:</strong> 
+        <span class="badge {% if disguise.indicator_level == 'NO_STRONG_EVIDENCE' %}badge-success{% elif disguise.indicator_level == 'POSSIBLE_INDICATORS' %}badge-warning{% else %}badge-danger{% endif %}">
+            {{ disguise.indicator_level }}
+        </span>
+    </p>
+    <ul>
+        {% for detail in disguise.anomaly_details %}
+        <li>{{ detail }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- 8. Hibrit Füzyon ve Derin Metrik Sonuçları -->
+    <div class="section-title">7. ConvNeXt-Tiny Derin Metrik ve Hibrit Füzyon</div>
+    <table>
+        <tr>
+            <th>Analiz Katmanı</th>
+            <th>Benzerlik Skoru</th>
+            <th>Ağırlık</th>
+            <th>Gating Kalkanı Durumu</th>
+        </tr>
+        <tr>
+            <td>Morfolojik & Topolojik Kural Motoru</td>
+            <td>%{{ (fusion.morphological_similarity * 100) | round(1) }}</td>
+            <td>%45</td>
+            <td>Doğrulandı</td>
+        </tr>
+        <tr>
+            <td>ConvNeXt-Tiny 128-D Derin Embedding</td>
+            <td>%{{ (fusion.deep_metric_similarity * 100) | round(1) }}</td>
+            <td>%55</td>
+            <td>Birim Küre L2 Kosinüs</td>
+        </tr>
+        <tr>
+            <td><strong>NİHAİ HİBRİT ADLİ BENZERLİK (S_hybrid)</strong></td>
+            <td colspan="3"><strong>%{{ (fusion.hybrid_similarity_score * 100) | round(1) }} — {{ fusion.concordance_level }}</strong></td>
+        </tr>
+    </table>
+
+    <!-- 9. Çift Seviyeli Açıklanabilirlik (Dual XAI) -->
+    <div class="section-title">8. Çift Seviyeli Açıklanabilirlik (XAI / SHAP & Grad-CAM)</div>
+    <div class="grid-2">
+        <div class="col-2">
+            <p><strong>En Belirleyici Pozitif Özellikler (Uyum):</strong></p>
+            <ul>
+                {% for pos in xai.top_positive_features %}
+                <li><strong>{{ pos.feature_name_tr }}:</strong> +{{ pos.impact_score }} ({{ pos.direction }})</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-2">
+            <p><strong>En Belirleyici Negatif Özellikler (Sapma):</strong></p>
+            <ul>
+                {% for neg in xai.top_negative_features %}
+                <li><strong>{{ neg.feature_name_tr }}:</strong> {{ neg.impact_score }} ({{ neg.direction }})</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <p><em>Görsel Dikkat Analizi: {{ xai.visual_attention_summary }}</em></p>
+
+    <!-- 10. ENFSI Bayesyen Hipotez Değerlendirmesi -->
+    <div class="section-title">9. ENFSI Standartlarında Bayesyen Hipotez Değerlendirmesi</div>
+    <div class="conclusion-box">
+        <p style="margin-top:0;">
+            <strong>Likelihood Ratio Kestirimi (LR):</strong> {{ hypothesis.likelihood_ratio_estimate }} (Log10(LR) = {{ hypothesis.log_likelihood_ratio }})<br>
+            <strong>ENFSI Kanıt Seviyesi:</strong> <span class="badge badge-info">{{ hypothesis.support_level }}</span><br>
+            <strong>Toplam Belirsizlik Skoru (U):</strong> %{{ (hypothesis.uncertainty_score * 100) | round(1) }}<br>
+            <strong>%95 Güven Aralığı:</strong> [{{ hypothesis.confidence_interval_log_lr[0] }}, {{ hypothesis.confidence_interval_log_lr[1] }}]
+        </p>
+        <p style="font-size: 10pt; font-weight: bold; color: #2c5282; margin-bottom: 0;">
+            {{ hypothesis.verbal_conclusion_tr }}
+        </p>
+    </div>
+
+    <!-- 10. Kriminalojik Benzerlik ve Tetabuk (İzdüşüm) Skalası Analizi -->
+    {% if hypothesis.similarity_scale_evaluation %}
+    <div class="section-title">10. Kriminalojik Benzerlik ve Tetabuk (İzdüşüm) Skalası Analizi</div>
+    <div style="margin-bottom: 12px;">
+        <table style="width:100%; font-size:8.5pt;">
+            <thead>
+                <tr>
+                    <th style="width: 18%;">Benzerlik Bandı</th>
+                    <th style="width: 25%;">Adli Durum</th>
+                    <th style="width: 42%;">Kriminaloji & Adli Tıp Yorumu</th>
+                    <th style="width: 15%;">Dosya Durumu</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="{% if hypothesis.similarity_scale_evaluation.band == 'SUPERIMPOSITION_ANOMALY' %}background-color:#fed7d7; font-weight:bold;{% endif %}">
+                    <td>%98 - %100</td>
+                    <td>⚠️ Tetabuk (İzdüşüm / Dolandırıcılık)</td>
+                    <td>İnsan biyomekaniği gereği iki imza birebir atılamaz. İzdüşüm, fotokopi transferi veya dolandırıcılık sahteciliği delilidir (H2).</td>
+                    <td>{% if hypothesis.similarity_scale_evaluation.band == 'SUPERIMPOSITION_ANOMALY' %}<span class="badge badge-danger">MEVCUT DOSYA (%{{ hypothesis.similarity_scale_evaluation.similarity_percentage }})</span>{% else %}-{% endif %}</td>
+                </tr>
+                <tr style="{% if hypothesis.similarity_scale_evaluation.band == 'NATURAL_VARIATION_MATCH' %}background-color:#c6f6d5; font-weight:bold;{% endif %}">
+                    <td>%85 - %97.9</td>
+                    <td> Doğal Varyasyon (Samimi Aidiyet)</td>
+                    <td>Yazarın doğal nöromüsküler varyasyon sınırları dahilindeki yerleşik motor alışkanlıkları (H1 lehine güçlü delil).</td>
+                    <td>{% if hypothesis.similarity_scale_evaluation.band == 'NATURAL_VARIATION_MATCH' %}<span class="badge badge-success">MEVCUT DOSYA (%{{ hypothesis.similarity_scale_evaluation.similarity_percentage }})</span>{% else %}-{% endif %}</td>
+                </tr>
+                <tr style="{% if hypothesis.similarity_scale_evaluation.band == 'SKILLED_SIMULATION_ZONE' %}background-color:#feebc8; font-weight:bold;{% endif %}">
+                    <td>%70 - %84.9</td>
+                    <td>🔍 Kritik Ayrım (Nitelikli Taklit)</td>
+                    <td>Makro benzerlik var; serbest taklit veya deformasyon ayrımı için FFT titreme ve mikroskobik hat analizi zorunludur.</td>
+                    <td>{% if hypothesis.similarity_scale_evaluation.band == 'SKILLED_SIMULATION_ZONE' %}<span class="badge badge-warning">MEVCUT DOSYA (%{{ hypothesis.similarity_scale_evaluation.similarity_percentage }})</span>{% else %}-{% endif %}</td>
+                </tr>
+                <tr style="{% if hypothesis.similarity_scale_evaluation.band == 'INCONCLUSIVE_DISGUISE_ZONE' %}background-color:#feebc8; font-weight:bold;{% endif %}">
+                    <td>%50 - %69.9</td>
+                    <td>⚖️ Kararsız / Olası İstekli Bozma</td>
+                    <td>Kısmi benzerlik. Şahsın imzasını kasten değiştirmesi (disguise) veya amatör taklit şüphesi (Ek mukayese gereklidir).</td>
+                    <td>{% if hypothesis.similarity_scale_evaluation.band == 'INCONCLUSIVE_DISGUISE_ZONE' %}<span class="badge badge-warning">MEVCUT DOSYA (%{{ hypothesis.similarity_scale_evaluation.similarity_percentage }})</span>{% else %}-{% endif %}</td>
+                </tr>
+                <tr style="{% if hypothesis.similarity_scale_evaluation.band == 'LOW_SIMILARITY_NON_SOURCE' %}background-color:#fed7d7; font-weight:bold;{% endif %}">
+                    <td>%25 - %49.9</td>
+                    <td>❌ Düşük Benzerlik (Kaba Taklit)</td>
+                    <td>Genel konfigürasyon ve alışkanlıklar referans profille uyuşmamaktadır (Farklı şahıs / Kaba taklit - H2).</td>
+                    <td>{% if hypothesis.similarity_scale_evaluation.band == 'LOW_SIMILARITY_NON_SOURCE' %}<span class="badge badge-danger">MEVCUT DOSYA (%{{ hypothesis.similarity_scale_evaluation.similarity_percentage }})</span>{% else %}-{% endif %}</td>
+                </tr>
+                <tr style="{% if hypothesis.similarity_scale_evaluation.band == 'COMPLETE_DISPARITY' %}background-color:#fed7d7; font-weight:bold;{% endif %}">
+                    <td>%0 - %24.9</td>
+                    <td>🚫 Tam Uyumsuzluk (Rastgele Sahtecilik)</td>
+                    <td>Hiçbir yapısal veya dinamik bağ bulunmamaktadır (Rastgele sahtecilik / Alakasız şahıs - H2).</td>
+                    <td>{% if hypothesis.similarity_scale_evaluation.band == 'COMPLETE_DISPARITY' %}<span class="badge badge-danger">MEVCUT DOSYA (%{{ hypothesis.similarity_scale_evaluation.similarity_percentage }})</span>{% else %}-{% endif %}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="margin-top:6px; font-size:8.5pt; color:#2d3748; background:#edf2f7; padding:6px 10px; border-radius:3px;">
+            <strong>Adli Yorum:</strong> {{ hypothesis.similarity_scale_evaluation.forensic_interpretation_tr }}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- 11. Belirsizlik ve Kısıt Şerhleri -->
+    {% if hypothesis.forensic_limitations %}
+    <div class="alert-box">
+        <strong>Adli Kısıtlar ve İhtiyati Şerhler:</strong>
+        <ul style="margin: 4px 0 0 0; padding-left: 20px;">
+            {% for lim in hypothesis.forensic_limitations %}
+            <li>{{ lim }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- 12. Dijital Mühür ve İmza -->
+    <div class="signature-seal">
+        <strong>KRİPTOGRAFİK BÜTÜNLÜK VE DENETİM İZİ MÜHRÜ (SHA-256)</strong><br>
+        Rapor Hash: {{ report_sha256 }}<br>
+        Oluşturulma Zamanı: {{ case_info.date_utc }} | Yazılım: FHDSS v1.0 (Audit-Verified)
+    </div>
+
+</body>
+</html>

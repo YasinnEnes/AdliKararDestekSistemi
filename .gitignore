@@ -1,0 +1,135 @@
+# ==============================================================================
+# Python & Bytecode
+# ==============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ==============================================================================
+# Virtual Environments
+# ==============================================================================
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# ==============================================================================
+# Testing, Coverage & Linters
+# ==============================================================================
+.pytest_cache/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# ==============================================================================
+# Environment Variables & Secrets & Local DBs
+# ==============================================================================
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+
+# ==============================================================================
+# Datasets (Large Data Files - Keep directories via .gitkeep)
+# ==============================================================================
+datasets/raw/*
+!datasets/raw/.gitkeep
+datasets/validated/*
+!datasets/validated/.gitkeep
+datasets/processed/*
+!datasets/processed/.gitkeep
+datasets/splits/*
+!datasets/splits/.gitkeep
+
+# ==============================================================================
+# ML / DL Models, Weights & Checkpoints
+# ==============================================================================
+*.pt
+*.pth
+*.onnx
+*.ckpt
+*.h5
+*.hdf5
+*.pb
+*.tflite
+*.bin
+*.joblib
+*.pkl
+checkpoints/
+
+# ==============================================================================
+# Generated Artifacts, Reports & Logs
+# ==============================================================================
+artifacts/*
+!artifacts/.gitkeep
+!artifacts/weights/
+!artifacts/weights/*.json
+!artifacts/training/
+!artifacts/training/*.json
+reports/*
+!reports/.gitkeep
+logs/
+*.log
+runs/
+wandb/
+mlruns/
+.tensorboard/
+
+# ==============================================================================
+# Node & Frontend
+# ==============================================================================
+node_modules/
+.npm/
+.next/
+.nuxt/
+.out/
+
+# ==============================================================================
+# IDEs & Operating Systems
+# ==============================================================================
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,9 @@
+{
+  "name": "fhdss-root",
+  "version": "1.0.0",
+  "description": "FHDSS - Adli Belge ve El Yazısı Karar Destek Sistemi Tekil Başlatıcı",
+  "scripts": {
+    "dev": "python start.py",
+    "start": "python start.py"
+  }
+}

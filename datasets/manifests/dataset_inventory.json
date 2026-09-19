@@ -1,0 +1,157 @@
+{
+  "inventory_version": "1.0",
+  "generated_at_utc": "2026-09-16T01:09:00Z",
+  "total_datasets": 6,
+  "summary": {
+    "total_images": 143918,
+    "total_signature_images": 27600,
+    "total_signature_writers": 430,
+    "total_handwriting_files": 116318,
+    "total_dynamic_trajectory_files": 200,
+    "unreadable_count": 0,
+    "corrupted_count": 0
+  },
+  "datasets": [
+    {
+      "name": "CEDAR",
+      "path": "datasets/DS_Downloaded/CEDAR/CEDAR1/signatures",
+      "type": "offline_signature",
+      "language": "english",
+      "storage_status": "EXTRACTED",
+      "image_format": "PNG",
+      "total_files": 2643,
+      "image_count": 2640,
+      "non_image_files": [
+        "Readme.txt",
+        "full_org/Thumbs.db",
+        "full_forg/Thumbs.db"
+      ],
+      "writer_count": 55,
+      "writer_id_pattern": "CEDAR_{writer_id:03d} (1..55)",
+      "genuine_count": 1320,
+      "forged_count": 1320,
+      "samples_per_writer": {
+        "genuine": 24,
+        "forged": 24,
+        "total": 48
+      },
+      "unreadable_count": 0,
+      "duplicate_count": 0,
+      "status": "READY",
+      "notes": "Tamamen ayıklanmış, adli model eğitimi için birincil veri seti."
+    },
+    {
+      "name": "BHSig-260",
+      "path": "datasets/DS_Downloaded/BHSig-260/BHSig-260.zip",
+      "type": "offline_signature",
+      "language": "bengali_hindi",
+      "storage_status": "ARCHIVED_ZIP",
+      "archive_size_mb": 291.6,
+      "image_format": "TIF",
+      "total_files": 16680,
+      "image_count": 16680,
+      "writer_count": 260,
+      "writer_subsets": {
+        "BHSig-Bengali": {
+          "writers": 100,
+          "genuine": 2400,
+          "forged": 3000
+        },
+        "BHSig-Hindi": {
+          "writers": 160,
+          "genuine": 5160,
+          "forged": 6120
+        }
+      },
+      "genuine_count": 7560,
+      "forged_count": 9120,
+      "samples_per_writer": {
+        "genuine_per_writer": 24,
+        "forged_per_writer": 30
+      },
+      "unreadable_count": 0,
+      "duplicate_count": 0,
+      "status": "ARCHIVED_READY",
+      "notes": "Bengal ve Hintçe dillerinde çift dilli imza veri seti; ZIP arşivi sağlam."
+    },
+    {
+      "name": "UTSig",
+      "path": "datasets/DS_Downloaded/UTSig/UTSig.zip",
+      "type": "offline_signature",
+      "language": "persian",
+      "storage_status": "ARCHIVED_ZIP",
+      "archive_size_mb": 249.2,
+      "image_format": "TIF",
+      "total_files": 8280,
+      "image_count": 8280,
+      "writer_count": 115,
+      "genuine_count": 3105,
+      "forged_count": 5175,
+      "samples_per_writer": {
+        "genuine": 27,
+        "forged_opposite_hand": 3,
+        "forged_skilled": 42,
+        "total": 72
+      },
+      "unreadable_count": 0,
+      "duplicate_count": 0,
+      "status": "ARCHIVED_READY",
+      "notes": "Farsça imzalar; hem ters el (opposite-hand) hem de yetenekli sahtecilik örnekleri içerir."
+    },
+    {
+      "name": "CVL Database",
+      "path": "datasets/DS_Downloaded/CVL Database/CVL Database.zip",
+      "type": "offline_handwriting",
+      "language": "multilingual",
+      "storage_status": "ARCHIVED_ZIP",
+      "archive_size_mb": 41.2,
+      "image_format": "JPG",
+      "total_files": 996,
+      "image_count": 996,
+      "writer_count": 27,
+      "genuine_count": 996,
+      "forged_count": 0,
+      "unreadable_count": 0,
+      "duplicate_count": 0,
+      "status": "ARCHIVED_READY",
+      "notes": "Viyana Teknik Üniversitesi el yazısı veri tabanı; el yazısı yazar tespiti için."
+    },
+    {
+      "name": "IAM_HW",
+      "path": "datasets/DS_Downloaded/IAM_HW/iam_handwriting.zip",
+      "type": "offline_handwriting_words",
+      "language": "english",
+      "storage_status": "ARCHIVED_ZIP",
+      "archive_size_mb": 1129.2,
+      "image_format": "PNG",
+      "total_files": 115322,
+      "image_count": 115320,
+      "writer_count": 76,
+      "genuine_count": 115320,
+      "forged_count": 0,
+      "unreadable_count": 0,
+      "duplicate_count": 0,
+      "status": "ARCHIVED_READY",
+      "notes": "Geniş ölçekli İngilizce el yazısı kelime veri seti."
+    },
+    {
+      "name": "SVC2004",
+      "path": "datasets/DS_Downloaded/SVC2004/SVC2004_task1.zip",
+      "type": "dynamic_trajectory",
+      "language": "english_chinese",
+      "storage_status": "ARCHIVED_ZIP",
+      "archive_size_mb": 1.4,
+      "image_format": "DAT",
+      "total_files": 200,
+      "image_count": 0,
+      "trajectory_count": 200,
+      "writer_count": 40,
+      "genuine_count": 160,
+      "forged_count": 40,
+      "unreadable_count": 0,
+      "duplicate_count": 0,
+      "status": "ARCHIVED_READY",
+      "notes": "İmza doğrulama yarışması dinamik koordinat/zaman serisi verisi."
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "report_version": "1.0",
+  "timestamp_utc": "2026-09-15T22:08:47Z",
+  "dataset_name": "CEDAR",
+  "root_path": "datasets\\DS_Downloaded\\CEDAR\\CEDAR1\\signatures",
+  "total_files_scanned": 2640,
+  "valid_images": 2640,
+  "unreadable_images": [],
+  "zero_dimension_images": [],
+  "too_small_images": [],
+  "blank_or_constant_images": [],
+  "conversion_failed_images": [],
+  "duplicate_groups": {},
+  "corrupted_images": [],
+  "resolution_stats": {
+    "min_width": 264,
+    "max_width": 888,
+    "min_height": 145,
+    "max_height": 816,
+    "mean_width": 543.8,
+    "mean_height": 350.5
+  },
+  "quality_summary": "PASS"
+}

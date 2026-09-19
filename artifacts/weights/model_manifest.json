@@ -1,0 +1,95 @@
+{
+  "manifest_version": "2.0.0",
+  "last_updated_utc": "2026-09-15T23:11:59Z",
+  "active_primary_model": "convnext_tiny_forensic_cedar_real",
+  "training_type": "real_dataset",
+  "dataset_name": "CEDAR",
+  "dataset_statistics": {
+    "total_samples": 2640,
+    "total_writers": 55,
+    "train_writers": 38,
+    "val_writers": 8,
+    "test_writers": 9,
+    "train_samples": 1824,
+    "val_samples": 384,
+    "test_samples": 432
+  },
+  "model_architecture": "ConvNeXt-Tiny",
+  "architecture": "convnext_tiny",
+  "embedding_dimension": 128,
+  "source_code_commit": "sprint19-cedar-real",
+  "random_seed": 42,
+  "preprocessing_version": "v1.2-adli-pipeline",
+  "weights": {
+    "pytorch_checkpoint": {
+      "filename": "convnext_tiny_forensic_cedar_real_best.pt",
+      "sha256": "b6befe7f7319c64ead170b7390eb19731101f223fc1ad91e638b227d7fce0d5f",
+      "size_bytes": 336807225,
+      "training_type": "real_dataset"
+    },
+    "onnx_model": {
+      "filename": "convnext_tiny_forensic_cedar_real.onnx",
+      "sha256": "e1df25967b6c76d601a88c57d021fcf95d5c773e7213234d750798119d4605ce",
+      "size_bytes": 112346775
+    },
+    "synthetic_baseline_pt": {
+      "filename": "convnext_tiny_forensic_best.pt",
+      "sha256": "598b31260bcbcc2de25aa53c4837d46267a95352db1c9046ea0bb31f4b3ee553",
+      "size_bytes": 336822701,
+      "training_type": "synthetic_test"
+    }
+  },
+  "test_metrics": {
+    "roc_auc": 0.5295,
+    "eer": 0.4826,
+    "optimal_threshold": 0.9812,
+    "tar_at_eer": 0.5185,
+    "far_at_eer": 0.4838,
+    "frr_at_eer": 0.4815
+  },
+  "val_metrics": {
+    "eer": 0.44808,
+    "auc": 0.58021
+  },
+  "export_numerical_parity": {
+    "max_abs_diff": 8.940696716308594e-08,
+    "mean_abs_diff": 1.3572389434557408e-08,
+    "numerical_tolerance": 0.0001,
+    "passed": true
+  },
+  "synthetic_baseline": {
+    "model_id": "convnext_tiny_synthetic_baseline",
+    "training_type": "synthetic_test",
+    "pt_filename": "convnext_tiny_forensic_best.pt",
+    "sha256": "598b31260bcbcc2de25aa53c4837d46267a95352db1c9046ea0bb31f4b3ee553",
+    "warning": "DIKKAT: Bu model test ve boru hatti dogrulama amacli sentetik/test agirliklari icermektedir. Gercek adli bilirkisi kararlari icin kullanilamaz."
+  },
+  "registered_models": [
+    {
+      "model_id": "convnext_tiny_forensic_cedar_real",
+      "display_name": "ConvNeXt-Tiny Forensic Metric Encoder (CEDAR Real)",
+      "filename": "convnext_tiny_forensic_cedar_real_best.pt",
+      "sha256": "b6befe7f7319c64ead170b7390eb19731101f223fc1ad91e638b227d7fce0d5f",
+      "training_type": "real_dataset",
+      "dataset_name": "CEDAR",
+      "status": "PRODUCTION_READY",
+      "metrics": {
+        "test_auc": 0.5295,
+        "test_eer": 0.4826,
+        "val_eer": 0.44808
+      }
+    },
+    {
+      "model_id": "convnext_tiny_synthetic_baseline",
+      "display_name": "ConvNeXt-Tiny Synthetic Test Baseline",
+      "filename": "convnext_tiny_forensic_best.pt",
+      "sha256": "598b31260bcbcc2de25aa53c4837d46267a95352db1c9046ea0bb31f4b3ee553",
+      "training_type": "synthetic_test",
+      "dataset_name": "Synthetic",
+      "status": "TEST_BASELINE_ONLY",
+      "metrics": {
+        "val_eer": 0.05
+      }
+    }
+  ]
+}

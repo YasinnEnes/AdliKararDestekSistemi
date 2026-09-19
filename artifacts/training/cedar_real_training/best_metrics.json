@@ -1,0 +1,9 @@
+{
+  "val_eer": 0.44808,
+  "val_auc": 0.58021,
+  "test_roc_auc": 0.5295,
+  "test_eer": 0.4826,
+  "test_tar_at_eer": 0.5185,
+  "test_optimal_threshold": 0.9812,
+  "elapsed_seconds": 2112.87
+}

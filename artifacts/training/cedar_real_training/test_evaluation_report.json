@@ -1,0 +1,74 @@
+{
+  "total_test_pairs": 648,
+  "genuine_pairs_count": 216,
+  "impostor_pairs_count": 432,
+  "roc_auc": 0.5295,
+  "eer": 0.4826,
+  "optimal_eer_threshold": 0.9812,
+  "tar_at_eer": 0.5185,
+  "far_at_eer": 0.4838,
+  "frr_at_eer": 0.4815,
+  "genuine_similarity_mean": 0.9802,
+  "genuine_similarity_std": 0.0073,
+  "impostor_similarity_mean": 0.9788,
+  "impostor_similarity_std": 0.0093,
+  "raw_cosine_min": 0.8158,
+  "raw_cosine_max": 0.985,
+  "threshold_analysis": [
+    {
+      "threshold": 0.5,
+      "TAR": 1.0,
+      "FAR": 1.0,
+      "FRR": 0.0,
+      "Accuracy": 0.3333,
+      "TP": 216,
+      "FP": 432,
+      "TN": 0,
+      "FN": 0
+    },
+    {
+      "threshold": 0.6,
+      "TAR": 1.0,
+      "FAR": 1.0,
+      "FRR": 0.0,
+      "Accuracy": 0.3333,
+      "TP": 216,
+      "FP": 432,
+      "TN": 0,
+      "FN": 0
+    },
+    {
+      "threshold": 0.7,
+      "TAR": 1.0,
+      "FAR": 1.0,
+      "FRR": 0.0,
+      "Accuracy": 0.3333,
+      "TP": 216,
+      "FP": 432,
+      "TN": 0,
+      "FN": 0
+    },
+    {
+      "threshold": 0.8,
+      "TAR": 1.0,
+      "FAR": 1.0,
+      "FRR": 0.0,
+      "Accuracy": 0.3333,
+      "TP": 216,
+      "FP": 432,
+      "TN": 0,
+      "FN": 0
+    },
+    {
+      "threshold": 0.9,
+      "TAR": 1.0,
+      "FAR": 1.0,
+      "FRR": 0.0,
+      "Accuracy": 0.3333,
+      "TP": 216,
+      "FP": 432,
+      "TN": 0,
+      "FN": 0
+    }
+  ]
+}

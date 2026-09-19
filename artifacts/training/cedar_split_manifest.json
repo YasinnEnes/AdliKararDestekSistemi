@@ -1,0 +1,96 @@
+{
+  "dataset": "CEDAR",
+  "seed": 42,
+  "created_at_utc": "2026-09-15T22:25:49Z",
+  "report": {
+    "status": "PASSED",
+    "is_disjoint": true,
+    "total_unique_writers": 55,
+    "total_samples": 2640,
+    "splits": {
+      "train": {
+        "writer_count": 38,
+        "sample_count": 1824,
+        "writer_ratio": 0.691
+      },
+      "val": {
+        "writer_count": 8,
+        "sample_count": 384,
+        "writer_ratio": 0.145
+      },
+      "test": {
+        "writer_count": 9,
+        "sample_count": 432,
+        "writer_ratio": 0.164
+      }
+    },
+    "overlaps": {
+      "train_val_count": 0,
+      "train_test_count": 0,
+      "val_test_count": 0,
+      "total_leaked_count": 0,
+      "leaked_writers": []
+    }
+  },
+  "train_writers": [
+    "YAZAR_001",
+    "YAZAR_004",
+    "YAZAR_005",
+    "YAZAR_010",
+    "YAZAR_011",
+    "YAZAR_012",
+    "YAZAR_013",
+    "YAZAR_014",
+    "YAZAR_017",
+    "YAZAR_019",
+    "YAZAR_020",
+    "YAZAR_021",
+    "YAZAR_022",
+    "YAZAR_023",
+    "YAZAR_024",
+    "YAZAR_025",
+    "YAZAR_026",
+    "YAZAR_027",
+    "YAZAR_029",
+    "YAZAR_030",
+    "YAZAR_031",
+    "YAZAR_032",
+    "YAZAR_033",
+    "YAZAR_034",
+    "YAZAR_036",
+    "YAZAR_037",
+    "YAZAR_039",
+    "YAZAR_040",
+    "YAZAR_042",
+    "YAZAR_043",
+    "YAZAR_045",
+    "YAZAR_047",
+    "YAZAR_049",
+    "YAZAR_050",
+    "YAZAR_051",
+    "YAZAR_052",
+    "YAZAR_054",
+    "YAZAR_055"
+  ],
+  "val_writers": [
+    "YAZAR_003",
+    "YAZAR_006",
+    "YAZAR_028",
+    "YAZAR_035",
+    "YAZAR_038",
+    "YAZAR_044",
+    "YAZAR_046",
+    "YAZAR_053"
+  ],
+  "test_writers": [
+    "YAZAR_002",
+    "YAZAR_007",
+    "YAZAR_008",
+    "YAZAR_009",
+    "YAZAR_015",
+    "YAZAR_016",
+    "YAZAR_018",
+    "YAZAR_041",
+    "YAZAR_048"
+  ]
+}

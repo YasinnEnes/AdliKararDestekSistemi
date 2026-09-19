@@ -1,0 +1,88 @@
+{
+  "history": {
+    "epoch": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "train_loss": [
+      3.40087,
+      2.9308,
+      2.15436,
+      1.72532,
+      1.48594,
+      1.39235,
+      1.33368,
+      1.27003,
+      1.24206,
+      1.22079
+    ],
+    "val_eer": [
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.48718,
+      0.47981,
+      0.44808,
+      0.4625,
+      0.45032,
+      0.44936
+    ],
+    "val_auc": [
+      0.55726,
+      0.58921,
+      0.56834,
+      0.56026,
+      0.58381,
+      0.53729,
+      0.58021,
+      0.57727,
+      0.54559,
+      0.57666
+    ],
+    "learning_rate": [
+      0.0001,
+      9.757729755661011e-05,
+      9.05463412215599e-05,
+      7.959536998847742e-05,
+      6.57963412215599e-05,
+      5.05e-05,
+      3.5203658778440106e-05,
+      2.1404630011522586e-05,
+      1.0453658778440107e-05,
+      3.4227024433899e-06
+    ]
+  },
+  "best_val_eer": 0.44808,
+  "best_val_metrics": {
+    "val_loss": 0.44808,
+    "val_eer": 0.44808,
+    "val_auc": 0.58021,
+    "tar_at_eer": 0.36667,
+    "far_at_eer": 0.26282,
+    "frr_at_eer": 0.63333,
+    "optimal_threshold": 0.99
+  },
+  "elapsed_seconds": 2112.87,
+  "epochs": 10,
+  "model_version": "v1.2-sprint18",
+  "training_type": "real_dataset",
+  "dataset_name": "CEDAR",
+  "export_result": {
+    "onnx_path": "C:\\T\u00dcBTAK\\artifacts\\weights\\convnext_tiny_forensic.onnx",
+    "pt_sha256": "b6befe7f7319c64ead170b7390eb19731101f223fc1ad91e638b227d7fce0d5f",
+    "onnx_sha256": "e1df25967b6c76d601a88c57d021fcf95d5c773e7213234d750798119d4605ce",
+    "max_abs_diff": 8.940696716308594e-08,
+    "parity_passed": true,
+    "manifest_path": "C:\\T\u00dcBTAK\\artifacts\\weights\\model_manifest.json",
+    "training_type": "real_dataset"
+  }
+}
