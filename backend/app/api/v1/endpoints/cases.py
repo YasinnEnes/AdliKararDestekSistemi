@@ -2,6 +2,7 @@
 FHDSS - Vaka ve Numune Yönetimi REST API Uç Noktaları (Sprint 14: Tekilleştirilmiş Asenkron Mimari)
 """
 
+import asyncio
 import hashlib
 import os
 import shutil
@@ -76,25 +77,39 @@ def get_case_orchestrator(
     return _ORCHESTRATORS[case_id]
 
 
+from sqlalchemy.inspection import inspect as sa_inspect
+from sqlalchemy.orm import selectinload
+
+_CASE_CREATION_LOCK = asyncio.Lock()
+
+
 async def _build_case_response(
     entity: CaseEntity,
     db: AsyncSession,
 ) -> CaseResponse:
-    """CaseEntity ve ilişkili numune verilerini birleştirerek CaseResponse döner."""
-    ref_stmt = select(SampleEntity.sample_id).where(
-        SampleEntity.case_id == entity.case_id,
-        SampleEntity.sample_type == "reference",
-        SampleEntity.is_deleted == False,
-    )
-    ref_res = await db.execute(ref_stmt)
-    ref_sample_ids = [row[0] for row in ref_res.all()]
-
-    # Soru konusu numunenin silinip silinmediğini kontrol et
-    q_sample_id = entity.questioned_sample_id
-    if q_sample_id:
-        q_chk = await db.execute(select(SampleEntity.sample_id).where(SampleEntity.sample_id == q_sample_id, SampleEntity.is_deleted == False))
-        if not q_chk.scalar_one_or_none():
+    """CaseEntity ve ilişkili numune verilerini birleştirerek CaseResponse döner. Eager-loaded ilişkileri öncelikli kullanarak N+1 sorgusunu engeller."""
+    is_samples_loaded = "samples" not in sa_inspect(entity).unloaded
+    if is_samples_loaded and entity.samples is not None:
+        active_samples = [s for s in entity.samples if not s.is_deleted]
+        ref_sample_ids = [s.sample_id for s in active_samples if s.sample_type == "reference"]
+        q_sample_id = entity.questioned_sample_id
+        if q_sample_id and not any(s.sample_id == q_sample_id for s in active_samples):
             q_sample_id = None
+    else:
+        ref_stmt = select(SampleEntity.sample_id).where(
+            SampleEntity.case_id == entity.case_id,
+            SampleEntity.sample_type == "reference",
+            SampleEntity.is_deleted == False,
+        )
+        ref_res = await db.execute(ref_stmt)
+        ref_sample_ids = [row[0] for row in ref_res.all()]
+
+        # Soru konusu numunenin silinip silinmediğini kontrol et
+        q_sample_id = entity.questioned_sample_id
+        if q_sample_id:
+            q_chk = await db.execute(select(SampleEntity.sample_id).where(SampleEntity.sample_id == q_sample_id, SampleEntity.is_deleted == False))
+            if not q_chk.scalar_one_or_none():
+                q_sample_id = None
 
     # Examination type parse
     exam_type = ExaminationType.SIGNATURE
@@ -156,9 +171,14 @@ async def list_cases(
     db: AsyncSession = Depends(get_db),
     current_user: UserEntity = Depends(get_current_active_user),
 ):
-    """Veritabanına kayıtlı tüm adli vakaları son güncellenme sırasına göre listeler."""
+    """Veritabanına kayıtlı tüm adli vakaları son güncellenme sırasına göre listeler (N+1 engellenmiş eager loading)."""
     try:
-        stmt = select(CaseEntity).where(CaseEntity.is_deleted == False).order_by(CaseEntity.updated_at_utc.desc())
+        stmt = (
+            select(CaseEntity)
+            .options(selectinload(CaseEntity.samples))
+            .where(CaseEntity.is_deleted == False)
+            .order_by(CaseEntity.updated_at_utc.desc())
+        )
         res = await db.execute(stmt)
         entities = res.scalars().all()
 
@@ -202,27 +222,44 @@ async def create_case(
 
     now = datetime.now(timezone.utc).isoformat()
 
-    # 2. Vaka Numarası Belirle
+    # 2. Vaka Numarası Belirle (Concurrency & Race Condition Korumalı Sıralı Üretici)
     case_number = payload.case_id
     if not case_number:
-        count_stmt = select(func.count(CaseEntity.case_id))
-        count_res = await db.execute(count_stmt)
-        count = count_res.scalar() or 0
-        year = datetime.now(timezone.utc).year
-        case_number = f"CASE-{year}-{count + 1:03d}"
-
-    # Çakışma kontrolü
-    existing_stmt = select(CaseEntity).where(CaseEntity.case_id == case_number)
-    existing_res = await db.execute(existing_stmt)
-    if existing_res.scalar_one_or_none():
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail={
-                "message": f"'{case_number}' numaralı vaka zaten mevcut.",
-                "error_code": "CASE_ALREADY_EXISTS",
-                "case_id": case_number,
-            },
-        )
+        async with _CASE_CREATION_LOCK:
+            year = datetime.now(timezone.utc).year
+            prefix = f"CASE-{year}-"
+            seq_stmt = select(CaseEntity.case_id).where(CaseEntity.case_id.like(f"{prefix}%"))
+            seq_res = await db.execute(seq_stmt)
+            existing_ids = [row[0] for row in seq_res.all()]
+            max_num = 0
+            for cid in existing_ids:
+                try:
+                    num_part = int(cid.split("-")[-1])
+                    if num_part > max_num:
+                        max_num = num_part
+                except (ValueError, IndexError):
+                    pass
+            candidate_num = max_num + 1
+            case_number = f"CASE-{year}-{candidate_num:03d}"
+            while True:
+                chk = await db.execute(select(CaseEntity.case_id).where(CaseEntity.case_id == case_number))
+                if not chk.scalar_one_or_none():
+                    break
+                candidate_num += 1
+                case_number = f"CASE-{year}-{candidate_num:03d}"
+    else:
+        # Kullanıcının manuel belirlediği case_id çakışma kontrolü
+        existing_stmt = select(CaseEntity).where(CaseEntity.case_id == case_number)
+        existing_res = await db.execute(existing_stmt)
+        if existing_res.scalar_one_or_none():
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail={
+                    "message": f"'{case_number}' numaralı vaka zaten mevcut.",
+                    "error_code": "CASE_ALREADY_EXISTS",
+                    "case_id": case_number,
+                },
+            )
 
     examiner = current_user.full_name or current_user.username or payload.examiner_id or "BILIRKISI_UZMAN_01"
     exam_type_str = payload.examination_type.value if hasattr(payload.examination_type, "value") else str(payload.examination_type)
