@@ -1,8 +1,9 @@
-import axios from "axios";
+import axios, { InternalAxiosRequestConfig } from "axios";
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 export const BACKEND_URL = API_BASE_URL.replace(/\/api\/v1\/?$/, "");
 export const TOKEN_STORAGE_KEY = "fhdss_access_token";
+export const REFRESH_TOKEN_STORAGE_KEY = "fhdss_refresh_token";
 export const USER_STORAGE_KEY = "fhdss_user";
 
 export const apiClient = axios.create({
@@ -24,20 +25,103 @@ apiClient.interceptors.request.use((config) => {
   return config;
 }, (error) => Promise.reject(error));
 
-// Response Interceptor: 401 Durumunda Güvenli Oturum Temizliği
+// Concurrency Queue for 401 Token Refresh (Sprint 20 - P1-2)
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (value?: any) => void;
+  reject: (reason?: any) => void;
+}> = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
+// Response Interceptor: 401 Durumunda Güvenli Refresh Token Rotation & Concurrency Queue
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401 && typeof window !== "undefined") {
-      const isLoginRequest = error.config?.url?.includes("/auth/login");
-      if (!isLoginRequest) {
+  async (error) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    if (!originalRequest || typeof window === "undefined") {
+      return Promise.reject(error);
+    }
+
+    const url = originalRequest.url || "";
+    const isAuthEndpoint = url.includes("/auth/login") || url.includes("/auth/refresh");
+
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
+      const storedRefreshToken = localStorage.getItem(REFRESH_TOKEN_STORAGE_KEY);
+      if (!storedRefreshToken) {
+        // Refresh token yok, oturumu güvenle temizle
         localStorage.removeItem(TOKEN_STORAGE_KEY);
+        localStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
         localStorage.removeItem(USER_STORAGE_KEY);
         if (window.location.pathname !== "/login") {
           window.location.href = "/login";
         }
+        return Promise.reject(error);
+      }
+
+      if (isRefreshing) {
+        // Halihazırda bir refresh isteği devam ediyorsa bu isteği kuyruğa ekle
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((newToken) => {
+            if (originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${newToken}`;
+            }
+            return apiClient(originalRequest);
+          })
+          .catch((err) => Promise.reject(err));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        // Döngüsel interceptor tetiklenmesini önlemek için doğrudan axios ile çağır
+        const res = await axios.post<{ access_token: string; refresh_token: string; token_type: string }>(
+          `${API_BASE_URL}/auth/refresh`,
+          { refresh_token: storedRefreshToken },
+          { headers: { "Content-Type": "application/json" } }
+        );
+
+        const newAccessToken = res.data.access_token;
+        const newRefreshToken = res.data.refresh_token;
+
+        localStorage.setItem(TOKEN_STORAGE_KEY, newAccessToken);
+        if (newRefreshToken) {
+          localStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, newRefreshToken);
+        }
+
+        apiClient.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        }
+
+        processQueue(null, newAccessToken);
+        return apiClient(originalRequest);
+      } catch (refreshErr) {
+        processQueue(refreshErr, null);
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
+        localStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
+        localStorage.removeItem(USER_STORAGE_KEY);
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        }
+        return Promise.reject(refreshErr);
+      } finally {
+        isRefreshing = false;
       }
     }
+
     return Promise.reject(error);
   }
 );
@@ -91,6 +175,7 @@ export interface UserResponse {
 
 export interface TokenResponse {
   access_token: string;
+  refresh_token?: string;
   token_type: string;
   user: UserResponse;
 }

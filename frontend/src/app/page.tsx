@@ -8,6 +8,8 @@ import {
   User,
   LogOut,
   Shield,
+  AlertTriangle,
+  RotateCw,
 } from "lucide-react";
 import { CaseSelectionDashboard } from "@/components/cases/CaseSelectionDashboard";
 import { ExistingCasesPanel } from "@/components/cases/ExistingCasesPanel";
@@ -18,13 +20,48 @@ type ViewState = "SELECTION" | "EXISTING_CASES" | "NEW_CASE";
 
 export default function HomePage() {
   const [viewState, setViewState] = useState<ViewState>("SELECTION");
-  const { user, logout, loading } = useAuth();
+  const { user, logout, loading, sessionState, error, retrySessionVerification } = useAuth();
 
-  if (loading) {
+  if (loading || sessionState === "verifying" || sessionState === "initializing") {
     return (
       <div className="fixed inset-0 w-full h-full min-h-screen bg-[#18120F] flex flex-col items-center justify-center space-y-4">
         <div className="w-10 h-10 rounded-full border-2 border-burgundy-600 border-t-transparent animate-spin" />
         <p className="text-xs text-[#D4C5A9] font-medium">Güvenli adli oturum doğrulanıyor...</p>
+      </div>
+    );
+  }
+
+  if (sessionState === "error" && !user) {
+    return (
+      <div className="fixed inset-0 w-full h-full min-h-screen bg-[#18120F] flex flex-col items-center justify-center p-4">
+        <div className="max-w-md w-full bg-[#1C1510] border border-rose-800/60 rounded-2xl p-6 text-center space-y-4 shadow-2xl">
+          <div className="w-12 h-12 rounded-full bg-rose-950/80 border border-rose-700/50 flex items-center justify-center mx-auto text-rose-300">
+            <AlertTriangle className="w-6 h-6" />
+          </div>
+          <h2 className="text-sm font-bold text-[#FAF7F0] tracking-wide">
+            Adli Oturum Doğrulanamadı
+          </h2>
+          <p className="text-xs text-[#D4C5A9]/80 leading-relaxed">
+            {error || "Sunucuyla bağlantı kurulamadı veya oturum zaman aşımına uğradı."}
+          </p>
+          <div className="flex items-center justify-center gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => retrySessionVerification()}
+              className="px-4 py-2 bg-gradient-to-r from-[#7B1E34] to-[#5C1425] hover:from-[#5C1425] hover:to-[#7B1E34] text-[#FAF7F0] text-xs font-semibold rounded-lg transition shadow-md flex items-center gap-1.5"
+            >
+              <RotateCw className="w-3.5 h-3.5" />
+              Tekrar Dene
+            </button>
+            <button
+              type="button"
+              onClick={logout}
+              className="px-4 py-2 bg-[#2A2019] hover:bg-[#3D2E24] text-[#D4C5A9] hover:text-[#FAF7F0] text-xs font-semibold rounded-lg border border-[#B8A484]/20 transition"
+            >
+              Giriş Ekranına Dön
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
