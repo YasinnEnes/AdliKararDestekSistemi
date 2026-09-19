@@ -12,6 +12,8 @@ import torch
 from backend.app.core.config import settings
 from backend.app.core.logger import logger
 
+from ml.models.registry import model_registry
+
 try:
     import onnxruntime as ort
     HAS_ONNXRUNTIME = True
@@ -35,10 +37,14 @@ class ForensicONNXInferenceEngine:
         if self.pytorch_model is not None:
             self.pytorch_model.eval()
 
-        self.onnx_model_path = Path(
-            onnx_model_path
-            or (settings.BASE_DIR / "artifacts" / "weights" / "convnext_tiny_forensic.onnx")
-        )
+        if onnx_model_path:
+            self.onnx_model_path = Path(onnx_model_path)
+        else:
+            try:
+                self.onnx_model_path = model_registry.get_active_onnx_path()
+            except Exception:
+                self.onnx_model_path = Path(settings.BASE_DIR / "artifacts" / "weights" / "convnext_tiny_forensic_cedar_real.onnx")
+
         self.ort_session: Optional[Any] = None
         self.fallback_active: bool = False
         self.last_fallback_reason: Optional[str] = None

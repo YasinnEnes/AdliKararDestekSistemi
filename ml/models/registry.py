@@ -100,6 +100,65 @@ class ForensicModelRegistry:
             logger.warning("UYARI: Model sicilindeki ağırlıklar SENTETİK TEST ağırlıklarıdır. Gerçek adli delil kararlarında kullanılmamalıdır.")
         return True, actual_sha, expected_sha
 
+    def get_active_model_id(self) -> str:
+        """Manifestoda birincil aktif olarak işaretlenen model kimliğini döner."""
+        manifest = self.load_manifest()
+        return manifest.get("active_primary_model", "convnext_tiny_forensic_cedar_real")
+
+    def get_active_pt_path(self) -> Path:
+        """Aktif birincil PyTorch model ağırlık dosyasının mutlak yolunu döner."""
+        manifest = self.load_manifest()
+        weights_dict = manifest.get("weights", {})
+        pt_entry = weights_dict.get("pytorch_checkpoint", {})
+        fn = pt_entry.get("filename", "convnext_tiny_forensic_cedar_real_best.pt")
+        pt_path = self.manifest_path.parent / fn
+        if not pt_path.exists():
+            # Fallback: Eğer CEDAR ağırlığı henüz bulunamadıysa (test ortamında)
+            legacy_pt = self.manifest_path.parent / "convnext_tiny_forensic_best.pt"
+            if legacy_pt.exists():
+                logger.warning(f"CEDAR modeli bulunamadı ({pt_path.name}), baseline modele başvuruluyor: {legacy_pt.name}")
+                return legacy_pt
+        return pt_path
+
+    def get_active_onnx_path(self) -> Path:
+        """Aktif birincil ONNX model dosyasının mutlak yolunu döner."""
+        manifest = self.load_manifest()
+        weights_dict = manifest.get("weights", {})
+        onnx_entry = weights_dict.get("onnx_model", {})
+        fn = onnx_entry.get("filename", "convnext_tiny_forensic_cedar_real.onnx")
+        onnx_path = self.manifest_path.parent / fn
+        if not onnx_path.exists():
+            legacy_onnx = self.manifest_path.parent / "convnext_tiny_forensic.onnx"
+            if legacy_onnx.exists():
+                logger.warning(f"CEDAR ONNX bulunamadı ({onnx_path.name}), baseline ONNX modeline başvuruluyor: {legacy_onnx.name}")
+                return legacy_onnx
+        return onnx_path
+
+    def get_active_model_metadata(self) -> Dict[str, Any]:
+        """Aktif modele ait sürüm, karma ve adli metrik bilgilerini döner."""
+        manifest = self.load_manifest()
+        active_id = self.get_active_model_id()
+        pt_path = self.get_active_pt_path()
+        onnx_path = self.get_active_onnx_path()
+        pt_entry = manifest.get("weights", {}).get("pytorch_checkpoint", {})
+        
+        pt_sha = pt_entry.get("sha256")
+        if not pt_sha and pt_path.exists():
+            pt_sha = self.compute_file_sha256(pt_path)
+
+        return {
+            "model_id": active_id,
+            "manifest_version": manifest.get("manifest_version", "2.0.0"),
+            "architecture": manifest.get("model_architecture", "ConvNeXt-Tiny"),
+            "embedding_dim": manifest.get("embedding_dimension", 128),
+            "training_type": manifest.get("training_type", "real_dataset"),
+            "dataset_name": manifest.get("dataset_name", "CEDAR"),
+            "pt_filename": pt_path.name,
+            "onnx_filename": onnx_path.name,
+            "model_sha256": pt_sha,
+            "metrics": manifest.get("test_metrics", manifest.get("val_metrics", {})),
+        }
+
     def get_model_training_type(self, filename: Optional[str] = None) -> str:
         """Modelin eğitim türünü döner: 'synthetic_test' veya 'real_dataset'."""
         manifest = self.load_manifest()
@@ -124,4 +183,5 @@ class ForensicModelRegistry:
 
 # Singleton Registry
 model_registry = ForensicModelRegistry()
+
 

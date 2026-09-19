@@ -172,6 +172,7 @@ class FullPipelineResponse(BaseModel):
     report_paths: Dict[str, Optional[str]]
     audit_checksum_sha256: str
     merkle_root_hash: Optional[str] = None
+    model_metadata: Optional[Dict[str, Any]] = None
 
 
 # ==============================================================================

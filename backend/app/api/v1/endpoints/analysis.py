@@ -60,11 +60,17 @@ _SUITABILITY_ASSESSOR = SuitabilityAssessor()
 _PREPROCESSOR = ForensicImagePreprocessor()
 _FEATURE_EXTRACTOR = ForensicFeatureExtractor()
 _COMPLEXITY_SCORER = SignatureComplexityScorer()
+from ml.models.registry import model_registry
+
 _COMPARISON_ENGINE = ForensicComparisonEngine()
 _CONVNEXT_ENCODER = ForensicConvNeXtEncoder(embedding_dim=128, pretrained=False)
-_WEIGHTS_PATH = settings.BASE_DIR / "artifacts" / "weights" / "convnext_tiny_forensic_best.pt"
-if not _WEIGHTS_PATH.exists():
-    _WEIGHTS_PATH = settings.BASE_DIR / "artifacts" / "weights" / "siamese_convnext_best.pt"
+
+try:
+    _WEIGHTS_PATH = model_registry.get_active_pt_path()
+except Exception:
+    _WEIGHTS_PATH = settings.BASE_DIR / "artifacts" / "weights" / "convnext_tiny_forensic_cedar_real_best.pt"
+    if not _WEIGHTS_PATH.exists():
+        _WEIGHTS_PATH = settings.BASE_DIR / "artifacts" / "weights" / "convnext_tiny_forensic_best.pt"
 
 if _WEIGHTS_PATH.exists():
     try:
@@ -80,6 +86,14 @@ if _WEIGHTS_PATH.exists():
         logger.warning(f"Model ağırlığı yüklenirken uyarı: {e}")
 
 _CONVNEXT_ENCODER.eval()
+try:
+    _ACTIVE_MODEL_META = model_registry.get_active_model_metadata()
+except Exception:
+    _ACTIVE_MODEL_META = {
+        "model_id": "convnext_tiny_forensic_cedar_real",
+        "dataset_name": "CEDAR",
+        "pt_filename": _WEIGHTS_PATH.name,
+    }
 from backend.app.services.onnx_inference import ForensicONNXInferenceEngine
 from backend.app.services.multi_sample_service import multi_sample_clustering_service
 
@@ -484,6 +498,7 @@ async def run_full_pipeline(
         },
         audit_checksum_sha256=report_result.report_sha256,
         merkle_root_hash=merkle_root,
+        model_metadata=_ACTIVE_MODEL_META,
     )
 
 
