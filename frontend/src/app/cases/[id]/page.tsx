@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   Shield,
@@ -118,6 +118,17 @@ export default function CaseWorkstationPage() {
   const [isExitModalOpen, setIsExitModalOpen] = useState(false);
   const [isDemoPickerOpen, setIsDemoPickerOpen] = useState<boolean>(false);
   const [demoPickerTarget, setDemoPickerTarget] = useState<"both" | "questioned" | "reference">("both");
+
+  // Sprint 20 (Problem B): Analiz öncesi sekme durumunun korunması ve kullanıcı etkileşimi
+  const analysisOriginTabRef = useRef<WorkflowTab | null>(null);
+  const userInteractedTabRef = useRef<boolean>(false);
+
+  const handleTabChange = (tabId: WorkflowTab) => {
+    if (isProgressModalOpen || activeJobId || loading) {
+      userInteractedTabRef.current = true;
+    }
+    setActiveTab(tabId);
+  };
 
   // Durum Yönetimi
   const [caseData, setCaseData] = useState<CaseResponse | null>(null);
@@ -584,6 +595,12 @@ export default function CaseWorkstationPage() {
 
   // Kapsamlı Adli Analiz Başlatma
   const handleRunFullPipeline = async () => {
+    setLoadError(null);
+
+    // Sprint 20 (Problem B): Analizin başlatıldığı kaynak sekmeyi kaydet
+    analysisOriginTabRef.current = activeTab;
+    userInteractedTabRef.current = false;
+
     let qId = caseData?.questioned_sample_id;
     let refIds = caseData?.reference_sample_ids || [];
 
@@ -687,8 +704,15 @@ export default function CaseWorkstationPage() {
       console.warn("Vaka yenilenirken hata:", e);
     }
 
-    // 2. Kullanıcıyı doğrudan "Bilirkişi Raporu" sekmesine geçir
-    setActiveTab("enfsi");
+    // 2. Sprint 20 (Problem B): Analiz tamamlandıktan sonra analiz öncesi sekmeyi koru.
+    // Kullanıcı analiz sürerken manuel olarak başka bir sekmeye geçtiyse kullanıcının seçimine saygı duy.
+    if (userInteractedTabRef.current) {
+      // Kullanıcı manuel geçiş yaptı, seçilen sekmede kal
+    } else if (analysisOriginTabRef.current) {
+      setActiveTab(analysisOriginTabRef.current);
+    }
+    analysisOriginTabRef.current = null;
+    userInteractedTabRef.current = false;
   };
 
   // Mühürlü PDF Rapor İndir
@@ -961,7 +985,7 @@ export default function CaseWorkstationPage() {
                 <button
                   key={tab.id}
                   type="button"
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => handleTabChange(tab.id)}
                   title={`${tab.stepNumber}. ${tab.title}`}
                   className={`w-full flex items-center rounded-xl transition-all duration-200 group text-left ${
                     isSidebarOpen ? "px-3 py-2.5 gap-3" : "p-2.5 justify-center"
@@ -1031,7 +1055,7 @@ export default function CaseWorkstationPage() {
                   <button
                     key={tab.id}
                     type="button"
-                    onClick={() => setActiveTab(tab.id)}
+                    onClick={() => handleTabChange(tab.id)}
                     className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 flex items-center gap-2 ${
                       isActive
                         ? "bg-gradient-to-r from-[#7B1E34] to-[#5C1425] text-[#FAF7F0] shadow-md border border-[#B8A484]/40 ring-1 ring-[#D4C5A9]/30"
@@ -1081,7 +1105,7 @@ export default function CaseWorkstationPage() {
               onClearAllReferences={handleClearAllReferences}
               pipelineResult={pipelineResult}
               onRunPipeline={handleRunFullPipeline}
-              onNavigateTab={(tabId) => setActiveTab(tabId as WorkflowTab)}
+              onNavigateTab={(tabId) => handleTabChange(tabId as WorkflowTab)}
             />
           )}
 
@@ -1107,7 +1131,7 @@ export default function CaseWorkstationPage() {
             <BiometricTab
               caseId={caseId}
               hasSamples={hasSamples}
-              onNavigateMicroscopy={() => setActiveTab("microscopy")}
+              onNavigateMicroscopy={() => handleTabChange("microscopy")}
             />
           )}
 
