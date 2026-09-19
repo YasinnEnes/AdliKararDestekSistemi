@@ -1,0 +1,738 @@
+{
+  "dataset_name": "BHSig-260",
+  "metadata": {
+    "zip_name": "BHSig-260.zip",
+    "type": "signature",
+    "language": "bengali_hindi"
+  },
+  "dry_run": true,
+  "summary": {
+    "total_writers": 4,
+    "train_writers_count": 2,
+    "val_writers_count": 1,
+    "test_writers_count": 1,
+    "train_samples_count": 60,
+    "val_samples_count": 10,
+    "test_samples_count": 30
+  },
+  "writers": {
+    "train": [
+      "BHSig_B-S-100",
+      "BHSig_B-S-10"
+    ],
+    "val": [
+      "BHSig_B-S-11"
+    ],
+    "test": [
+      "BHSig_B-S-1"
+    ]
+  },
+  "splits": {
+    "train": [
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-01",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-01.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-02",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-02.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-03",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-03.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-04",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-04.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-05",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-05.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-06",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-06.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-07",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-07.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-08",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-08.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-09",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-09.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-10",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-10.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-11",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-11.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-12",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-12.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-13",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-13.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-14",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-14.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-15",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-15.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-16",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-16.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-17",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-17.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-18",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-18.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-19",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-19.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-20",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-20.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-21",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-21.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-22",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-22.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-23",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-23.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-24",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-24.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-25",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-25.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-26",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-26.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-27",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-27.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-28",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-28.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-29",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-29.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-100_B-S-100-F-30",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-100-F-30.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-100"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-01",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-01.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-02",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-02.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-03",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-03.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-04",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-04.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-05",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-05.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-06",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-06.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-07",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-07.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-08",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-08.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-09",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-09.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-10",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-10.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-11",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-11.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-12",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-12.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-13",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-13.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-14",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-14.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-15",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-15.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-16",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-16.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-17",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-17.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-18",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-18.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-19",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-19.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-20",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-20.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-21",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-21.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-22",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-22.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-23",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-23.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-24",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-24.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-25",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-25.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-26",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-26.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-27",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-27.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-28",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-28.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-29",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-29.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      },
+      {
+        "sample_id": "BHSig_B-S-10_B-S-10-F-30",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-10-F-30.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-10"
+      }
+    ],
+    "val": [
+      {
+        "sample_id": "BHSig_B-S-11_B-S-11-F-01",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-11-F-01.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-11"
+      },
+      {
+        "sample_id": "BHSig_B-S-11_B-S-11-F-02",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-11-F-02.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-11"
+      },
+      {
+        "sample_id": "BHSig_B-S-11_B-S-11-F-03",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-11-F-03.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-11"
+      },
+      {
+        "sample_id": "BHSig_B-S-11_B-S-11-F-04",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-11-F-04.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-11"
+      },
+      {
+        "sample_id": "BHSig_B-S-11_B-S-11-F-05",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-11-F-05.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-11"
+      },
+      {
+        "sample_id": "BHSig_B-S-11_B-S-11-F-06",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-11-F-06.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-11"
+      },
+      {
+        "sample_id": "BHSig_B-S-11_B-S-11-F-07",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-11-F-07.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-11"
+      },
+      {
+        "sample_id": "BHSig_B-S-11_B-S-11-F-08",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-11-F-08.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-11"
+      },
+      {
+        "sample_id": "BHSig_B-S-11_B-S-11-F-09",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-11-F-09.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-11"
+      },
+      {
+        "sample_id": "BHSig_B-S-11_B-S-11-F-10",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-11-F-10.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-11"
+      }
+    ],
+    "test": [
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-01",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-01.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-02",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-02.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-03",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-03.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-04",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-04.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-05",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-05.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-06",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-06.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-07",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-07.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-08",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-08.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-09",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-09.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-10",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-10.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-11",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-11.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-12",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-12.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-13",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-13.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-14",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-14.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-15",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-15.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-16",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-16.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-17",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-17.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-18",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-18.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-19",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-19.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-20",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-20.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-21",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-21.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-22",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-22.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-23",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-23.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-24",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-24.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-25",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-25.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-26",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-26.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-27",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-27.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-28",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-28.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-29",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-29.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      },
+      {
+        "sample_id": "BHSig_B-S-1_B-S-1-F-30",
+        "relative_path": "Reconstructed_BHSig100-20250403T193101Z-001/Reconstructed_BHSig100/Forged/B-S-1-F-30.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "BHSig_B-S-1"
+      }
+    ]
+  }
+}

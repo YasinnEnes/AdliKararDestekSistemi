@@ -1,0 +1,735 @@
+{
+  "dataset_name": "CVL Database",
+  "metadata": {
+    "zip_name": "CVL Database.zip",
+    "type": "handwriting",
+    "language": "multilingual"
+  },
+  "dry_run": true,
+  "summary": {
+    "total_writers": 3,
+    "train_writers_count": 2,
+    "val_writers_count": 0,
+    "test_writers_count": 1,
+    "train_samples_count": 75,
+    "val_samples_count": 0,
+    "test_samples_count": 25
+  },
+  "writers": {
+    "train": [
+      "CVL_W_0002",
+      "CVL_W_0001"
+    ],
+    "val": [],
+    "test": [
+      "CVL_W_0003"
+    ]
+  },
+  "splits": {
+    "train": [
+      {
+        "sample_id": "CVL_W_0002_0002-1-0",
+        "relative_path": "0002-1-0.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-1-1",
+        "relative_path": "0002-1-1.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-1-2",
+        "relative_path": "0002-1-2.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-1-3",
+        "relative_path": "0002-1-3.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-1-4",
+        "relative_path": "0002-1-4.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-1-5",
+        "relative_path": "0002-1-5.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-1-6",
+        "relative_path": "0002-1-6.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-1-7",
+        "relative_path": "0002-1-7.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-1-8",
+        "relative_path": "0002-1-8.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-1-9",
+        "relative_path": "0002-1-9.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-2-0",
+        "relative_path": "0002-2-0.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-2-1",
+        "relative_path": "0002-2-1.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-2-2",
+        "relative_path": "0002-2-2.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-2-3",
+        "relative_path": "0002-2-3.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-2-4",
+        "relative_path": "0002-2-4.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-2-5",
+        "relative_path": "0002-2-5.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-4-0",
+        "relative_path": "0002-4-0.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-4-1",
+        "relative_path": "0002-4-1.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-4-2",
+        "relative_path": "0002-4-2.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-4-3",
+        "relative_path": "0002-4-3.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-4-4",
+        "relative_path": "0002-4-4.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-7-0",
+        "relative_path": "0002-7-0.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-7-1",
+        "relative_path": "0002-7-1.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-7-2",
+        "relative_path": "0002-7-2.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-7-3",
+        "relative_path": "0002-7-3.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-7-4",
+        "relative_path": "0002-7-4.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-7-5",
+        "relative_path": "0002-7-5.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-7-6",
+        "relative_path": "0002-7-6.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-8-0",
+        "relative_path": "0002-8-0.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-8-1",
+        "relative_path": "0002-8-1.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-8-2",
+        "relative_path": "0002-8-2.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-8-3",
+        "relative_path": "0002-8-3.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-8-4",
+        "relative_path": "0002-8-4.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-8-5",
+        "relative_path": "0002-8-5.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0002_0002-8-6",
+        "relative_path": "0002-8-6.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0002"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-1-0",
+        "relative_path": "0001-1-0.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-1-1",
+        "relative_path": "0001-1-1.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-1-2",
+        "relative_path": "0001-1-2.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-1-3",
+        "relative_path": "0001-1-3.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-1-4",
+        "relative_path": "0001-1-4.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-1-5",
+        "relative_path": "0001-1-5.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-1-6",
+        "relative_path": "0001-1-6.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-1-7",
+        "relative_path": "0001-1-7.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-1-8",
+        "relative_path": "0001-1-8.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-1-9",
+        "relative_path": "0001-1-9.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-2-0",
+        "relative_path": "0001-2-0.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-2-1",
+        "relative_path": "0001-2-1.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-2-2",
+        "relative_path": "0001-2-2.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-2-3",
+        "relative_path": "0001-2-3.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-2-4",
+        "relative_path": "0001-2-4.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-2-5",
+        "relative_path": "0001-2-5.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-4-0",
+        "relative_path": "0001-4-0.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-4-1",
+        "relative_path": "0001-4-1.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-4-2",
+        "relative_path": "0001-4-2.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-4-3",
+        "relative_path": "0001-4-3.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-4-4",
+        "relative_path": "0001-4-4.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-4-5",
+        "relative_path": "0001-4-5.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-7-0",
+        "relative_path": "0001-7-0.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-7-1",
+        "relative_path": "0001-7-1.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-7-2",
+        "relative_path": "0001-7-2.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-7-3",
+        "relative_path": "0001-7-3.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-7-4",
+        "relative_path": "0001-7-4.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-7-5",
+        "relative_path": "0001-7-5.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-7-6",
+        "relative_path": "0001-7-6.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-7-7",
+        "relative_path": "0001-7-7.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-8-0",
+        "relative_path": "0001-8-0.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-8-1",
+        "relative_path": "0001-8-1.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-8-2",
+        "relative_path": "0001-8-2.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-8-3",
+        "relative_path": "0001-8-3.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-8-4",
+        "relative_path": "0001-8-4.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-8-5",
+        "relative_path": "0001-8-5.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-8-6",
+        "relative_path": "0001-8-6.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-8-7",
+        "relative_path": "0001-8-7.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-8-8",
+        "relative_path": "0001-8-8.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      },
+      {
+        "sample_id": "CVL_W_0001_0001-8-9",
+        "relative_path": "0001-8-9.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0001"
+      }
+    ],
+    "val": [],
+    "test": [
+      {
+        "sample_id": "CVL_W_0003_0003-1-0",
+        "relative_path": "0003-1-0.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-1-1",
+        "relative_path": "0003-1-1.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-1-2",
+        "relative_path": "0003-1-2.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-1-3",
+        "relative_path": "0003-1-3.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-1-4",
+        "relative_path": "0003-1-4.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-1-5",
+        "relative_path": "0003-1-5.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-1-6",
+        "relative_path": "0003-1-6.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-1-7",
+        "relative_path": "0003-1-7.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-2-0",
+        "relative_path": "0003-2-0.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-2-1",
+        "relative_path": "0003-2-1.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-2-2",
+        "relative_path": "0003-2-2.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-2-3",
+        "relative_path": "0003-2-3.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-2-4",
+        "relative_path": "0003-2-4.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-2-5",
+        "relative_path": "0003-2-5.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-4-0",
+        "relative_path": "0003-4-0.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-4-1",
+        "relative_path": "0003-4-1.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-4-2",
+        "relative_path": "0003-4-2.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-4-3",
+        "relative_path": "0003-4-3.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-4-4",
+        "relative_path": "0003-4-4.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-7-0",
+        "relative_path": "0003-7-0.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-7-1",
+        "relative_path": "0003-7-1.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-7-2",
+        "relative_path": "0003-7-2.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-7-3",
+        "relative_path": "0003-7-3.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-7-4",
+        "relative_path": "0003-7-4.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      },
+      {
+        "sample_id": "CVL_W_0003_0003-7-5",
+        "relative_path": "0003-7-5.jpg",
+        "is_forgery": false,
+        "extension": ".jpg",
+        "writer_id": "CVL_W_0003"
+      }
+    ]
+  }
+}

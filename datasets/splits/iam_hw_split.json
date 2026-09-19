@@ -1,0 +1,734 @@
+{
+  "dataset_name": "IAM_HW",
+  "metadata": {
+    "zip_name": "iam_handwriting.zip",
+    "type": "handwriting",
+    "language": "english"
+  },
+  "dry_run": true,
+  "summary": {
+    "total_writers": 2,
+    "train_writers_count": 1,
+    "val_writers_count": 0,
+    "test_writers_count": 1,
+    "train_samples_count": 99,
+    "val_samples_count": 0,
+    "test_samples_count": 1
+  },
+  "writers": {
+    "train": [
+      "IAM_W_a01"
+    ],
+    "val": [],
+    "test": [
+      "IAM_HW_W_001"
+    ]
+  },
+  "splits": {
+    "train": [
+      {
+        "sample_id": "IAM_W_a01_a01-000u-00-00",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-00-00.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-00-01",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-00-01.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-00-02",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-00-02.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-00-03",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-00-03.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-00-04",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-00-04.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-00-05",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-00-05.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-00-06",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-00-06.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-01-00",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-01-00.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-01-01",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-01-01.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-01-02",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-01-02.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-01-03",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-01-03.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-01-04",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-01-04.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-01-05",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-01-05.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-02-00",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-02-00.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-02-01",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-02-01.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-02-02",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-02-02.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-02-03",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-02-03.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-02-04",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-02-04.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-02-05",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-02-05.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-02-06",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-02-06.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-02-07",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-02-07.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-02-08",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-02-08.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-03-00",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-03-00.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-03-01",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-03-01.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-03-02",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-03-02.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-03-03",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-03-03.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-03-04",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-03-04.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-03-05",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-03-05.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-03-06",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-03-06.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-04-00",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-04-00.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-04-01",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-04-01.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-04-02",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-04-02.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-04-03",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-04-03.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-04-04",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-04-04.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-04-05",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-04-05.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-04-06",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-04-06.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-05-00",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-05-00.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-05-01",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-05-01.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-05-02",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-05-02.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-05-03",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-05-03.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-05-04",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-05-04.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-05-05",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-05-05.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-05-06",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-05-06.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-05-07",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-05-07.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-05-08",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-05-08.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-06-00",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-06-00.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-06-01",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-06-01.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-06-02",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-06-02.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-06-03",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-06-03.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-06-04",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-06-04.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-06-05",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-06-05.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000u-06-06",
+        "relative_path": "iam_words/words/a01/a01-000u/a01-000u-06-06.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-00-00",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-00-00.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-00-01",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-00-01.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-00-02",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-00-02.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-00-03",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-00-03.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-00-04",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-00-04.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-00-05",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-00-05.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-00-06",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-00-06.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-00-07",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-00-07.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-01-00",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-01-00.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-01-01",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-01-01.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-01-02",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-01-02.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-01-03",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-01-03.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-01-04",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-01-04.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-01-05",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-01-05.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-01-06",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-01-06.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-01-07",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-01-07.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-01-08",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-01-08.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-01-09",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-01-09.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-01-10",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-01-10.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-02-00",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-02-00.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-02-01",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-02-01.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-02-02",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-02-02.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-02-03",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-02-03.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-02-04",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-02-04.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-02-05",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-02-05.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-02-06",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-02-06.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-02-07",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-02-07.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-03-00",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-03-00.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-03-01",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-03-01.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-03-02",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-03-02.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-03-03",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-03-03.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-03-04",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-03-04.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-03-05",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-03-05.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-03-06",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-03-06.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-03-07",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-03-07.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-03-08",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-03-08.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-04-00",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-04-00.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-04-01",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-04-01.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-04-02",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-04-02.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-04-03",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-04-03.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-04-04",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-04-04.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-04-05",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-04-05.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-04-06",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-04-06.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-04-07",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-04-07.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-04-08",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-04-08.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-04-09",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-04-09.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      },
+      {
+        "sample_id": "IAM_W_a01_a01-000x-04-10",
+        "relative_path": "iam_words/words/a01/a01-000x/a01-000x-04-10.png",
+        "is_forgery": false,
+        "extension": ".png",
+        "writer_id": "IAM_W_a01"
+      }
+    ],
+    "val": [],
+    "test": [
+      {
+        "sample_id": "IAM_HW_W_001_words",
+        "relative_path": "iam_words/words.txt",
+        "is_forgery": false,
+        "extension": ".txt",
+        "writer_id": "IAM_HW_W_001"
+      }
+    ]
+  }
+}

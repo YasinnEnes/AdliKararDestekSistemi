@@ -1,0 +1,768 @@
+{
+  "dataset_name": "UTSig",
+  "metadata": {
+    "zip_name": "UTSig.zip",
+    "type": "signature",
+    "language": "persian"
+  },
+  "dry_run": true,
+  "summary": {
+    "total_writers": 34,
+    "train_writers_count": 23,
+    "val_writers_count": 5,
+    "test_writers_count": 6,
+    "train_samples_count": 69,
+    "val_samples_count": 15,
+    "test_samples_count": 16
+  },
+  "writers": {
+    "train": [
+      "UTSig_W_013",
+      "UTSig_W_101",
+      "UTSig_W_102",
+      "UTSig_W_020",
+      "UTSig_W_106",
+      "UTSig_W_110",
+      "UTSig_W_023",
+      "UTSig_W_018",
+      "UTSig_W_024",
+      "UTSig_W_019",
+      "UTSig_W_108",
+      "UTSig_W_022",
+      "UTSig_W_107",
+      "UTSig_W_017",
+      "UTSig_W_016",
+      "UTSig_W_111",
+      "UTSig_W_014",
+      "UTSig_W_104",
+      "UTSig_W_001",
+      "UTSig_W_114",
+      "UTSig_W_021",
+      "UTSig_W_100",
+      "UTSig_W_010"
+    ],
+    "val": [
+      "UTSig_W_113",
+      "UTSig_W_109",
+      "UTSig_W_103",
+      "UTSig_W_011",
+      "UTSig_W_105"
+    ],
+    "test": [
+      "UTSig_W_012",
+      "UTSig_W_112",
+      "UTSig_W_115",
+      "UTSig_W_025",
+      "UTSig_W_002",
+      "UTSig_W_015"
+    ]
+  },
+  "splits": {
+    "train": [
+      {
+        "sample_id": "UTSig_W_013_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/13/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_013"
+      },
+      {
+        "sample_id": "UTSig_W_013_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/13/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_013"
+      },
+      {
+        "sample_id": "UTSig_W_013_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/13/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_013"
+      },
+      {
+        "sample_id": "UTSig_W_101_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/101/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_101"
+      },
+      {
+        "sample_id": "UTSig_W_101_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/101/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_101"
+      },
+      {
+        "sample_id": "UTSig_W_101_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/101/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_101"
+      },
+      {
+        "sample_id": "UTSig_W_102_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/102/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_102"
+      },
+      {
+        "sample_id": "UTSig_W_102_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/102/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_102"
+      },
+      {
+        "sample_id": "UTSig_W_102_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/102/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_102"
+      },
+      {
+        "sample_id": "UTSig_W_020_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/20/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_020"
+      },
+      {
+        "sample_id": "UTSig_W_020_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/20/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_020"
+      },
+      {
+        "sample_id": "UTSig_W_020_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/20/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_020"
+      },
+      {
+        "sample_id": "UTSig_W_106_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/106/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_106"
+      },
+      {
+        "sample_id": "UTSig_W_106_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/106/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_106"
+      },
+      {
+        "sample_id": "UTSig_W_106_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/106/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_106"
+      },
+      {
+        "sample_id": "UTSig_W_110_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/110/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_110"
+      },
+      {
+        "sample_id": "UTSig_W_110_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/110/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_110"
+      },
+      {
+        "sample_id": "UTSig_W_110_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/110/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_110"
+      },
+      {
+        "sample_id": "UTSig_W_023_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/23/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_023"
+      },
+      {
+        "sample_id": "UTSig_W_023_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/23/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_023"
+      },
+      {
+        "sample_id": "UTSig_W_023_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/23/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_023"
+      },
+      {
+        "sample_id": "UTSig_W_018_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/18/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_018"
+      },
+      {
+        "sample_id": "UTSig_W_018_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/18/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_018"
+      },
+      {
+        "sample_id": "UTSig_W_018_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/18/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_018"
+      },
+      {
+        "sample_id": "UTSig_W_024_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/24/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_024"
+      },
+      {
+        "sample_id": "UTSig_W_024_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/24/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_024"
+      },
+      {
+        "sample_id": "UTSig_W_024_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/24/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_024"
+      },
+      {
+        "sample_id": "UTSig_W_019_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/19/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_019"
+      },
+      {
+        "sample_id": "UTSig_W_019_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/19/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_019"
+      },
+      {
+        "sample_id": "UTSig_W_019_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/19/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_019"
+      },
+      {
+        "sample_id": "UTSig_W_108_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/108/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_108"
+      },
+      {
+        "sample_id": "UTSig_W_108_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/108/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_108"
+      },
+      {
+        "sample_id": "UTSig_W_108_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/108/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_108"
+      },
+      {
+        "sample_id": "UTSig_W_022_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/22/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_022"
+      },
+      {
+        "sample_id": "UTSig_W_022_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/22/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_022"
+      },
+      {
+        "sample_id": "UTSig_W_022_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/22/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_022"
+      },
+      {
+        "sample_id": "UTSig_W_107_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/107/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_107"
+      },
+      {
+        "sample_id": "UTSig_W_107_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/107/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_107"
+      },
+      {
+        "sample_id": "UTSig_W_107_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/107/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_107"
+      },
+      {
+        "sample_id": "UTSig_W_017_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/17/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_017"
+      },
+      {
+        "sample_id": "UTSig_W_017_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/17/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_017"
+      },
+      {
+        "sample_id": "UTSig_W_017_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/17/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_017"
+      },
+      {
+        "sample_id": "UTSig_W_016_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/16/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_016"
+      },
+      {
+        "sample_id": "UTSig_W_016_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/16/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_016"
+      },
+      {
+        "sample_id": "UTSig_W_016_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/16/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_016"
+      },
+      {
+        "sample_id": "UTSig_W_111_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/111/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_111"
+      },
+      {
+        "sample_id": "UTSig_W_111_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/111/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_111"
+      },
+      {
+        "sample_id": "UTSig_W_111_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/111/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_111"
+      },
+      {
+        "sample_id": "UTSig_W_014_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/14/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_014"
+      },
+      {
+        "sample_id": "UTSig_W_014_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/14/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_014"
+      },
+      {
+        "sample_id": "UTSig_W_014_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/14/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_014"
+      },
+      {
+        "sample_id": "UTSig_W_104_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/104/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_104"
+      },
+      {
+        "sample_id": "UTSig_W_104_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/104/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_104"
+      },
+      {
+        "sample_id": "UTSig_W_104_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/104/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_104"
+      },
+      {
+        "sample_id": "UTSig_W_001_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/1/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_001"
+      },
+      {
+        "sample_id": "UTSig_W_001_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/1/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_001"
+      },
+      {
+        "sample_id": "UTSig_W_001_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/1/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_001"
+      },
+      {
+        "sample_id": "UTSig_W_114_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/114/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_114"
+      },
+      {
+        "sample_id": "UTSig_W_114_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/114/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_114"
+      },
+      {
+        "sample_id": "UTSig_W_114_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/114/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_114"
+      },
+      {
+        "sample_id": "UTSig_W_021_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/21/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_021"
+      },
+      {
+        "sample_id": "UTSig_W_021_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/21/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_021"
+      },
+      {
+        "sample_id": "UTSig_W_021_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/21/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_021"
+      },
+      {
+        "sample_id": "UTSig_W_100_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/100/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_100"
+      },
+      {
+        "sample_id": "UTSig_W_100_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/100/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_100"
+      },
+      {
+        "sample_id": "UTSig_W_100_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/100/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_100"
+      },
+      {
+        "sample_id": "UTSig_W_010_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/10/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_010"
+      },
+      {
+        "sample_id": "UTSig_W_010_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/10/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_010"
+      },
+      {
+        "sample_id": "UTSig_W_010_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/10/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_010"
+      }
+    ],
+    "val": [
+      {
+        "sample_id": "UTSig_W_113_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/113/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_113"
+      },
+      {
+        "sample_id": "UTSig_W_113_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/113/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_113"
+      },
+      {
+        "sample_id": "UTSig_W_113_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/113/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_113"
+      },
+      {
+        "sample_id": "UTSig_W_109_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/109/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_109"
+      },
+      {
+        "sample_id": "UTSig_W_109_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/109/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_109"
+      },
+      {
+        "sample_id": "UTSig_W_109_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/109/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_109"
+      },
+      {
+        "sample_id": "UTSig_W_103_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/103/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_103"
+      },
+      {
+        "sample_id": "UTSig_W_103_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/103/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_103"
+      },
+      {
+        "sample_id": "UTSig_W_103_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/103/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_103"
+      },
+      {
+        "sample_id": "UTSig_W_011_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/11/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_011"
+      },
+      {
+        "sample_id": "UTSig_W_011_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/11/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_011"
+      },
+      {
+        "sample_id": "UTSig_W_011_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/11/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_011"
+      },
+      {
+        "sample_id": "UTSig_W_105_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/105/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_105"
+      },
+      {
+        "sample_id": "UTSig_W_105_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/105/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_105"
+      },
+      {
+        "sample_id": "UTSig_W_105_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/105/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_105"
+      }
+    ],
+    "test": [
+      {
+        "sample_id": "UTSig_W_012_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/12/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_012"
+      },
+      {
+        "sample_id": "UTSig_W_012_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/12/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_012"
+      },
+      {
+        "sample_id": "UTSig_W_012_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/12/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_012"
+      },
+      {
+        "sample_id": "UTSig_W_112_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/112/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_112"
+      },
+      {
+        "sample_id": "UTSig_W_112_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/112/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_112"
+      },
+      {
+        "sample_id": "UTSig_W_112_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/112/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_112"
+      },
+      {
+        "sample_id": "UTSig_W_115_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/115/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_115"
+      },
+      {
+        "sample_id": "UTSig_W_115_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/115/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_115"
+      },
+      {
+        "sample_id": "UTSig_W_115_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/115/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_115"
+      },
+      {
+        "sample_id": "UTSig_W_025_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/25/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_025"
+      },
+      {
+        "sample_id": "UTSig_W_002_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/2/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_002"
+      },
+      {
+        "sample_id": "UTSig_W_002_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/2/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_002"
+      },
+      {
+        "sample_id": "UTSig_W_002_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/2/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_002"
+      },
+      {
+        "sample_id": "UTSig_W_015_1",
+        "relative_path": "UTSig/Forgery/Opposite Hand/15/1.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_015"
+      },
+      {
+        "sample_id": "UTSig_W_015_2",
+        "relative_path": "UTSig/Forgery/Opposite Hand/15/2.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_015"
+      },
+      {
+        "sample_id": "UTSig_W_015_3",
+        "relative_path": "UTSig/Forgery/Opposite Hand/15/3.tif",
+        "is_forgery": true,
+        "extension": ".tif",
+        "writer_id": "UTSig_W_015"
+      }
+    ]
+  }
+}

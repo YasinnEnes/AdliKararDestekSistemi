@@ -1,0 +1,754 @@
+{
+  "dataset_name": "SVC2004",
+  "metadata": {
+    "zip_name": "SVC2004_task1.zip",
+    "type": "dynamic_trajectory",
+    "language": "english_chinese"
+  },
+  "dry_run": true,
+  "summary": {
+    "total_writers": 20,
+    "train_writers_count": 14,
+    "val_writers_count": 3,
+    "test_writers_count": 3,
+    "train_samples_count": 70,
+    "val_samples_count": 15,
+    "test_samples_count": 15
+  },
+  "writers": {
+    "train": [
+      "SVC_W_nUser27",
+      "SVC_W_nUser14",
+      "SVC_W_nUser22",
+      "SVC_W_nUser13",
+      "SVC_W_nUser18",
+      "SVC_W_nUser21",
+      "SVC_W_nUser23",
+      "SVC_W_nUser26",
+      "SVC_W_nUser15",
+      "SVC_W_nUser20",
+      "SVC_W_nUser25",
+      "SVC_W_nUser19",
+      "SVC_W_nUser10",
+      "SVC_W_nUser2"
+    ],
+    "val": [
+      "SVC_W_nUser11",
+      "SVC_W_nUser24",
+      "SVC_W_nUser16"
+    ],
+    "test": [
+      "SVC_W_nUser17",
+      "SVC_W_nUser1",
+      "SVC_W_nUser12"
+    ]
+  },
+  "splits": {
+    "train": [
+      {
+        "sample_id": "SVC_W_nUser27_USER27-2-1tra",
+        "relative_path": "nUser27/USER27-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser27"
+      },
+      {
+        "sample_id": "SVC_W_nUser27_USER27-2-1tst",
+        "relative_path": "nUser27/USER27-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser27"
+      },
+      {
+        "sample_id": "SVC_W_nUser27_USER27-2-2tra",
+        "relative_path": "nUser27/USER27-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser27"
+      },
+      {
+        "sample_id": "SVC_W_nUser27_USER27-2-2tst",
+        "relative_path": "nUser27/USER27-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser27"
+      },
+      {
+        "sample_id": "SVC_W_nUser27_USER27",
+        "relative_path": "nUser27/USER27.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser27"
+      },
+      {
+        "sample_id": "SVC_W_nUser14_USER14-2-1tra",
+        "relative_path": "nUser14/USER14-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser14"
+      },
+      {
+        "sample_id": "SVC_W_nUser14_USER14-2-1tst",
+        "relative_path": "nUser14/USER14-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser14"
+      },
+      {
+        "sample_id": "SVC_W_nUser14_USER14-2-2tra",
+        "relative_path": "nUser14/USER14-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser14"
+      },
+      {
+        "sample_id": "SVC_W_nUser14_USER14-2-2tst",
+        "relative_path": "nUser14/USER14-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser14"
+      },
+      {
+        "sample_id": "SVC_W_nUser14_USER14",
+        "relative_path": "nUser14/USER14.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser14"
+      },
+      {
+        "sample_id": "SVC_W_nUser22_USER22-2-1tra",
+        "relative_path": "nUser22/USER22-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser22"
+      },
+      {
+        "sample_id": "SVC_W_nUser22_USER22-2-1tst",
+        "relative_path": "nUser22/USER22-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser22"
+      },
+      {
+        "sample_id": "SVC_W_nUser22_USER22-2-2tra",
+        "relative_path": "nUser22/USER22-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser22"
+      },
+      {
+        "sample_id": "SVC_W_nUser22_USER22-2-2tst",
+        "relative_path": "nUser22/USER22-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser22"
+      },
+      {
+        "sample_id": "SVC_W_nUser22_USER22",
+        "relative_path": "nUser22/USER22.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser22"
+      },
+      {
+        "sample_id": "SVC_W_nUser13_USER13-2-1tra",
+        "relative_path": "nUser13/USER13-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser13"
+      },
+      {
+        "sample_id": "SVC_W_nUser13_USER13-2-1tst",
+        "relative_path": "nUser13/USER13-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser13"
+      },
+      {
+        "sample_id": "SVC_W_nUser13_USER13-2-2tra",
+        "relative_path": "nUser13/USER13-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser13"
+      },
+      {
+        "sample_id": "SVC_W_nUser13_USER13-2-2tst",
+        "relative_path": "nUser13/USER13-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser13"
+      },
+      {
+        "sample_id": "SVC_W_nUser13_USER13",
+        "relative_path": "nUser13/USER13.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser13"
+      },
+      {
+        "sample_id": "SVC_W_nUser18_USER18-2-1tra",
+        "relative_path": "nUser18/USER18-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser18"
+      },
+      {
+        "sample_id": "SVC_W_nUser18_USER18-2-1tst",
+        "relative_path": "nUser18/USER18-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser18"
+      },
+      {
+        "sample_id": "SVC_W_nUser18_USER18-2-2tra",
+        "relative_path": "nUser18/USER18-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser18"
+      },
+      {
+        "sample_id": "SVC_W_nUser18_USER18-2-2tst",
+        "relative_path": "nUser18/USER18-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser18"
+      },
+      {
+        "sample_id": "SVC_W_nUser18_USER18",
+        "relative_path": "nUser18/USER18.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser18"
+      },
+      {
+        "sample_id": "SVC_W_nUser21_USER21-2-1tra",
+        "relative_path": "nUser21/USER21-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser21"
+      },
+      {
+        "sample_id": "SVC_W_nUser21_USER21-2-1tst",
+        "relative_path": "nUser21/USER21-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser21"
+      },
+      {
+        "sample_id": "SVC_W_nUser21_USER21-2-2tra",
+        "relative_path": "nUser21/USER21-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser21"
+      },
+      {
+        "sample_id": "SVC_W_nUser21_USER21-2-2tst",
+        "relative_path": "nUser21/USER21-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser21"
+      },
+      {
+        "sample_id": "SVC_W_nUser21_USER21",
+        "relative_path": "nUser21/USER21.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser21"
+      },
+      {
+        "sample_id": "SVC_W_nUser23_USER23-2-1tra",
+        "relative_path": "nUser23/USER23-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser23"
+      },
+      {
+        "sample_id": "SVC_W_nUser23_USER23-2-1tst",
+        "relative_path": "nUser23/USER23-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser23"
+      },
+      {
+        "sample_id": "SVC_W_nUser23_USER23-2-2tra",
+        "relative_path": "nUser23/USER23-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser23"
+      },
+      {
+        "sample_id": "SVC_W_nUser23_USER23-2-2tst",
+        "relative_path": "nUser23/USER23-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser23"
+      },
+      {
+        "sample_id": "SVC_W_nUser23_USER23",
+        "relative_path": "nUser23/USER23.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser23"
+      },
+      {
+        "sample_id": "SVC_W_nUser26_USER26-2-1tra",
+        "relative_path": "nUser26/USER26-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser26"
+      },
+      {
+        "sample_id": "SVC_W_nUser26_USER26-2-1tst",
+        "relative_path": "nUser26/USER26-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser26"
+      },
+      {
+        "sample_id": "SVC_W_nUser26_USER26-2-2tra",
+        "relative_path": "nUser26/USER26-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser26"
+      },
+      {
+        "sample_id": "SVC_W_nUser26_USER26-2-2tst",
+        "relative_path": "nUser26/USER26-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser26"
+      },
+      {
+        "sample_id": "SVC_W_nUser26_USER26",
+        "relative_path": "nUser26/USER26.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser26"
+      },
+      {
+        "sample_id": "SVC_W_nUser15_USER15-2-1tra",
+        "relative_path": "nUser15/USER15-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser15"
+      },
+      {
+        "sample_id": "SVC_W_nUser15_USER15-2-1tst",
+        "relative_path": "nUser15/USER15-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser15"
+      },
+      {
+        "sample_id": "SVC_W_nUser15_USER15-2-2tra",
+        "relative_path": "nUser15/USER15-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser15"
+      },
+      {
+        "sample_id": "SVC_W_nUser15_USER15-2-2tst",
+        "relative_path": "nUser15/USER15-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser15"
+      },
+      {
+        "sample_id": "SVC_W_nUser15_USER15",
+        "relative_path": "nUser15/USER15.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser15"
+      },
+      {
+        "sample_id": "SVC_W_nUser20_USER20-2-1tra",
+        "relative_path": "nUser20/USER20-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser20"
+      },
+      {
+        "sample_id": "SVC_W_nUser20_USER20-2-1tst",
+        "relative_path": "nUser20/USER20-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser20"
+      },
+      {
+        "sample_id": "SVC_W_nUser20_USER20-2-2tra",
+        "relative_path": "nUser20/USER20-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser20"
+      },
+      {
+        "sample_id": "SVC_W_nUser20_USER20-2-2tst",
+        "relative_path": "nUser20/USER20-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser20"
+      },
+      {
+        "sample_id": "SVC_W_nUser20_USER20",
+        "relative_path": "nUser20/USER20.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser20"
+      },
+      {
+        "sample_id": "SVC_W_nUser25_USER25-2-1tra",
+        "relative_path": "nUser25/USER25-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser25"
+      },
+      {
+        "sample_id": "SVC_W_nUser25_USER25-2-1tst",
+        "relative_path": "nUser25/USER25-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser25"
+      },
+      {
+        "sample_id": "SVC_W_nUser25_USER25-2-2tra",
+        "relative_path": "nUser25/USER25-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser25"
+      },
+      {
+        "sample_id": "SVC_W_nUser25_USER25-2-2tst",
+        "relative_path": "nUser25/USER25-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser25"
+      },
+      {
+        "sample_id": "SVC_W_nUser25_USER25",
+        "relative_path": "nUser25/USER25.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser25"
+      },
+      {
+        "sample_id": "SVC_W_nUser19_USER19-2-1tra",
+        "relative_path": "nUser19/USER19-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser19"
+      },
+      {
+        "sample_id": "SVC_W_nUser19_USER19-2-1tst",
+        "relative_path": "nUser19/USER19-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser19"
+      },
+      {
+        "sample_id": "SVC_W_nUser19_USER19-2-2tra",
+        "relative_path": "nUser19/USER19-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser19"
+      },
+      {
+        "sample_id": "SVC_W_nUser19_USER19-2-2tst",
+        "relative_path": "nUser19/USER19-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser19"
+      },
+      {
+        "sample_id": "SVC_W_nUser19_USER19",
+        "relative_path": "nUser19/USER19.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser19"
+      },
+      {
+        "sample_id": "SVC_W_nUser10_USER10-2-1tra",
+        "relative_path": "nUser10/USER10-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser10"
+      },
+      {
+        "sample_id": "SVC_W_nUser10_USER10-2-1tst",
+        "relative_path": "nUser10/USER10-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser10"
+      },
+      {
+        "sample_id": "SVC_W_nUser10_USER10-2-2tra",
+        "relative_path": "nUser10/USER10-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser10"
+      },
+      {
+        "sample_id": "SVC_W_nUser10_USER10-2-2tst",
+        "relative_path": "nUser10/USER10-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser10"
+      },
+      {
+        "sample_id": "SVC_W_nUser10_USER10",
+        "relative_path": "nUser10/USER10.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser10"
+      },
+      {
+        "sample_id": "SVC_W_nUser2_USER2-2-1tra",
+        "relative_path": "nUser2/USER2-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser2"
+      },
+      {
+        "sample_id": "SVC_W_nUser2_USER2-2-1tst",
+        "relative_path": "nUser2/USER2-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser2"
+      },
+      {
+        "sample_id": "SVC_W_nUser2_USER2-2-2tra",
+        "relative_path": "nUser2/USER2-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser2"
+      },
+      {
+        "sample_id": "SVC_W_nUser2_USER2-2-2tst",
+        "relative_path": "nUser2/USER2-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser2"
+      },
+      {
+        "sample_id": "SVC_W_nUser2_USER2",
+        "relative_path": "nUser2/USER2.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser2"
+      }
+    ],
+    "val": [
+      {
+        "sample_id": "SVC_W_nUser11_USER11-2-1tra",
+        "relative_path": "nUser11/USER11-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser11"
+      },
+      {
+        "sample_id": "SVC_W_nUser11_USER11-2-1tst",
+        "relative_path": "nUser11/USER11-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser11"
+      },
+      {
+        "sample_id": "SVC_W_nUser11_USER11-2-2tra",
+        "relative_path": "nUser11/USER11-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser11"
+      },
+      {
+        "sample_id": "SVC_W_nUser11_USER11-2-2tst",
+        "relative_path": "nUser11/USER11-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser11"
+      },
+      {
+        "sample_id": "SVC_W_nUser11_USER11",
+        "relative_path": "nUser11/USER11.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser11"
+      },
+      {
+        "sample_id": "SVC_W_nUser24_USER24-2-1tra",
+        "relative_path": "nUser24/USER24-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser24"
+      },
+      {
+        "sample_id": "SVC_W_nUser24_USER24-2-1tst",
+        "relative_path": "nUser24/USER24-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser24"
+      },
+      {
+        "sample_id": "SVC_W_nUser24_USER24-2-2tra",
+        "relative_path": "nUser24/USER24-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser24"
+      },
+      {
+        "sample_id": "SVC_W_nUser24_USER24-2-2tst",
+        "relative_path": "nUser24/USER24-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser24"
+      },
+      {
+        "sample_id": "SVC_W_nUser24_USER24",
+        "relative_path": "nUser24/USER24.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser24"
+      },
+      {
+        "sample_id": "SVC_W_nUser16_USER16-2-1tra",
+        "relative_path": "nUser16/USER16-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser16"
+      },
+      {
+        "sample_id": "SVC_W_nUser16_USER16-2-1tst",
+        "relative_path": "nUser16/USER16-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser16"
+      },
+      {
+        "sample_id": "SVC_W_nUser16_USER16-2-2tra",
+        "relative_path": "nUser16/USER16-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser16"
+      },
+      {
+        "sample_id": "SVC_W_nUser16_USER16-2-2tst",
+        "relative_path": "nUser16/USER16-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser16"
+      },
+      {
+        "sample_id": "SVC_W_nUser16_USER16",
+        "relative_path": "nUser16/USER16.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser16"
+      }
+    ],
+    "test": [
+      {
+        "sample_id": "SVC_W_nUser17_USER17-2-1tra",
+        "relative_path": "nUser17/USER17-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser17"
+      },
+      {
+        "sample_id": "SVC_W_nUser17_USER17-2-1tst",
+        "relative_path": "nUser17/USER17-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser17"
+      },
+      {
+        "sample_id": "SVC_W_nUser17_USER17-2-2tra",
+        "relative_path": "nUser17/USER17-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser17"
+      },
+      {
+        "sample_id": "SVC_W_nUser17_USER17-2-2tst",
+        "relative_path": "nUser17/USER17-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser17"
+      },
+      {
+        "sample_id": "SVC_W_nUser17_USER17",
+        "relative_path": "nUser17/USER17.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser17"
+      },
+      {
+        "sample_id": "SVC_W_nUser1_USER1-2-1tra",
+        "relative_path": "nUser1/USER1-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser1"
+      },
+      {
+        "sample_id": "SVC_W_nUser1_USER1-2-1tst",
+        "relative_path": "nUser1/USER1-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser1"
+      },
+      {
+        "sample_id": "SVC_W_nUser1_USER1-2-2tra",
+        "relative_path": "nUser1/USER1-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser1"
+      },
+      {
+        "sample_id": "SVC_W_nUser1_USER1-2-2tst",
+        "relative_path": "nUser1/USER1-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser1"
+      },
+      {
+        "sample_id": "SVC_W_nUser1_USER1",
+        "relative_path": "nUser1/USER1.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser1"
+      },
+      {
+        "sample_id": "SVC_W_nUser12_USER12-2-1tra",
+        "relative_path": "nUser12/USER12-2-1tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser12"
+      },
+      {
+        "sample_id": "SVC_W_nUser12_USER12-2-1tst",
+        "relative_path": "nUser12/USER12-2-1tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser12"
+      },
+      {
+        "sample_id": "SVC_W_nUser12_USER12-2-2tra",
+        "relative_path": "nUser12/USER12-2-2tra.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser12"
+      },
+      {
+        "sample_id": "SVC_W_nUser12_USER12-2-2tst",
+        "relative_path": "nUser12/USER12-2-2tst.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser12"
+      },
+      {
+        "sample_id": "SVC_W_nUser12_USER12",
+        "relative_path": "nUser12/USER12.dat",
+        "is_forgery": false,
+        "extension": ".dat",
+        "writer_id": "SVC_W_nUser12"
+      }
+    ]
+  }
+}
