@@ -41,6 +41,9 @@ class ComparisonReport(BaseModel):
     preliminary_opinion: str = Field(..., description="Ön teknik kanaat özeti")
     reference_count: int = Field(..., description="Kullanılan referans belge sayısı")
     audit_hash_sha256: str = Field(..., description="Rapor bütünlük imzası")
+    covariance_method: Optional[str] = Field(default=None, description="Kovaryans kestirim yöntemi")
+    condition_number: Optional[float] = Field(default=None, description="Kovaryans matrisi koşul sayısı")
+    confidence_warning: Optional[str] = Field(default=None, description="Örneklem yetersizliği veya kovaryans belirsizlik uyarısı")
 
 
 class ForensicComparisonEngine:
@@ -104,6 +107,33 @@ class ForensicComparisonEngine:
         "acceleration_proxy": 0.12,
     }
 
+    # Sprint 31: Boyutsuz normalize oranlar için tolerans standart sapmaları
+    MIN_PRIOR_STD_NORM = {
+        "slant_angle_deg": 3.0,
+        "baseline_angle_deg": 2.5,
+        "baseline_deviation_px": 0.040,   # %4.0 yazı yüksekliği toleransı
+        "loop_count": 0.8,
+        "crossing_count": 2.0,
+        "terminal_count": 2.0,
+        "avg_stroke_length_px": 0.120,    # %12.0 köşegen uzunluk toleransı
+        "inter_stroke_spacing_px": 0.060, # %6.0 genişlik aralık toleransı
+        "tremor_index_psd": 0.10,
+        "smoothness_energy": 0.12,
+        "mean_velocity_proxy": 0.20,
+        "velocity_variance_proxy": 0.15,
+        "acceleration_proxy": 0.12,
+    }
+
+    def _get_min_prior_std(self, key: str, mean_val: float) -> float:
+        """Piksel veya normalize oran rejimine göre doğru asgari standart sapmayı döner."""
+        if key == "baseline_deviation_px" and abs(mean_val) < 1.0:
+            return self.MIN_PRIOR_STD_NORM.get(key, 0.040)
+        elif key == "avg_stroke_length_px" and abs(mean_val) < 2.0:
+            return self.MIN_PRIOR_STD_NORM.get(key, 0.120)
+        elif key == "inter_stroke_spacing_px" and abs(mean_val) < 1.0:
+            return self.MIN_PRIOR_STD_NORM.get(key, 0.060)
+        return self.MIN_PRIOR_STD.get(key, 1.0)
+
     def _to_vector(self, item: Union[ForensicFeatureReport, List[float], np.ndarray, Dict[str, Any]]) -> np.ndarray:
         """Girdi formatını normalize numpy vektörüne dönüştürür."""
         if isinstance(item, ForensicFeatureReport):
@@ -126,46 +156,98 @@ class ForensicComparisonEngine:
         regularization_lambda: Optional[float] = None,
     ) -> float:
         """
-        Sprint 16.8: Ledoit-Wolf ve Tikhonov Düzenlileştirmeli Kararlı Mahalanobis Mesafesi.
-        2-3 numune, tekil numune veya özdeş numunelerde tekil matris (singular matrix)
-        oluşmasını ve LinAlgError istisnalarını kesin olarak önler.
+        Sprint 31 P0 Düzeltmesi: N=1, N=2 ve N>=3 için Kararlı, Düzenlileştirilmiş Mahalanobis Mesafesi.
+        Rank-1 tekil matris patlamasını (N=2), tek örnek belirsizliğini (N=1) ve aşırı mesafeleri
+        kesin olarak önler.
         """
         p = q_vec.shape[0]
         n_samples = ref_matrix.shape[0]
         ref_mean = np.mean(ref_matrix, axis=0)
         diff = q_vec - ref_mean
 
-        if n_samples >= 2:
+        # 1. Temel Adli Prior Diyagonal Matrisi (Sigma_0)
+        ref_std_prior = np.zeros(p, dtype=np.float64)
+        for i, k in enumerate(self.FEATURE_KEYS):
+            min_std = self._get_min_prior_std(k, float(ref_mean[i]))
+            if n_samples == 1:
+                min_std *= 1.5
+                scale_std = abs(float(ref_mean[i])) * 0.20
+            elif n_samples == 2:
+                min_std *= 1.25
+                scale_std = abs(float(ref_mean[i])) * 0.15
+            else:
+                scale_std = abs(float(ref_mean[i])) * 0.10
+            ref_std_prior[i] = max(min_std, scale_std)
+        cov_prior = np.diag(ref_std_prior ** 2)
+
+        cov_method = "DIAGONAL_PRIOR"
+        if n_samples >= 3:
             try:
                 from sklearn.covariance import LedoitWolf
                 lw = LedoitWolf(assume_centered=False, store_precision=True)
                 lw.fit(ref_matrix)
                 cov = lw.covariance_
+                cov_method = "LEDOIT_WOLF"
             except Exception:
                 cov = np.cov(ref_matrix, rowvar=False)
-        else:
-            # Tekil numunede prior varyans matrisi
-            ref_std = np.array([self.MIN_PRIOR_STD.get(k, 1.0) for k in self.FEATURE_KEYS], dtype=np.float64)
-            cov = np.diag(ref_std ** 2)
+                cov_method = "SAMPLE_COVARIANCE"
+            # Köşegen varyansını minimum prior ile güvenceye al
+            for i in range(p):
+                cov[i, i] = max(float(cov[i, i]), float(cov_prior[i, i]))
+        elif n_samples == 2:
+            # Sprint 31 P0 Düzeltmesi: N=2 durumunda sample cov rank-1'dir.
+            # Diyagonal adli prior (cov_prior) hedefli kontrollü shrinkage (%70 prior, %30 sample):
+            s_raw = np.cov(ref_matrix, rowvar=False)
+            gamma = 0.30  # sample covariance ağırlığı
+            cov = (1.0 - gamma) * cov_prior + gamma * s_raw
 
-        # Düzenlileştirme katsayısı (Tikhonov / Shrinkage lambda)
-        if regularization_lambda is not None:
-            lam = max(1e-6, float(regularization_lambda))
+            # Korelasyon sınırlandırması (Kovaryans korelasyon katsayılarını [-0.5, +0.5] aralığına kırp)
+            stds = np.sqrt(np.maximum(np.diag(cov), 1e-8))
+            for i in range(p):
+                cov[i, i] = max(float(cov[i, i]), float(cov_prior[i, i]))
+                for j in range(p):
+                    if i != j:
+                        r_ij = cov[i, j] / (stds[i] * stds[j])
+                        r_clamped = max(-0.50, min(0.50, r_ij))
+                        cov[i, j] = r_clamped * stds[i] * stds[j]
+            cov_method = "TARGET_SHRINKAGE_N2"
         else:
-            tr = float(np.trace(cov))
+            # N=1 tekil referans
+            cov = cov_prior
+            cov_method = "SINGLE_REF_PRIOR"
+
+        # Tikhonov düzenlileştirmesi ve koşul sayısı kontrolü
+        tr = float(np.trace(cov))
+        if regularization_lambda is not None:
+            lam = max(1e-5, float(regularization_lambda))
+        else:
             lam = max(1e-4, (tr / p) * 1e-3) if tr > 0 else 1e-3
 
         cov_reg = cov + lam * np.eye(p)
+
+        # Koşul sayısı kontrolü (ill-conditioned durumunda lambda'yı artır)
+        try:
+            cond = float(np.linalg.cond(cov_reg))
+            if cond > 1e4:
+                cov_reg += (tr / p) * 0.05 * np.eye(p)
+                cond = float(np.linalg.cond(cov_reg))
+        except Exception:
+            cond = 1e6
+
+        self._last_cov_method = cov_method
+        self._last_cond_number = round(cond, 2)
 
         try:
             cov_inv = np.linalg.pinv(cov_reg)
             dist_sq = float(diff.T @ cov_inv @ diff)
             norm_dist = math.sqrt(max(0.0, dist_sq / p))
-            return float(norm_dist)
+            # Aşırı mesafe patlamasını mantıksal üst sınırla sınırla (maksimum 12.0)
+            return float(min(12.0, max(0.0, norm_dist)))
         except Exception:
             ref_std = np.sqrt(np.diag(cov_reg))
             z = diff / np.maximum(ref_std, 1e-6)
-            return float(np.sqrt(np.mean(z ** 2)))
+            fallback_dist = float(np.sqrt(np.mean(z ** 2)))
+            return float(min(12.0, max(0.0, fallback_dist)))
 
     def compare(
         self,
@@ -191,12 +273,21 @@ class ForensicComparisonEngine:
         # 1. Referans İstatistikleri (Ortalama ve Standart Sapma)
         ref_mean = np.mean(ref_matrix, axis=0)
         ref_std_raw = np.std(ref_matrix, axis=0)
+        is_single_ref = len(references) == 1
+        is_two_ref = len(references) == 2
 
         # Doğal yazar içi varyasyonu garantiye almak için minimum prior std ve göreli tolerans ile harmanla
         ref_std = np.zeros(num_features, dtype=np.float64)
         for i, key in enumerate(self.FEATURE_KEYS):
-            min_std = self.MIN_PRIOR_STD.get(key, 1.0)
-            scale_std = abs(float(ref_mean[i])) * 0.10
+            min_std = self._get_min_prior_std(key, float(ref_mean[i]))
+            if is_single_ref:
+                min_std *= 1.5
+                scale_std = abs(float(ref_mean[i])) * 0.20
+            elif is_two_ref:
+                min_std *= 1.25
+                scale_std = abs(float(ref_mean[i])) * 0.15
+            else:
+                scale_std = abs(float(ref_mean[i])) * 0.10
             ref_std[i] = max(float(ref_std_raw[i]), min_std, scale_std)
 
         # 2. Mutlak Farklar ve Z-Skorları
@@ -295,7 +386,23 @@ class ForensicComparisonEngine:
                 "Yazının farklı bir şahıs eli ürünü veya taklit olma olasılığı yüksektir."
             )
 
-        # 6. Rapor Bütünlük Karması
+        # 6. Referans Sayısı Güvenilirlik & Belirsizlik Uyarısı
+        cov_method = getattr(self, "_last_cov_method", "DIAGONAL_PRIOR")
+        cond_num = getattr(self, "_last_cond_number", None)
+        if len(references) == 1:
+            conf_warning = (
+                "UYARI: Tek referans numune (N=1) ile analiz yapılmıştır. Yazar içi doğal varyasyon "
+                "bilinemediğinden genişletilmiş adli prior kullanılmıştır. Kesin adli kanaat için en az 3 referans önerilir."
+            )
+        elif len(references) == 2:
+            conf_warning = (
+                "BİLGİ: 2 referans numune (N=2) ile analiz yapılmıştır. Kovaryans rank-1 sınırlaması "
+                "nedeniyle adli prior ile düzenlileştirilmiştir (Target Shrinkage). Tavsiye edilen referans sayısı >= 3'tür."
+            )
+        else:
+            conf_warning = None
+
+        # 7. Rapor Bütünlük Karması
         hash_payload = {
             "similarity_score": similarity_score,
             "euclidean_distance": round(euclidean_dist, 3),
@@ -304,6 +411,7 @@ class ForensicComparisonEngine:
             "num_natural_vars": len(natural_vars),
             "num_significant_diffs": len(significant_diffs),
             "reference_count": len(references),
+            "covariance_method": cov_method,
         }
         serialized = json.dumps(hash_payload, sort_keys=True)
         audit_hash = hashlib.sha256(serialized.encode("utf-8")).hexdigest()
@@ -318,4 +426,7 @@ class ForensicComparisonEngine:
             preliminary_opinion=opinion,
             reference_count=len(references),
             audit_hash_sha256=audit_hash,
+            covariance_method=cov_method,
+            condition_number=cond_num,
+            confidence_warning=conf_warning,
         )

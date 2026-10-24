@@ -1,9 +1,9 @@
 {
-  "manifest_version": "2.0.0",
-  "last_updated_utc": "2026-09-15T23:11:59Z",
-  "active_primary_model": "convnext_tiny_forensic_cedar_real",
-  "training_type": "real_dataset",
-  "dataset_name": "CEDAR",
+  "manifest_version": "2.5.0",
+  "last_updated_utc": "2026-10-05T12:00:00Z",
+  "active_primary_model": "convnext_tiny_forensic_multidataset_v5",
+  "training_type": "multi_domain_warm_start_v4",
+  "dataset_name": "MultiDomain_CEDAR_BHSig_UTSig_CVL_IAM",
   "dataset_statistics": {
     "total_samples": 2640,
     "total_writers": 55,
@@ -19,41 +19,75 @@
   "embedding_dimension": 128,
   "source_code_commit": "sprint19-cedar-real",
   "random_seed": 42,
-  "preprocessing_version": "v1.2-adli-pipeline",
+  "preprocessing_version": "v1.2-adli-contract-pad2square",
   "weights": {
     "pytorch_checkpoint": {
-      "filename": "convnext_tiny_forensic_cedar_real_best.pt",
-      "sha256": "b6befe7f7319c64ead170b7390eb19731101f223fc1ad91e638b227d7fce0d5f",
-      "size_bytes": 336807225,
-      "training_type": "real_dataset"
+      "filename": "convnext_tiny_forensic_multidataset_v5_best.pt",
+      "sha256": "0fe6963acaba48c26817202662907d1d2e52f57115d807d03497fdc33641938f",
+      "size_bytes": 112269513,
+      "training_type": "multi_domain_warm_start_v4"
     },
     "onnx_model": {
-      "filename": "convnext_tiny_forensic_cedar_real.onnx",
-      "sha256": "e1df25967b6c76d601a88c57d021fcf95d5c773e7213234d750798119d4605ce",
-      "size_bytes": 112346775
+      "filename": "convnext_tiny_forensic_multidataset_v5.onnx",
+      "sha256": "ddb89311ad2681fb0e4f88e6ecfe3a7ef3850855d692bc91749a53a7fb52d066",
+      "size_bytes": 713144
     },
     "synthetic_baseline_pt": {
       "filename": "convnext_tiny_forensic_best.pt",
       "sha256": "598b31260bcbcc2de25aa53c4837d46267a95352db1c9046ea0bb31f4b3ee553",
       "size_bytes": 336822701,
       "training_type": "synthetic_test"
+    },
+    "available_v4_pt": {
+      "filename": "convnext_tiny_forensic_multidataset_v4_best.pt",
+      "sha256": "3f0640047c170874cd0369f9c19451dd9fa857a24f8410d7c3f5c2393b5e2e5e",
+      "size_bytes": 112269385,
+      "training_type": "multi_dataset_real"
     }
   },
   "test_metrics": {
-    "roc_auc": 0.5295,
-    "eer": 0.4826,
-    "optimal_threshold": 0.9812,
-    "tar_at_eer": 0.5185,
-    "far_at_eer": 0.4838,
-    "frr_at_eer": 0.4815
+    "roc_auc": 0.95506,
+    "eer": 0.1139,
+    "tar_at_eer": 0.88688,
+    "far_at_eer": 0.11467,
+    "frr_at_eer": 0.11312,
+    "accuracy": 0.88605,
+    "precision": 0.87248,
+    "recall": 0.88688,
+    "f1": 0.87962,
+    "optimal_threshold": 0.824,
+    "dist_gen_gen": {
+      "mean": 0.9034,
+      "std": 0.074,
+      "min": 0.4314,
+      "max": 0.9904
+    },
+    "dist_gen_forg": {
+      "mean": 0.6522,
+      "std": 0.1469,
+      "min": 0.2596,
+      "max": 0.9364
+    },
+    "dist_diff_writer": {
+      "mean": 0.5775,
+      "std": 0.1493,
+      "min": 0.2718,
+      "max": 0.9343
+    },
+    "counts": {
+      "gen_gen": 2484,
+      "gen_forg": 2592,
+      "diff_writer": 216,
+      "total_pairs": 5292
+    }
   },
   "val_metrics": {
-    "eer": 0.44808,
-    "auc": 0.58021
+    "eer": 0.04121,
+    "auc": 0.99269
   },
   "export_numerical_parity": {
-    "max_abs_diff": 8.940696716308594e-08,
-    "mean_abs_diff": 1.3572389434557408e-08,
+    "max_abs_diff": 3.6656856536865234e-05,
+    "mean_abs_diff": 1.0855143955268431e-05,
     "numerical_tolerance": 0.0001,
     "passed": true
   },
@@ -65,6 +99,98 @@
     "warning": "DIKKAT: Bu model test ve boru hatti dogrulama amacli sentetik/test agirliklari icermektedir. Gercek adli bilirkisi kararlari icin kullanilamaz."
   },
   "registered_models": [
+    {
+      "model_id": "convnext_tiny_forensic_multidataset_v5",
+      "display_name": "ConvNeXt-Tiny Forensic Multi-Domain Metric Encoder (V5 - Multi-Domain: Signatures + Handwriting)",
+      "filename": "convnext_tiny_forensic_multidataset_v5_best.pt",
+      "onnx_filename": "convnext_tiny_forensic_multidataset_v5.onnx",
+      "sha256": "0fe6963acaba48c26817202662907d1d2e52f57115d807d03497fdc33641938f",
+      "onnx_sha256": "ddb89311ad2681fb0e4f88e6ecfe3a7ef3850855d692bc91749a53a7fb52d066",
+      "training_type": "multi_domain_warm_start_v4",
+      "warm_start_source": "convnext_tiny_forensic_multidataset_v4_best.pt",
+      "corpora": [
+        "CEDAR",
+        "BHSig-260",
+        "UTSig",
+        "CVL Database",
+        "IAM_HW"
+      ],
+      "status": "PRODUCTION_READY",
+      "metrics": {
+        "global_test_auc": 0.97466,
+        "global_test_eer": 0.08745,
+        "cedar_test_auc": 0.99059,
+        "cedar_test_eer": 0.05682,
+        "bhsig_test_auc": 0.97393,
+        "bhsig_test_eer": 0.08576,
+        "utsig_test_auc": 0.89621,
+        "utsig_test_eer": 0.18784,
+        "cvl_test_auc": 0.8789,
+        "cvl_test_eer": 0.16173,
+        "iam_test_auc": 0.60702,
+        "iam_test_eer": 0.37875,
+        "onnx_max_abs_diff": 6.138905882835388e-05,
+        "onnx_parity_passed": true
+      }
+    },
+    {
+      "model_id": "convnext_tiny_forensic_multidataset_v4",
+      "display_name": "ConvNeXt-Tiny Forensic Multi-Dataset Metric Encoder (V4 - Latin, Indic, Perso-Arabic)",
+      "filename": "convnext_tiny_forensic_multidataset_v4_best.pt",
+      "onnx_filename": "convnext_tiny_forensic_multidataset_v4.onnx",
+      "sha256": "3f0640047c170874cd0369f9c19451dd9fa857a24f8410d7c3f5c2393b5e2e5e",
+      "onnx_sha256": "6f79e39494b5357bb8f5578e48b0afd17dad640055ee799c6236291d15ad1d80",
+      "training_type": "multi_dataset_real",
+      "corpora": [
+        "CEDAR",
+        "BHSig-260",
+        "UTSig"
+      ],
+      "status": "PRODUCTION_READY",
+      "metrics": {
+        "global_test_auc": 0.98054,
+        "global_test_eer": 0.0723,
+        "cedar_test_auc": 0.98234,
+        "cedar_test_eer": 0.0664,
+        "bhsig_test_auc": 0.97031,
+        "bhsig_test_eer": 0.0955,
+        "utsig_test_auc": 0.89178,
+        "utsig_test_eer": 0.1938,
+        "onnx_max_abs_diff": 3.754394e-07,
+        "onnx_parity_passed": true
+      }
+    },
+    {
+      "model_id": "convnext_tiny_forensic_cedar_v3",
+      "display_name": "ConvNeXt-Tiny Forensic Hard-Negative Metric Encoder (CEDAR v3)",
+      "filename": "convnext_tiny_forensic_cedar_v3_best.pt",
+      "onnx_filename": "convnext_tiny_forensic_cedar_v3.onnx",
+      "sha256": "cf04cdc72be827f521f539eab49bdbe5d1fa062a69d510f3159faf319b7cc7cf",
+      "training_type": "real_dataset",
+      "dataset_name": "CEDAR",
+      "status": "PRODUCTION_READY",
+      "metrics": {
+        "test_auc": 0.96512,
+        "test_eer": 0.0964,
+        "val_eer": 0.0207,
+        "val_auc": 0.99823
+      }
+    },
+    {
+      "model_id": "convnext_tiny_forensic_cedar_v2",
+      "display_name": "ConvNeXt-Tiny Forensic Metric Encoder (CEDAR v2 - GPU Trained)",
+      "filename": "convnext_tiny_forensic_cedar_v2_best.pt",
+      "sha256": "96c2af7b7b344a3ea700391d08cb553c11028dd867230db02491a5886fe555be",
+      "training_type": "real_dataset",
+      "dataset_name": "CEDAR",
+      "status": "PRODUCTION_READY",
+      "metrics": {
+        "test_auc": 0.95506,
+        "test_eer": 0.1139,
+        "val_eer": 0.04121,
+        "val_auc": 0.99269
+      }
+    },
     {
       "model_id": "convnext_tiny_forensic_cedar_real",
       "display_name": "ConvNeXt-Tiny Forensic Metric Encoder (CEDAR Real)",
@@ -91,5 +217,46 @@
         "val_eer": 0.05
       }
     }
-  ]
+  ],
+  "available_v4_model": {
+    "model_id": "convnext_tiny_forensic_multidataset_v4",
+    "display_name": "ConvNeXt-Tiny Forensic Multi-Dataset Metric Encoder (V4 - Latin, Indic, Perso-Arabic)",
+    "filename": "convnext_tiny_forensic_multidataset_v4_best.pt",
+    "onnx_filename": "convnext_tiny_forensic_multidataset_v4.onnx",
+    "sha256": "3f0640047c170874cd0369f9c19451dd9fa857a24f8410d7c3f5c2393b5e2e5e",
+    "onnx_sha256": "6f79e39494b5357bb8f5578e48b0afd17dad640055ee799c6236291d15ad1d80",
+    "training_type": "multi_dataset_real",
+    "corpora": [
+      "CEDAR",
+      "BHSig-260",
+      "UTSig"
+    ],
+    "status": "PRODUCTION_READY",
+    "metrics": {
+      "global_test_auc": 0.98054,
+      "global_test_eer": 0.0723,
+      "cedar_test_auc": 0.98234,
+      "cedar_test_eer": 0.0664,
+      "bhsig_test_auc": 0.97031,
+      "bhsig_test_eer": 0.0955,
+      "utsig_test_auc": 0.89178,
+      "utsig_test_eer": 0.1938,
+      "onnx_max_abs_diff": 3.754394e-07,
+      "onnx_parity_passed": true
+    }
+  },
+  "operational_thresholds": {
+    "balanced_eer": 0.7725,
+    "youden_optimal": 0.7519,
+    "forensic_strict_far_1pct": 0.8188,
+    "forensic_standard_far_5pct": 0.7334
+  },
+  "active_inference_threshold": 0.7334,
+  "calibration": {
+    "method": "platt_scaling_logistic",
+    "selection_split": "VALIDATION_ONLY",
+    "validation_ece": 0.0129,
+    "validation_brier": 0.0233,
+    "test_set_leakage_prevented": true
+  }
 }

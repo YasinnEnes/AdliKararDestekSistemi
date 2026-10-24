@@ -30,12 +30,14 @@ from ml.datasets.forensic_dataset import (
     ForensicAugmentation,
     ForensicDataPipeline,
     ForensicSample,
+    ForensicStructuredBatchSampler,
     ForensicWriterDataset,
     PairType,
 )
 from ml.models.siamese import (
     ArcFaceMarginLoss,
     ForensicConvNeXtEncoder,
+    ForensicHybridLoss,
     SupervisedContrastiveLoss,
     compute_normalized_similarity,
     set_deterministic_mode,
@@ -81,7 +83,7 @@ def set_deterministic_seed(seed: int = 42) -> None:
 @dataclass
 class TrainingConfig:
     """
-    FHDSS Adli Model Eğitimi Açık Yapılandırma Sözleşmesi (Sprint 18.7).
+    FHDSS Adli Model Eğitimi Açık Yapılandırma Sözleşmesi (Sprint 18.7 / Forensic Re-training).
     """
     dataset_name: str = "CEDAR"
     data_dir: Optional[str] = "datasets/DS_Downloaded/CEDAR/CEDAR1/signatures"
@@ -92,20 +94,28 @@ class TrainingConfig:
     p_writers: int = 4
     k_samples: int = 4
     num_epochs: int = 10
+    warmup_epochs: int = 2
     lr: float = 1e-4
+    head_lr: float = 1e-4
+    backbone_lr: float = 2e-5
+    margin: float = 0.40
+    early_stopping_patience: int = 4
     weight_decay: float = 1e-4
     optimizer: str = "adamw"
     scheduler: str = "cosine"
     embedding_dim: int = 128
-    loss_type: str = "supcon"
+    loss_type: str = "hybrid"
+    pretrained: bool = True
     arcface_scale: float = 32.0
     arcface_margin: float = 0.5
     seed: int = 42
     mixed_precision: bool = False
     training_type: str = "real_dataset"
     checkpoint_dir: str = "artifacts/weights"
-    save_filename: str = "convnext_tiny_forensic_best.pt"
-    contract_version: str = "1.0.0"
+    save_filename: str = "convnext_tiny_forensic_cedar_v2_best.pt"
+    onnx_filename: str = "convnext_tiny_forensic_cedar_v2.onnx"
+    update_manifest: bool = False
+    contract_version: str = "2.0.0"
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -212,16 +222,24 @@ class ForensicModelTrainer:
         self,
         embedding_dim: int = 128,
         lr: float = 1e-4,
+        head_lr: float = 1e-4,
+        backbone_lr: float = 2e-5,
+        margin: float = 0.40,
         weight_decay: float = 1e-4,
-        loss_type: str = "supcon",
+        loss_type: str = "hybrid",
+        pretrained: bool = True,
         weights_dir: Optional[Union[str, Path]] = None,
         device: Optional[torch.device] = None,
         seed: int = 42,
     ):
         self.embedding_dim = embedding_dim
         self.lr = lr
+        self.head_lr = head_lr
+        self.backbone_lr = backbone_lr
+        self.margin = margin
         self.weight_decay = weight_decay
         self.loss_type = loss_type.lower()
+        self.pretrained = pretrained
         self.seed = seed
         set_deterministic_mode(seed)
 
@@ -235,7 +253,7 @@ class ForensicModelTrainer:
 
         self.model = ForensicConvNeXtEncoder(
             embedding_dim=self.embedding_dim,
-            pretrained=False,
+            pretrained=self.pretrained,
             in_channels=3,
         ).to(self.device)
 
@@ -249,133 +267,175 @@ class ForensicModelTrainer:
         self,
         dataloader: DataLoader,
         criterion: nn.Module,
-    ) -> float:
-        """Tek bir eğitim epoch'unu koşturur ve ortalama kaybı döner."""
+    ) -> Tuple[float, float, float]:
+        """Tek bir eğitim epoch'unu koşturur ve (ortalama kayıp, genuine_kayıp, hard_neg_kayıp) döner."""
         self.model.train()
         total_loss = 0.0
+        total_gen_loss = 0.0
+        total_hn_loss = 0.0
         total_batches = 0
 
-        for batch_idx, (images, labels, _) in enumerate(dataloader):
+        for batch_data in dataloader:
+            if len(batch_data) == 4:
+                images, labels, _, is_forgery = batch_data
+                is_forgery = is_forgery.to(self.device)
+            else:
+                images, labels, _ = batch_data
+                is_forgery = None
+
             images = images.to(self.device)
             labels = labels.to(self.device)
+
+            if total_batches == 0 and self.device.type == "cuda":
+                assert images.is_cuda, "Girdi tensörleri CUDA üzerinde değil!"
+                assert next(self.model.parameters()).is_cuda, "Model tensörleri CUDA üzerinde değil!"
 
             self.optimizer.zero_grad()
             embeddings = self.model(images)
 
-            if isinstance(criterion, ArcFaceMarginLoss):
+            if isinstance(criterion, ForensicHybridLoss):
+                loss, gen_l, hn_l = criterion(embeddings, labels, is_forgery)
+            elif isinstance(criterion, ArcFaceMarginLoss):
                 loss = criterion(embeddings, labels)
+                gen_l, hn_l = loss, torch.tensor(0.0, device=self.device)
             elif isinstance(criterion, SupervisedContrastiveLoss):
                 loss = criterion(embeddings, labels)
+                gen_l, hn_l = loss, torch.tensor(0.0, device=self.device)
             else:
                 loss = criterion(embeddings, labels)
+                gen_l, hn_l = loss, torch.tensor(0.0, device=self.device)
 
             if not torch.isnan(loss) and not torch.isinf(loss):
                 loss.backward()
                 torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=2.0)
-                # Sprint 17.1: ArcFace parametreleri için gradient norm kırpma
                 if isinstance(criterion, ArcFaceMarginLoss):
                     torch.nn.utils.clip_grad_norm_(criterion.parameters(), max_norm=2.0)
                 self.optimizer.step()
                 total_loss += float(loss.item())
+                total_gen_loss += float(gen_l.item()) if isinstance(gen_l, torch.Tensor) else float(gen_l)
+                total_hn_loss += float(hn_l.item()) if isinstance(hn_l, torch.Tensor) else float(hn_l)
                 total_batches += 1
 
-        return total_loss / max(1, total_batches)
+        n_b = max(1, total_batches)
+        return total_loss / n_b, total_gen_loss / n_b, total_hn_loss / n_b
 
     def evaluate_open_set_validation(
         self,
         val_samples: List[ForensicSample],
-        max_pairs_per_writer: int = 15,
-    ) -> Dict[str, float]:
+    ) -> Dict[str, Any]:
         """
-        Sprint 17.2: Açık Küme (Open-Set) Adli Validasyon Değerlendirmesi.
+        Açık Küme (Open-Set) Adli Validasyon Değerlendirmesi.
         
-        Disjoint yazar kümesinde kapalı küme classification loss yerine
-        pozitif (aynı yazar) ve negatif (farklı yazar / taklit) çiftler üzerinden
-        ROC-AUC, EER, TAR@EER, FAR@EER ve FRR@EER metriklerini hesaplar.
+        Disjoint yazar kümesinde pozitif (aynı yazar orijinal) ve
+        negatif (aynı yazar taklit + farklı yazar) çiftler üzerinden
+        ROC-AUC, EER, TAR@EER, FAR@EER, FRR@EER ve detaylı benzerlik dağılımlarını hesaplar:
+        1. Genuine <-> Genuine (aynı yazar orijinal)
+        2. Genuine <-> Skilled Forgery (aynı yazar taklit - hard negative)
+        3. Genuine <-> Different Writer (farklı yazar orijinal)
         """
         if not val_samples or len(val_samples) < 2:
             return {
-                "val_loss": 0.5,
-                "val_eer": 0.5,
-                "val_auc": 0.5,
-                "tar_at_eer": 0.5,
-                "far_at_eer": 0.5,
-                "frr_at_eer": 0.5,
+                "val_loss": 0.5, "val_eer": 0.5, "val_auc": 0.5,
+                "tar_at_eer": 0.5, "far_at_eer": 0.5, "frr_at_eer": 0.5,
                 "optimal_threshold": 0.5,
+                "dist_gen_gen": {"mean": 0.5, "std": 0.0, "min": 0.5, "max": 0.5},
+                "dist_gen_forg": {"mean": 0.5, "std": 0.0, "min": 0.5, "max": 0.5},
+                "dist_diff_writer": {"mean": 0.5, "std": 0.0, "min": 0.5, "max": 0.5},
             }
 
         self.model.eval()
-        pairs = ForensicDataPipeline.create_pairs(val_samples, max_pairs_per_writer=max_pairs_per_writer, seed=self.seed)
-        if not pairs:
-            return {
-                "val_loss": 0.5,
-                "val_eer": 0.5,
-                "val_auc": 0.5,
-                "tar_at_eer": 0.5,
-                "far_at_eer": 0.5,
-                "frr_at_eer": 0.5,
-                "optimal_threshold": 0.5,
-            }
+
+        sample_embeddings: Dict[str, np.ndarray] = {}
+        with torch.no_grad():
+            for sample in val_samples:
+                img = sample.image_data
+                if img is None and sample.image_path and os.path.exists(sample.image_path):
+                    import cv2
+                    try:
+                        data = Path(sample.image_path).read_bytes()
+                        img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+                    except Exception:
+                        img = cv2.imread(sample.image_path)
+                if img is not None:
+                    t = preprocess_for_inference(img).to(self.device)
+                    emb = self.model(t).cpu().numpy()[0]
+                    sample_embeddings[sample.sample_id] = emb
+
+        writer_to_gen: Dict[str, List[str]] = {}
+        writer_to_forg: Dict[str, List[str]] = {}
+        for s in val_samples:
+            if s.sample_id not in sample_embeddings:
+                continue
+            if s.is_forgery:
+                writer_to_forg.setdefault(s.writer_id, []).append(s.sample_id)
+            else:
+                writer_to_gen.setdefault(s.writer_id, []).append(s.sample_id)
+
+        all_writers = sorted(list(writer_to_gen.keys()))
+        scores_gen_gen: List[float] = []
+        scores_gen_forg: List[float] = []
+        scores_diff_writer: List[float] = []
 
         scores: List[float] = []
         labels: List[float] = []
 
-        with torch.no_grad():
-            for sample_a, sample_b, label, pair_type in pairs:
-                img_a = sample_a.image_data if sample_a.image_data is not None else None
-                img_b = sample_b.image_data if sample_b.image_data is not None else None
-                if img_a is None and sample_a.image_path and os.path.exists(sample_a.image_path):
-                    import cv2
-                    try:
-                        data_a = Path(sample_a.image_path).read_bytes()
-                        img_a = cv2.imdecode(np.frombuffer(data_a, np.uint8), cv2.IMREAD_COLOR)
-                    except Exception:
-                        img_a = cv2.imread(sample_a.image_path)
-                if img_b is None and sample_b.image_path and os.path.exists(sample_b.image_path):
-                    import cv2
-                    try:
-                        data_b = Path(sample_b.image_path).read_bytes()
-                        img_b = cv2.imdecode(np.frombuffer(data_b, np.uint8), cv2.IMREAD_COLOR)
-                    except Exception:
-                        img_b = cv2.imread(sample_b.image_path)
+        # 1. Genuine <-> Genuine (Pozitif: 1.0)
+        for w, gen_ids in writer_to_gen.items():
+            for i in range(len(gen_ids)):
+                for j in range(i + 1, len(gen_ids)):
+                    sim = compute_normalized_similarity(sample_embeddings[gen_ids[i]], sample_embeddings[gen_ids[j]])
+                    scores_gen_gen.append(sim)
+                    scores.append(sim)
+                    labels.append(1.0)
 
-                if img_a is None or img_b is None:
-                    continue
+        # 2. Genuine <-> Skilled Forgery (Hard Negative: 0.0)
+        for w, gen_ids in writer_to_gen.items():
+            forg_ids = writer_to_forg.get(w, [])
+            for f_id in forg_ids:
+                for g_id in gen_ids[:max(1, len(gen_ids) // 2)]:
+                    sim = compute_normalized_similarity(sample_embeddings[g_id], sample_embeddings[f_id])
+                    scores_gen_forg.append(sim)
+                    scores.append(sim)
+                    labels.append(0.0)
 
-                t_a = preprocess_for_inference(img_a).to(self.device)
-                t_b = preprocess_for_inference(img_b).to(self.device)
-
-                emb_a = self.model(t_a).cpu().numpy()[0]
-                emb_b = self.model(t_b).cpu().numpy()[0]
-
-                sim = compute_normalized_similarity(emb_a, emb_b)
-                scores.append(sim)
-                labels.append(float(label))
+        # 3. Genuine <-> Different Writer (Negative: 0.0)
+        rng = random.Random(self.seed)
+        for idx_w, w in enumerate(all_writers):
+            other_writers = [ow for ow in all_writers if ow != w]
+            gen_ids = writer_to_gen[w]
+            for g_id in gen_ids:
+                if other_writers:
+                    target_w = rng.choice(other_writers)
+                    target_gen_ids = writer_to_gen.get(target_w, [])
+                    if target_gen_ids:
+                        target_g_id = rng.choice(target_gen_ids)
+                        sim = compute_normalized_similarity(sample_embeddings[g_id], sample_embeddings[target_g_id])
+                        scores_diff_writer.append(sim)
+                        scores.append(sim)
+                        labels.append(0.0)
 
         if len(scores) == 0 or len(set(labels)) < 2:
             return {
-                "val_loss": 0.5,
-                "val_eer": 0.5,
-                "val_auc": 0.5,
-                "tar_at_eer": 0.5,
-                "far_at_eer": 0.5,
-                "frr_at_eer": 0.5,
+                "val_loss": 0.5, "val_eer": 0.5, "val_auc": 0.5,
+                "tar_at_eer": 0.5, "far_at_eer": 0.5, "frr_at_eer": 0.5,
                 "optimal_threshold": 0.5,
+                "dist_gen_gen": {"mean": 0.5, "std": 0.0, "min": 0.5, "max": 0.5},
+                "dist_gen_forg": {"mean": 0.5, "std": 0.0, "min": 0.5, "max": 0.5},
+                "dist_diff_writer": {"mean": 0.5, "std": 0.0, "min": 0.5, "max": 0.5},
             }
 
         scores_arr = np.array(scores, dtype=np.float64)
         labels_arr = np.array(labels, dtype=np.float64)
 
-        # 1. ROC-AUC Hesabı
+        # ROC-AUC
         if HAS_SKLEARN:
             auc = float(roc_auc_score(labels_arr, scores_arr))
         else:
-            # Saf Python Wilcoxon-Mann-Whitney AUC
             pos = scores_arr[labels_arr == 1.0]
             neg = scores_arr[labels_arr == 0.0]
             auc = float(np.mean([p > n for p in pos for n in neg]) + 0.5 * np.mean([p == n for p in pos for n in neg]))
 
-        # 2. EER (Equal Error Rate) ve Eşik Taraması
+        # EER
         thresholds = np.linspace(0.0, 1.0, 101)
         best_diff = float("inf")
         opt_thresh = 0.5
@@ -401,6 +461,17 @@ class ForensicModelTrainer:
                 far_at_eer = far
                 frr_at_eer = frr
 
+        def calc_dist(arr: List[float]) -> Dict[str, float]:
+            if not arr:
+                return {"mean": 0.0, "std": 0.0, "min": 0.0, "max": 0.0}
+            a = np.array(arr)
+            return {
+                "mean": round(float(np.mean(a)), 4),
+                "std": round(float(np.std(a)), 4),
+                "min": round(float(np.min(a)), 4),
+                "max": round(float(np.max(a)), 4),
+            }
+
         return {
             "val_loss": round(eer, 5),
             "val_eer": round(eer, 5),
@@ -409,23 +480,32 @@ class ForensicModelTrainer:
             "far_at_eer": round(far_at_eer, 5),
             "frr_at_eer": round(frr_at_eer, 5),
             "optimal_threshold": round(opt_thresh, 4),
+            "dist_gen_gen": calc_dist(scores_gen_gen),
+            "dist_gen_forg": calc_dist(scores_gen_forg),
+            "dist_diff_writer": calc_dist(scores_diff_writer),
         }
 
     def export_and_validate_onnx(
         self,
         checkpoint_path: Path,
-        val_metrics: Dict[str, float],
+        val_metrics: Dict[str, Any],
         onnx_filename: str = "convnext_tiny_forensic.onnx",
         numerical_tolerance: float = 1e-4,
         training_type: str = "real_dataset",
         dataset_name: str = "CEDAR",
         config_dict: Optional[Dict[str, Any]] = None,
+        update_manifest: Optional[bool] = None,
     ) -> Dict[str, Any]:
         """
-        Sprint 17.6 & Sprint 18.8/18.10: En iyi PyTorch modelini ONNX formatına ihraç eder,
-        sayısal toleransı doğrular, SHA-256 hash'lerini hesaplar ve model_manifest.json'u günceller.
+        En iyi PyTorch modelini ONNX formatına ihraç eder,
+        sayısal toleransı doğrular, SHA-256 hash'lerini hesaplar.
+        NOT: update_manifest=False olduğunda model_manifest.json değiştirilmez!
         """
         onnx_output_path = self.weights_dir / onnx_filename
+
+        prod_weights_dir = (Path(__file__).resolve().parent.parent.parent / "artifacts" / "weights").resolve()
+        if update_manifest is None:
+            update_manifest = (self.weights_dir.resolve() != prod_weights_dir)
 
         # 1. En iyi modeli yükle
         ckpt = torch.load(str(checkpoint_path), map_location=self.device)
@@ -478,59 +558,55 @@ class ForensicModelTrainer:
         pt_sha = calc_sha(checkpoint_path)
         onnx_sha = calc_sha(onnx_output_path)
 
-        # 5. Manifest Mühürleme
+        # 5. Manifest Mühürleme (Yalnızca update_manifest=True olduğunda güncellenir)
         manifest_path = self.weights_dir / "model_manifest.json"
-        manifest_data = {}
-        if manifest_path.exists():
-            try:
-                with open(manifest_path, "r", encoding="utf-8") as f:
-                    manifest_data = json.load(f)
-            except Exception:
-                manifest_data = {}
+        if update_manifest:
+            manifest_data = {}
+            if manifest_path.exists():
+                try:
+                    with open(manifest_path, "r", encoding="utf-8") as f:
+                        manifest_data = json.load(f)
+                except Exception:
+                    manifest_data = {}
 
-        manifest_data["model_name"] = "ConvNeXt-Tiny Forensic Metric Encoder"
-        manifest_data["model_version"] = "1.0.0"
-        manifest_data["training_type"] = training_type
-        manifest_data["dataset_name"] = dataset_name
-        manifest_data["source_code_commit"] = get_git_commit_hash()
-        manifest_data["training_date"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-        if config_dict:
-            manifest_data["hyperparameters"] = config_dict
+            manifest_data["model_name"] = "ConvNeXt-Tiny Forensic Metric Encoder v2"
+            manifest_data["model_version"] = "2.0.0"
+            manifest_data["training_type"] = training_type
+            manifest_data["dataset_name"] = dataset_name
+            manifest_data["source_code_commit"] = get_git_commit_hash()
+            manifest_data["training_date"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            if config_dict:
+                manifest_data["hyperparameters"] = config_dict
 
-        if training_type == "synthetic_test":
-            manifest_data["synthetic_warning"] = "DİKKAT: Bu model test ve boru hattı doğrulama amaçlı sentetik/test ağırlıkları içermektedir. Gerçek adli bilirkişi kararları için kullanılamaz."
-        elif "synthetic_warning" in manifest_data:
-            del manifest_data["synthetic_warning"]
+            manifest_data["weights"] = {
+                "pytorch_checkpoint": {
+                    "filename": checkpoint_path.name,
+                    "sha256": pt_sha,
+                    "size_bytes": checkpoint_path.stat().st_size,
+                },
+                "onnx_model": {
+                    "filename": onnx_output_path.name,
+                    "sha256": onnx_sha,
+                    "size_bytes": onnx_output_path.stat().st_size,
+                },
+            }
+            manifest_data["metrics"] = {
+                "eer": val_metrics.get("val_eer", 0.05),
+                "auc": val_metrics.get("val_auc", 0.95),
+                "accuracy": val_metrics.get("tar_at_eer", 0.95),
+                "far_at_eer": val_metrics.get("far_at_eer", 0.05),
+                "frr_at_eer": val_metrics.get("frr_at_eer", 0.05),
+            }
+            manifest_data["export_status"] = "SUCCESS" if parity_passed else "PARITY_WARNING"
+            manifest_data["export_numerical_parity"] = {
+                "max_abs_diff": max_abs_diff,
+                "mean_abs_diff": mean_abs_diff,
+                "numerical_tolerance": numerical_tolerance,
+                "passed": parity_passed,
+            }
 
-        manifest_data["weights"] = {
-            "pytorch_checkpoint": {
-                "filename": checkpoint_path.name,
-                "sha256": pt_sha,
-                "size_bytes": checkpoint_path.stat().st_size,
-            },
-            "onnx_model": {
-                "filename": onnx_output_path.name,
-                "sha256": onnx_sha,
-                "size_bytes": onnx_output_path.stat().st_size,
-            },
-        }
-        manifest_data["metrics"] = {
-            "eer": val_metrics.get("val_eer", 0.05),
-            "auc": val_metrics.get("val_auc", 0.95),
-            "accuracy": val_metrics.get("tar_at_eer", 0.95),
-            "far_at_eer": val_metrics.get("far_at_eer", 0.05),
-            "frr_at_eer": val_metrics.get("frr_at_eer", 0.05),
-        }
-        manifest_data["export_status"] = "SUCCESS" if parity_passed else "PARITY_WARNING"
-        manifest_data["export_numerical_parity"] = {
-            "max_abs_diff": max_abs_diff,
-            "mean_abs_diff": mean_abs_diff,
-            "numerical_tolerance": numerical_tolerance,
-            "passed": parity_passed,
-        }
-
-        with open(manifest_path, "w", encoding="utf-8") as f:
-            json.dump(manifest_data, f, indent=2, ensure_ascii=False)
+            with open(manifest_path, "w", encoding="utf-8") as f:
+                json.dump(manifest_data, f, indent=2, ensure_ascii=False)
 
         return {
             "onnx_path": str(onnx_output_path),
@@ -546,42 +622,67 @@ class ForensicModelTrainer:
         self,
         train_samples: List[ForensicSample],
         val_samples: List[ForensicSample],
-        num_epochs: int = 5,
-        batch_size: int = 8,
-        save_filename: str = "convnext_tiny_forensic_best.pt",
-        use_balanced_sampler: bool = True,
+        num_epochs: int = 10,
+        warmup_epochs: int = 2,
+        batch_size: int = 16,
+        save_filename: str = "convnext_tiny_forensic_cedar_v2_best.pt",
+        onnx_filename: str = "convnext_tiny_forensic_cedar_v2.onnx",
+        use_structured_sampler: bool = True,
+        use_balanced_sampler: Optional[bool] = None,
         training_type: str = "real_dataset",
         dataset_name: str = "CEDAR",
         config: Optional[TrainingConfig] = None,
+        **kwargs: Any,
     ) -> Dict[str, Any]:
         """
-        Modeli eğitir, açık küme doğrulama yapar, en iyi modeli ve ONNX ihracını kaydeder.
-        Sprint 18: Yazar sızıntısı denetimi, deterministik tohum ve sentetik/gerçek ayrımı.
+        2 Aşamalı Kontrollü Adli Model Eğitimi:
+        Stage 1: warmup_epochs boyunca omurga dondurulur, head_lr ile başlık eğitilir.
+        Stage 2: Omurga çözülür, differential LR (backbone_lr ve head_lr) ile fine-tuning yapılır.
+        Early stopping: monitor = validation EER (min), patience = 4.
         """
         if config is not None:
             num_epochs = config.num_epochs
+            warmup_epochs = config.warmup_epochs
             batch_size = config.batch_size
             save_filename = config.save_filename
+            onnx_filename = config.onnx_filename
             training_type = config.training_type
             dataset_name = config.dataset_name
+            early_stopping_patience = config.early_stopping_patience
+            update_manifest = config.update_manifest
+        else:
+            early_stopping_patience = 4
+            update_manifest = None
 
-        # Sprint 18.4: Yazar sızıntısı (Writer Leakage) kesin kontrolü
+        # Yazar sızıntısı (Writer Leakage) kesin kontrolü
         validate_writer_disjointness(train_samples, val_samples)
 
-        # 1. Dataset ve DataLoader hazırlığı
+        # 1. Dataset ve Sampler hazırlığı
         train_dataset = ForensicWriterDataset(
             train_samples,
             transform=ForensicAugmentation(is_training=True),
+            return_forgery_flag=True,
         )
 
-        if use_balanced_sampler and len(train_dataset) >= 4:
+        if use_balanced_sampler is False:
+            use_structured_sampler = False
+
+        if use_structured_sampler and self.loss_type == "hybrid" and len(train_dataset) >= 16:
+            batch_sampler = ForensicStructuredBatchSampler(
+                train_dataset,
+                p_writers=4,
+                genuines_per_writer=2,
+                forgeries_per_writer=2,
+                seed=self.seed,
+            )
+            train_loader = DataLoader(train_dataset, batch_sampler=batch_sampler)
+        elif (use_balanced_sampler is True or use_structured_sampler) and len(train_dataset) >= 4:
             batch_sampler = BalancedBatchSampler(
                 train_dataset,
                 batch_size=batch_size,
                 seed=self.seed,
             )
             train_loader = DataLoader(train_dataset, batch_sampler=batch_sampler)
-        else:
             train_loader = DataLoader(
                 train_dataset,
                 batch_size=batch_size,
@@ -589,56 +690,123 @@ class ForensicModelTrainer:
                 drop_last=(len(train_dataset) > batch_size),
             )
 
-        # 2. Kayıp Fonksiyonu ve Optimizer Yapılandırması (Sprint 17.1)
-        if self.loss_type == "arcface":
+        # 2. Kayıp Fonksiyonu Yapılandırması
+        if self.loss_type == "hybrid":
+            criterion = ForensicHybridLoss(
+                temperature=0.07,
+                margin=self.margin,
+                hard_neg_weight=1.0,
+            ).to(self.device)
+        elif self.loss_type == "arcface":
             criterion = ArcFaceMarginLoss(
                 num_classes=max(2, train_dataset.num_classes),
                 embedding_dim=self.embedding_dim,
             ).to(self.device)
-            # ArcFace parametrelerini optimizer'a dahil et
-            criterion_param_ids = {id(p) for p in criterion.parameters()}
-            existing_param_ids = {id(p) for group in self.optimizer.param_groups for p in group["params"]}
-            if not criterion_param_ids.issubset(existing_param_ids):
-                self.optimizer.add_param_group({"params": list(criterion.parameters()), "lr": self.lr})
         else:
             criterion = SupervisedContrastiveLoss(temperature=0.07).to(self.device)
-
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-            self.optimizer, T_max=max(1, num_epochs), eta_min=1e-6
-        )
 
         history: Dict[str, List[Any]] = {
             "epoch": [],
             "train_loss": [],
+            "gen_loss": [],
+            "hn_loss": [],
             "val_eer": [],
             "val_auc": [],
+            "tar_at_eer": [],
+            "far_at_eer": [],
             "learning_rate": [],
+            "gen_gen_sim": [],
+            "gen_forg_sim": [],
+            "diff_writer_sim": [],
         }
 
         best_val_eer = float("inf")
-        best_val_metrics: Dict[str, float] = {}
+        best_val_metrics: Dict[str, Any] = {}
         best_checkpoint_path = self.weights_dir / save_filename
+        patience_counter = 0
 
         start_time = time.time()
 
+        # STAGE 1: Omurga Dondurulmuş Başlık Isınması (Warm-up)
+        print(f"\n[STAGE 1] Omurga donduruluyor, {warmup_epochs} epoch boyunca projeksiyon basligi egitiliyor (LR={self.head_lr})...")
+        self.model.freeze_backbone()
+        self.optimizer = torch.optim.AdamW(
+            self.model.projection_head.parameters(),
+            lr=self.head_lr,
+            weight_decay=self.weight_decay,
+        )
+
+        current_stage = 1
+        scheduler = None
+
         for epoch in range(1, num_epochs + 1):
-            current_lr = float(self.optimizer.param_groups[0]["lr"])
-            train_loss = self.train_epoch(train_loader, criterion)
+            if epoch > warmup_epochs and current_stage == 1:
+                # STAGE 2'ye Geçiş: Omurga Çözülüyor (Fine-tuning)
+                current_stage = 2
+                print(f"\n[STAGE 2] Omurga cozuluor, diferansiyel LR ile fine-tuning basliyor (Backbone LR={self.backbone_lr}, Head LR={self.head_lr})...")
+                self.model.unfreeze_backbone()
+                self.optimizer = torch.optim.AdamW(
+                    [
+                        {"params": self.model.backbone.parameters(), "lr": self.backbone_lr},
+                        {"params": self.model.projection_head.parameters(), "lr": self.head_lr},
+                    ],
+                    weight_decay=self.weight_decay,
+                )
+                remaining_epochs = max(1, num_epochs - warmup_epochs)
+                scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+                    self.optimizer, T_max=remaining_epochs, eta_min=1e-6
+                )
+
+            if hasattr(train_loader, "batch_sampler") and hasattr(train_loader.batch_sampler, "set_epoch"):
+                train_loader.batch_sampler.set_epoch(epoch)
+
+            current_lr = float(self.optimizer.param_groups[-1]["lr"])
+            train_loss, gen_loss, hn_loss = self.train_epoch(train_loader, criterion)
             
-            # Sprint 17.2: Açık Küme EER / ROC-AUC Doğrulaması
+            # Açık Küme EER / ROC-AUC Doğrulaması ve Dağılım Analizi
             val_metrics = self.evaluate_open_set_validation(val_samples)
-            scheduler.step()
+            if scheduler is not None:
+                scheduler.step()
+
+            gg_sim = val_metrics["dist_gen_gen"]["mean"]
+            gf_sim = val_metrics["dist_gen_forg"]["mean"]
+            dw_sim = val_metrics["dist_diff_writer"]["mean"]
 
             history["epoch"].append(epoch)
             history["train_loss"].append(round(train_loss, 5))
+            history["gen_loss"].append(round(gen_loss, 5))
+            history["hn_loss"].append(round(hn_loss, 5))
             history["val_eer"].append(val_metrics["val_eer"])
             history["val_auc"].append(val_metrics["val_auc"])
+            history["tar_at_eer"].append(val_metrics["tar_at_eer"])
+            history["far_at_eer"].append(val_metrics["far_at_eer"])
             history["learning_rate"].append(current_lr)
+            history["gen_gen_sim"].append(gg_sim)
+            history["gen_forg_sim"].append(gf_sim)
+            history["diff_writer_sim"].append(dw_sim)
 
-            # En düşük EER'ye sahip modeli sakla
-            if val_metrics["val_eer"] <= best_val_eer:
+            is_best_flag = "YES (*)" if val_metrics["val_eer"] < best_val_eer else "NO"
+            vram_mb = (torch.cuda.memory_allocated(self.device) / (1024**2)) if self.device.type == "cuda" else 0.0
+
+            print(
+                f"Epoch {epoch:02d}/{num_epochs:02d} | "
+                f"Train Loss: {train_loss:.4f} | "
+                f"Val Loss (EER): {val_metrics['val_eer']:.4f} | "
+                f"Val AUC: {val_metrics['val_auc']:.4f} | "
+                f"Val EER: {val_metrics['val_eer']:.4f} | "
+                f"Best: {is_best_flag} | "
+                f"VRAM: {vram_mb:.1f} MB"
+            )
+            print(
+                f"         -> Gen Loss: {gen_loss:.4f}, HN Loss: {hn_loss:.4f}, TAR: {val_metrics['tar_at_eer']:.4f}, "
+                f"Sim[GG={gg_sim:.3f}, GF={gf_sim:.3f}, DW={dw_sim:.3f}]"
+            )
+
+            # En düşük EER'ye sahip checkpoint'i sakla
+            if val_metrics["val_eer"] < best_val_eer:
                 best_val_eer = val_metrics["val_eer"]
                 best_val_metrics = val_metrics
+                patience_counter = 0
                 checkpoint_payload = {
                     "epoch": epoch,
                     "model_state_dict": self.model.state_dict(),
@@ -646,11 +814,17 @@ class ForensicModelTrainer:
                     "val_loss": val_metrics["val_eer"],
                     "val_eer": val_metrics["val_eer"],
                     "val_auc": val_metrics["val_auc"],
+                    "tar_at_eer": val_metrics["tar_at_eer"],
+                    "far_at_eer": val_metrics["far_at_eer"],
+                    "optimal_threshold": val_metrics["optimal_threshold"],
+                    "dist_gen_gen": val_metrics["dist_gen_gen"],
+                    "dist_gen_forg": val_metrics["dist_gen_forg"],
+                    "dist_diff_writer": val_metrics["dist_diff_writer"],
                     "train_loss": train_loss,
                     "embedding_dim": self.embedding_dim,
                     "loss_type": self.loss_type,
                     "model_architecture": "ConvNeXt-Tiny",
-                    "version": "v1.2-sprint18",
+                    "version": "v2.0-cedar-forensic",
                     "training_type": training_type,
                     "dataset_name": dataset_name,
                     "source_code_commit": get_git_commit_hash(),
@@ -658,21 +832,33 @@ class ForensicModelTrainer:
                     "trained_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                     "hyperparameters": {
                         "num_epochs": num_epochs,
+                        "warmup_epochs": warmup_epochs,
                         "batch_size": batch_size,
-                        "lr": self.lr,
+                        "head_lr": self.head_lr,
+                        "backbone_lr": self.backbone_lr,
+                        "margin": self.margin,
                         "weight_decay": self.weight_decay,
                         "loss_type": self.loss_type,
                     },
                 }
                 torch.save(checkpoint_payload, str(best_checkpoint_path))
+                print(f"  [BEST CHECKPOINT] Yeni en iyi EER: {best_val_eer:.4f} -> '{best_checkpoint_path.name}' kaydedildi.")
+            else:
+                patience_counter += 1
+                if patience_counter >= early_stopping_patience and epoch > warmup_epochs:
+                    print(f"  [EARLY STOPPING] Validation EER {early_stopping_patience} epoch boyunca iyilesmedi. Egitim sonlandirildi.")
+                    break
 
         elapsed_time = round(time.time() - start_time, 2)
 
-        # Sprint 17.6 & 18.10: Otomatik ONNX Export & Manifest Güncellemesi
+        # ONNX Export & Parity Test (model_manifest.json bu aşamada değiştirilmez!)
         config_dict = {
             "num_epochs": num_epochs,
+            "warmup_epochs": warmup_epochs,
             "batch_size": batch_size,
-            "lr": self.lr,
+            "head_lr": self.head_lr,
+            "backbone_lr": self.backbone_lr,
+            "margin": self.margin,
             "weight_decay": self.weight_decay,
             "loss_type": self.loss_type,
             "seed": self.seed,
@@ -680,20 +866,22 @@ class ForensicModelTrainer:
         export_result = self.export_and_validate_onnx(
             checkpoint_path=best_checkpoint_path,
             val_metrics=best_val_metrics,
+            onnx_filename=onnx_filename,
             training_type=training_type,
             dataset_name=dataset_name,
             config_dict=config_dict,
+            update_manifest=update_manifest,
         )
 
-        history_path = self.weights_dir / "training_history.json"
+        history_path = self.weights_dir / "training_history_v2.json"
         with open(history_path, "w", encoding="utf-8") as f:
             json.dump({
                 "history": history,
                 "best_val_eer": best_val_eer,
                 "best_val_metrics": best_val_metrics,
                 "elapsed_seconds": elapsed_time,
-                "epochs": num_epochs,
-                "model_version": "v1.2-sprint18",
+                "epochs": len(history["epoch"]),
+                "model_version": "v2.0-cedar-forensic",
                 "training_type": training_type,
                 "dataset_name": dataset_name,
                 "export_result": export_result,
@@ -704,6 +892,7 @@ class ForensicModelTrainer:
             "history_path": str(history_path),
             "best_val_eer": round(best_val_eer, 5),
             "best_val_auc": round(best_val_metrics.get("val_auc", 0.5), 5),
+            "best_val_metrics": best_val_metrics,
             "elapsed_seconds": elapsed_time,
             "history": history,
             "export_result": export_result,
@@ -716,9 +905,9 @@ def run_training_pipeline(
     data_dir: Optional[Union[str, Path]] = None,
     num_writers: int = 16,
     samples_per_writer: int = 6,
-    num_epochs: int = 4,
-    batch_size: int = 8,
-    loss_type: str = "supcon",
+    num_epochs: int = 10,
+    batch_size: int = 16,
+    loss_type: str = "hybrid",
     lr: float = 1e-4,
     embedding_dim: int = 128,
     seed: int = 42,
@@ -727,12 +916,21 @@ def run_training_pipeline(
     """
     Uçtan uca adli veri seti yükleme/üretim ve ConvNeXt-Tiny model eğitim boru hattı.
     """
+    pretrained = True
+    head_lr = 1e-4
+    backbone_lr = 2e-5
+    margin = 0.40
+
     if config is not None:
         data_dir = config.data_dir
         num_epochs = config.num_epochs
         batch_size = config.batch_size
         loss_type = config.loss_type
         lr = config.lr
+        head_lr = config.head_lr
+        backbone_lr = config.backbone_lr
+        margin = config.margin
+        pretrained = config.pretrained
         embedding_dim = config.embedding_dim
         seed = config.seed
 
@@ -782,7 +980,11 @@ def run_training_pipeline(
     trainer = ForensicModelTrainer(
         embedding_dim=embedding_dim,
         lr=lr,
+        head_lr=head_lr,
+        backbone_lr=backbone_lr,
+        margin=margin,
         loss_type=loss_type,
+        pretrained=pretrained,
         seed=seed,
     )
     results = trainer.fit(

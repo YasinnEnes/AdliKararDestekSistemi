@@ -1,0 +1,39 @@
+{
+  "model_version": "v6.0-research-candidate",
+  "parent_model_version": "v5.0-production",
+  "architecture": "ForensicConvNeXtEncoder",
+  "embedding_dimension": 128,
+  "checkpoint_sha256": "da6b1c6d126cc18c3e0e7762c782a3c1f1f8a79edd5698abcb9495e980efc627",
+  "onnx_sha256": "e33a97f933d8410743777726af83c86a3408bc48431ddaaa6f86f1c9c680a2e3",
+  "thresholds": {
+    "eer_threshold": 0.8552,
+    "standard_threshold_far5": 0.8983,
+    "strict_threshold_far1": 0.9866
+  },
+  "metrics": {
+    "global_auc": 0.965,
+    "global_eer": 0.0649,
+    "delta_gg_gf": 0.3874,
+    "cedar_auc": 0.9999,
+    "bhsig_auc": 0.9991,
+    "utsig_auc": 0.9236,
+    "cvl_auc": 0.7067,
+    "iam_auc": 0.422
+  },
+  "onnx_parity": {
+    "status": "PASS",
+    "max_abs_error": 3.725290298461914e-07,
+    "mae": 7.326620732328593e-08,
+    "rmse": 9.221481178656177e-08
+  },
+  "geometry": {
+    "mean_norm": 1.0,
+    "norm_std": 0.0,
+    "min_dim_variance": 0.002197,
+    "max_dim_variance": 0.013222,
+    "mean_dim_variance": 0.006482,
+    "effective_dimensionality": 69.62,
+    "embedding_dimension": 128
+  },
+  "production_status": "RESEARCH_CANDIDATE_FREEZE"
+}

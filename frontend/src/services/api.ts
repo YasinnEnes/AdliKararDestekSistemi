@@ -86,11 +86,11 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // Döngüsel interceptor tetiklenmesini önlemek için doğrudan axios ile çağır
+        // Döngüsel interceptor tetiklenmesini önlemek için doğrudan axios ile çağır (6s timeout ile kilitlenmeyi engelle)
         const res = await axios.post<{ access_token: string; refresh_token: string; token_type: string }>(
           `${API_BASE_URL}/auth/refresh`,
           { refresh_token: storedRefreshToken },
-          { headers: { "Content-Type": "application/json" } }
+          { headers: { "Content-Type": "application/json" }, timeout: 6000 }
         );
 
         const newAccessToken = res.data.access_token;

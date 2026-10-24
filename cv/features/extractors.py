@@ -21,6 +21,11 @@ class StructuralSpatialFeatures(BaseModel):
     terminal_count: int = Field(..., description="Uç nokta sayısı (degree == 1)")
     avg_stroke_length_px: float = Field(..., description="Ortalama vuruş / çizgi uzunluğu (piksel)")
     inter_stroke_spacing_px: float = Field(..., description="Vuruşlar / karakterler arası ortalama mesafe (piksel)")
+    # Sprint 31: Boyutsuz ve ölçekten bağımsız normalize oranlar (Scale-Invariant)
+    baseline_deviation_ratio: float = Field(default=0.0, description="Boyutsuz taban çizgisi dalgalanması (H_bbox normalize)")
+    avg_stroke_length_ratio: float = Field(default=0.0, description="Boyutsuz ortalama vuruş uzunluğu (D_diag normalize)")
+    inter_stroke_spacing_ratio: float = Field(default=0.0, description="Boyutsuz vuruşlar arası mesafe (W_bbox normalize)")
+    bbox_dimensions: Tuple[float, float, float] = Field(default=(100.0, 100.0, 141.42), description="Bounding box (W, H, Diag) piksel")
 
 
 class LineQualityFeatures(BaseModel):
@@ -191,21 +196,36 @@ class StructuralSpatialExtractor:
         slant_angle = self.calculate_slant_angle(skeleton_image)
         baseline_angle, baseline_dev = self.calculate_baseline_features(skeleton_image)
 
-        # Ortalama vuruş uzunluğu (İskelet pikseli / bileşen sayısı)
+        # Ortalama vuruş uzunluğu ve bileşen analizi (min alan >= 4 px parazit filtresi)
         skel_pixels = int(np.count_nonzero(skeleton_image > 0))
         num_labels, _, stats, _ = cv2.connectedComponentsWithStats(
             (skeleton_image > 0).astype(np.uint8), connectivity=8
         )
-        comp_count = max(1, num_labels - 1)
+        valid_stats = [stats[i] for i in range(1, num_labels) if stats[i, cv2.CC_STAT_AREA] >= 4]
+        comp_count = max(1, len(valid_stats))
         avg_stroke_length = skel_pixels / comp_count
 
         # Vuruşlar arası ortalama yatay mesafe
         if comp_count > 1:
-            lefts = sorted([stats[i, cv2.CC_STAT_LEFT] for i in range(1, num_labels)])
+            lefts = sorted([s[cv2.CC_STAT_LEFT] for s in valid_stats])
             spacings = [lefts[i+1] - lefts[i] for i in range(len(lefts)-1)]
             avg_spacing = float(np.mean(spacings)) if spacings else 0.0
         else:
             avg_spacing = 0.0
+
+        # Sprint 31: İskelet piksellerinden bounding box boyutlarını çıkar
+        y_idx, x_idx = np.nonzero(skeleton_image > 0)
+        if len(x_idx) > 0 and len(y_idx) > 0:
+            bw = float(np.max(x_idx) - np.min(x_idx) + 1)
+            bh = float(np.max(y_idx) - np.min(y_idx) + 1)
+            bdiag = float(math.sqrt(bw**2 + bh**2))
+        else:
+            bw, bh, bdiag = 100.0, 100.0, 141.42
+
+        # Boyutsuz normalize oranlar
+        base_dev_ratio = float(baseline_dev / max(10.0, bh))
+        stroke_len_ratio = float(avg_stroke_length / max(10.0, bdiag))
+        spacing_ratio = float(avg_spacing / max(10.0, bw))
 
         return StructuralSpatialFeatures(
             slant_angle_deg=slant_angle,
@@ -216,6 +236,10 @@ class StructuralSpatialExtractor:
             terminal_count=terminals,
             avg_stroke_length_px=round(avg_stroke_length, 2),
             inter_stroke_spacing_px=round(avg_spacing, 2),
+            baseline_deviation_ratio=round(base_dev_ratio, 4),
+            avg_stroke_length_ratio=round(stroke_len_ratio, 4),
+            inter_stroke_spacing_ratio=round(spacing_ratio, 4),
+            bbox_dimensions=(round(bw, 1), round(bh, 1), round(bdiag, 1)),
         )
 
 
@@ -349,9 +373,10 @@ class ForensicFeatureExtractor:
     Yapısal, Uzamsal, Çizgi Kalitesi ve Kinematik Çıkarıcıları koordine eden ana motor.
     """
 
-    def __init__(self):
+    def __init__(self, scale_invariant: bool = True):
         self.structural_extractor = StructuralSpatialExtractor()
         self.kinematics_extractor = LineQualityKinematicsExtractor()
+        self.scale_invariant = scale_invariant
 
     def extract_all(
         self,
@@ -362,16 +387,29 @@ class ForensicFeatureExtractor:
         structural = self.structural_extractor.extract(skeleton_image, binary_image)
         line_quality = self.kinematics_extractor.extract(skeleton_image)
 
+        if self.scale_invariant:
+            # Sprint 31 P1: Ölçek ve DPI farkından bağımsız boyutsuz oranlar
+            b_dev = round(structural.baseline_deviation_ratio, 4)
+            s_len = round(structural.avg_stroke_length_ratio, 4)
+            s_spc = round(structural.inter_stroke_spacing_ratio, 4)
+            schema_ver = "2.0.0_SCALE_INVARIANT"
+        else:
+            # v1 legacy piksel vektörü
+            b_dev = structural.baseline_deviation_px
+            s_len = structural.avg_stroke_length_px
+            s_spc = structural.inter_stroke_spacing_px
+            schema_ver = "1.0.0_RAW_PIXELS"
+
         # Karşılaştırma motorları için normalize sayısal özellik vektörü
         feature_vector = [
             structural.slant_angle_deg,
             structural.baseline_angle_deg,
-            structural.baseline_deviation_px,
+            b_dev,
             float(structural.loop_count),
             float(structural.crossing_count),
             float(structural.terminal_count),
-            structural.avg_stroke_length_px,
-            structural.inter_stroke_spacing_px,
+            s_len,
+            s_spc,
             line_quality.tremor_index_psd,
             line_quality.smoothness_energy,
             line_quality.mean_velocity_proxy,
@@ -381,7 +419,8 @@ class ForensicFeatureExtractor:
 
         metadata = {
             "total_feature_dimensions": len(feature_vector),
-            "extractor_version": "1.0.0",
+            "extractor_version": schema_ver,
+            "scale_invariant": self.scale_invariant,
         }
 
         return ForensicFeatureReport(

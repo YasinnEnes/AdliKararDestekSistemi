@@ -40,11 +40,13 @@ def clean_port_windows(port: int):
         for line in lines:
             parts = line.strip().split()
             if len(parts) >= 5 and "LISTENING" in parts:
-                pid = parts[-1]
-                if pid and pid != "0" and pid not in killed_pids and int(pid) != os.getpid():
-                    subprocess.run(f"taskkill /F /T /PID {pid}", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                    subprocess.run(f"powershell -Command \"Stop-Process -Id {pid} -Force -ErrorAction SilentlyContinue\"", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                    killed_pids.add(pid)
+                local_addr = parts[1]
+                if local_addr.endswith(f":{port}"):
+                    pid = parts[-1]
+                    if pid and pid != "0" and pid not in killed_pids and int(pid) != os.getpid():
+                        subprocess.run(f"taskkill /F /T /PID {pid}", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                        subprocess.run(f"powershell -Command \"Stop-Process -Id {pid} -Force -ErrorAction SilentlyContinue\"", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                        killed_pids.add(pid)
 
         if killed_pids:
             print(f"🧹 Port {port} üzerindeki eski işlemler temizlendi (PID: {', '.join(killed_pids)}).")

@@ -241,14 +241,30 @@ async def run_pipeline_job(
         await update_progress(70, "ONNX CPU Hızlandırmalı Derin Metrik ve Vektör Karşılaştırması")
         comp_report = _COMPARISON_ENGINE.compare(q_features, ref_features_list)
 
-        # ONNX veya PyTorch Fallback ile embedding çıkarımı
-        # Sprint 17.4 & 17.5: Ortak Preprocessing Sözleşmesi ve Normalize Benzerlik Standardı
-        q_tensor = preprocess_for_inference(q_artifacts.normalized_crop)
+        # ONNX veya PyTorch Fallback ile embedding çıkarımı (Sprint 31: normalized_crop öncelikli)
+        def _get_roi(art):
+            if art is not None:
+                crop = getattr(art, "normalized_crop", None)
+                bbox_meta = getattr(art, "metadata", {}).get("bounding_box_normalization", {})
+                if crop is not None and crop.size > 0 and bbox_meta.get("has_content", True):
+                    return crop
+                doc = getattr(art, "isolated_document", None)
+                if doc is not None and doc.size > 0:
+                    return doc
+            return None
+
+        q_target = _get_roi(q_artifacts)
+        if q_target is None:
+            q_target = getattr(q_artifacts, "isolated_document", None) if q_artifacts else None
+        q_tensor = preprocess_for_inference(q_target)
         q_emb_np = _ONNX_ENGINE.encode(q_tensor)
 
         ref_sims = []
         for r_art in ref_artifacts_list:
-            r_tensor = preprocess_for_inference(r_art.normalized_crop)
+            r_target = _get_roi(r_art)
+            if r_target is None:
+                r_target = getattr(r_art, "isolated_document", None) if r_art else None
+            r_tensor = preprocess_for_inference(r_target)
             r_emb_np = _ONNX_ENGINE.encode(r_tensor)
             # cosine similarity on normalized vectors -> [0.0, 1.0]
             sim = compute_normalized_similarity(q_emb_np[0], r_emb_np[0])

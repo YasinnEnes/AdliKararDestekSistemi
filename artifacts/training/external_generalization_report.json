@@ -1,0 +1,60 @@
+{
+  "inventory": [
+    {
+      "dataset_name": "CEDAR",
+      "type": "signature",
+      "language": "English",
+      "script": "Latin",
+      "archive_status": "Mevcut (A\u00e7\u0131k)",
+      "writer_overlap_with_cedar": 0
+    },
+    {
+      "dataset_name": "BHSig-260",
+      "type": "signature",
+      "language": "Bengali & Hindi",
+      "script": "Indic (Bangla / Devanagari)",
+      "archive_status": "Mevcut (A\u00e7\u0131k)",
+      "writer_overlap_with_cedar": 0
+    },
+    {
+      "dataset_name": "UTSig",
+      "type": "signature",
+      "language": "Persian",
+      "script": "Perso-Arabic",
+      "archive_status": "ZIP Ar\u015fivi Var",
+      "writer_overlap_with_cedar": 0
+    },
+    {
+      "dataset_name": "SVC2004",
+      "type": "dynamic_signature",
+      "language": "English & Chinese",
+      "script": "Latin & Hanzi",
+      "archive_status": "ZIP Ar\u015fivi Var",
+      "writer_overlap_with_cedar": 0
+    },
+    {
+      "dataset_name": "CVL Database",
+      "type": "handwriting",
+      "language": "Multilingual (German/English)",
+      "script": "Latin Cursive",
+      "archive_status": "ZIP Ar\u015fivi Var",
+      "writer_overlap_with_cedar": 0
+    },
+    {
+      "dataset_name": "IAM_HW",
+      "type": "handwriting",
+      "language": "English",
+      "script": "Latin Cursive",
+      "archive_status": "ZIP Ar\u015fivi Var",
+      "writer_overlap_with_cedar": 0
+    }
+  ],
+  "bhsig_evaluation": {
+    "dataset": "BHSig-260",
+    "cross_dataset_auc": 0.84722,
+    "cross_dataset_eer": 0.25076,
+    "mean_genuine_similarity": 0.9575,
+    "mean_forgery_similarity": 0.9042,
+    "total_evaluated_pairs": 1050
+  }
+}

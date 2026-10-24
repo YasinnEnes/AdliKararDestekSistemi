@@ -1,0 +1,206 @@
+{
+  "sprint": "SPRINT 22",
+  "model_id": "convnext_tiny_forensic_multidataset_v4",
+  "model_version": "v4.0.0-multidataset",
+  "training_completed_utc": "2026-09-25T17:45:32Z",
+  "corpora": [
+    "CEDAR",
+    "BHSig-260",
+    "UTSig"
+  ],
+  "hardware": {
+    "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "vram_gb": 8.0,
+    "amp": true
+  },
+  "weights": {
+    "pytorch_checkpoint": {
+      "filename": "convnext_tiny_forensic_multidataset_v4_best.pt",
+      "sha256": "3f0640047c170874cd0369f9c19451dd9fa857a24f8410d7c3f5c2393b5e2e5e",
+      "size_bytes": 112269385
+    },
+    "onnx_model": {
+      "filename": "convnext_tiny_forensic_multidataset_v4.onnx",
+      "sha256": "6f79e39494b5357bb8f5578e48b0afd17dad640055ee799c6236291d15ad1d80",
+      "size_bytes": 112346775
+    }
+  },
+  "onnx_parity": {
+    "passed": true,
+    "max_abs_diff": 3.754394128918648e-07,
+    "tolerance": 0.0001
+  },
+  "validation_metrics": {
+    "best_val_auc": 0.9406603734988437,
+    "best_val_eer": 0.13372829353338261
+  },
+  "test_metrics": {
+    "global_test_auc": 0.9805371185477245,
+    "global_test_eer": 0.07225679976211336,
+    "cedar_test_auc": 0.9823438991024035,
+    "cedar_test_eer": 0.066430152979066,
+    "bhsig_test_auc": 0.9703098449405585,
+    "bhsig_test_eer": 0.09550817539947976,
+    "utsig_test_auc": 0.8917764299184815,
+    "utsig_test_eer": 0.19379022897541417
+  },
+  "training_history": [
+    {
+      "epoch": 1,
+      "stage": "Stage 1 (Head Only, LR=1e-4)",
+      "train_loss": 0.7707,
+      "val_auc": 0.87733,
+      "val_eer": 0.20946,
+      "cedar_val_auc": 0.99746,
+      "cedar_val_eer": 0.02416,
+      "opt_threshold": 0.8342,
+      "elapsed_seconds": 117.12
+    },
+    {
+      "epoch": 2,
+      "stage": "Stage 1 (Head Only, LR=1e-4)",
+      "train_loss": 0.581,
+      "val_auc": 0.88323,
+      "val_eer": 0.2023,
+      "cedar_val_auc": 0.99748,
+      "cedar_val_eer": 0.02527,
+      "opt_threshold": 0.8311,
+      "elapsed_seconds": 112.16
+    },
+    {
+      "epoch": 3,
+      "stage": "Stage 2 (Differential LR)",
+      "train_loss": 0.487,
+      "val_auc": 0.91648,
+      "val_eer": 0.1652,
+      "cedar_val_auc": 0.99723,
+      "cedar_val_eer": 0.02671,
+      "opt_threshold": 0.8233,
+      "elapsed_seconds": 121.83
+    },
+    {
+      "epoch": 4,
+      "stage": "Stage 2 (Differential LR)",
+      "train_loss": 0.4144,
+      "val_auc": 0.91902,
+      "val_eer": 0.16257,
+      "cedar_val_auc": 0.99882,
+      "cedar_val_eer": 0.01596,
+      "opt_threshold": 0.8186,
+      "elapsed_seconds": 116.38
+    },
+    {
+      "epoch": 5,
+      "stage": "Stage 2 (Differential LR)",
+      "train_loss": 0.3778,
+      "val_auc": 0.92969,
+      "val_eer": 0.14673,
+      "cedar_val_auc": 0.99953,
+      "cedar_val_eer": 0.00765,
+      "opt_threshold": 0.8073,
+      "elapsed_seconds": 119.59
+    },
+    {
+      "epoch": 6,
+      "stage": "Stage 2 (Differential LR)",
+      "train_loss": 0.3242,
+      "val_auc": 0.92968,
+      "val_eer": 0.14486,
+      "cedar_val_auc": 0.99928,
+      "cedar_val_eer": 0.01108,
+      "opt_threshold": 0.8043,
+      "elapsed_seconds": 122.89
+    },
+    {
+      "epoch": 7,
+      "stage": "Stage 2 (Differential LR)",
+      "train_loss": 0.2587,
+      "val_auc": 0.93383,
+      "val_eer": 0.14357,
+      "cedar_val_auc": 0.99988,
+      "cedar_val_eer": 0.00576,
+      "opt_threshold": 0.8075,
+      "elapsed_seconds": 119.52
+    },
+    {
+      "epoch": 8,
+      "stage": "Stage 2 (Differential LR)",
+      "train_loss": 0.2609,
+      "val_auc": 0.93431,
+      "val_eer": 0.14437,
+      "cedar_val_auc": 0.99995,
+      "cedar_val_eer": 0.00366,
+      "opt_threshold": 0.7913,
+      "elapsed_seconds": 117.78
+    },
+    {
+      "epoch": 9,
+      "stage": "Stage 2 (Differential LR)",
+      "train_loss": 0.2221,
+      "val_auc": 0.94066,
+      "val_eer": 0.13373,
+      "cedar_val_auc": 0.99986,
+      "cedar_val_eer": 0.00499,
+      "opt_threshold": 0.7986,
+      "elapsed_seconds": 114.33
+    },
+    {
+      "epoch": 10,
+      "stage": "Stage 2 (Differential LR)",
+      "train_loss": 0.2458,
+      "val_auc": 0.93642,
+      "val_eer": 0.14033,
+      "cedar_val_auc": 0.99858,
+      "cedar_val_eer": 0.02083,
+      "opt_threshold": 0.8027,
+      "elapsed_seconds": 118.34
+    }
+  ],
+  "distribution_summary": {
+    "model_version": "v4.0.0-multidataset",
+    "genuine_genuine_gg": {
+      "count": 19566,
+      "mean": 0.8965,
+      "median": 0.915,
+      "std": 0.0713,
+      "min": 0.4629,
+      "max": 1.0,
+      "p05": 0.7546,
+      "p25": 0.8632,
+      "p50": 0.915,
+      "p75": 0.9488,
+      "p95": 0.975
+    },
+    "genuine_forgery_gf": {
+      "count": 24570,
+      "mean": 0.6135,
+      "median": 0.6341,
+      "std": 0.1698,
+      "min": 0.1727,
+      "max": 1.0,
+      "p05": 0.3267,
+      "p25": 0.4732,
+      "p50": 0.6341,
+      "p75": 0.7524,
+      "p95": 0.8611
+    },
+    "genuine_different_writer_gdw": {
+      "count": 3276,
+      "mean": 0.5732,
+      "median": 0.5564,
+      "std": 0.147,
+      "min": 0.2437,
+      "max": 0.9401,
+      "p05": 0.3603,
+      "p25": 0.4552,
+      "p50": 0.5564,
+      "p75": 0.6869,
+      "p95": 0.8267
+    },
+    "margins": {
+      "delta_gg_gf": 0.283,
+      "delta_gg_gdw": 0.3233,
+      "delta_gf_gdw": 0.0403
+    }
+  }
+}

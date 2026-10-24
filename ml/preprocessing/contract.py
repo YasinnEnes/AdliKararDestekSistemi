@@ -179,3 +179,91 @@ def preprocess_for_inference(
 
     tensor_3d = _DEFAULT_CONTRACT.preprocess_image(image, is_bgr=is_bgr)
     return tensor_3d.unsqueeze(0)
+
+
+def inference_preprocess(
+    image: Union[np.ndarray, torch.Tensor],
+    is_bgr: bool = True,
+) -> torch.Tensor:
+    """
+    Sprint 22 Sözleşmesi: Canlı çıkarım (inference) ön işleme fonksiyonu.
+    preprocess_for_inference() ile birebir eşittir.
+    Returns:
+        (1, 3, 224, 224) float32 normalize PyTorch tensörü.
+    """
+    return preprocess_for_inference(image, is_bgr=is_bgr)
+
+
+class V4ForensicAugmentation:
+    """
+    Sprint 22 V4 Adli Biyomekanik Veri Artırma ve Ön İşleme Katmanı.
+    
+    Kullanılan kontrollü artırmalar:
+    - rotation: ±2°
+    - small translation: ±4 piksel
+    - mild contrast variation: [0.95, 1.05]
+    - mild brightness variation: [-5, +5]
+    - very small Gaussian noise: sigma <= 1.5
+    
+    Kesinlikle KULLANILMAYAN agresif dönüşümler:
+    - Horizontal/vertical flip
+    - Large rotation (>2°)
+    - Elastic deformation
+    - Strong perspective transformation
+    - Aggressive crop / Random erasing
+    """
+    def __init__(self, is_training: bool = True, target_size: Tuple[int, int] = (224, 224)):
+        self.is_training = is_training
+        self.target_size = target_size
+        self.normalizer = T.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD)
+
+    def __call__(self, image: np.ndarray, is_bgr: bool = True) -> torch.Tensor:
+        if image is None or image.size == 0:
+            raise ValueError("Boş veya geçersiz görsel verisi.")
+
+        img_rgb = to_rgb(image, is_bgr=is_bgr)
+        h, w = img_rgb.shape[:2]
+
+        if self.is_training:
+            import random
+            # 1. Küçük rotasyon (±2 derece) ve hafif öteleme (±4 piksel)
+            angle = random.uniform(-2.0, 2.0)
+            tx = random.uniform(-4.0, 4.0)
+            ty = random.uniform(-4.0, 4.0)
+            center = (w / 2.0, h / 2.0)
+            M = cv2.getRotationMatrix2D(center, angle, 1.0)
+            M[0, 2] += tx
+            M[1, 2] += ty
+            img_rgb = cv2.warpAffine(
+                img_rgb, M, (w, h),
+                borderMode=cv2.BORDER_CONSTANT,
+                borderValue=(255, 255, 255)
+            )
+
+            # 2. Hafif kontrast ve parlaklık
+            alpha = random.uniform(0.95, 1.05)
+            beta = random.uniform(-5.0, 5.0)
+            img_rgb = np.clip(alpha * img_rgb.astype(np.float32) + beta, 0, 255).astype(np.uint8)
+
+            # 3. Çok küçük Gauss gürültüsü
+            if random.random() < 0.3:
+                noise = np.random.normal(0, 1.0, img_rgb.shape).astype(np.float32)
+                img_rgb = np.clip(img_rgb.astype(np.float32) + noise, 0, 255).astype(np.uint8)
+
+        # Pad to square
+        img_padded = pad_to_square(img_rgb, background_value=(255, 255, 255))
+        img_resized = cv2.resize(img_padded, self.target_size, interpolation=cv2.INTER_AREA)
+
+        # Tensör ve normalizasyon
+        tensor = torch.from_numpy(img_resized).permute(2, 0, 1).float() / 255.0
+        return self.normalizer(tensor)
+
+
+def training_preprocess(image: np.ndarray, is_training: bool = True, is_bgr: bool = True) -> torch.Tensor:
+    """
+    Sprint 22 Sözleşmesi: Model eğitimi için standart ön işleme fonksiyonu.
+    is_training=False durumunda inference_preprocess ile tensör düzeyinde tam özdeştir.
+    """
+    aug = V4ForensicAugmentation(is_training=is_training)
+    return aug(image, is_bgr=is_bgr)
+

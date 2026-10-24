@@ -1,0 +1,83 @@
+model:
+  backbone: "convnext_tiny"
+  init_from: "artifacts/weights/convnext_tiny_forensic_multidataset_v4_best.pt"
+  embedding_dim: 128
+  l2_normalize: true
+  warm_start: true
+
+corpora:
+  signature_corpora:
+    - name: "CEDAR"
+      language: "Latin/English"
+      task: "SIGNATURE_VERIFICATION"
+      weight: 0.28
+    - name: "BHSig-260"
+      language: "Indic (Bengali & Hindi)"
+      task: "SIGNATURE_VERIFICATION"
+      weight: 0.28
+    - name: "UTSig"
+      language: "Perso-Arabic (Persian)"
+      task: "SIGNATURE_VERIFICATION"
+      weight: 0.24
+  handwriting_corpora:
+    - name: "CVL Database"
+      language: "Multilingual (English/German)"
+      task: "HANDWRITING_WRITER_VERIFICATION"
+      weight: 0.10
+    - name: "IAM_HW"
+      language: "Latin (English)"
+      task: "HANDWRITING_WRITER_VERIFICATION"
+      weight: 0.10
+  auxiliary_modalities:
+    - name: "SVC2004"
+      modality: "DYNAMIC_TRAJECTORY_KINEMATIC"
+      status: "EXCLUDED_FROM_2D_IMAGE_ENCODER"
+      reason: "Coordinate/pressure time-series data; preserved for dynamic auxiliary models"
+
+data:
+  writer_disjoint: true
+  namespace_writer_ids: true
+  split_ratios:
+    train: 0.70
+    val: 0.15
+    test: 0.15
+  random_seed: 42
+  image_size: [224, 224]
+  deskew_policy: "DISABLED"
+  augmentation:
+    max_rotation_deg: 2.0
+    max_translation_px: 4.0
+    contrast_range: [0.95, 1.05]
+    brightness_range: [-5, 5]
+    horizontal_flip: false
+    vertical_flip: false
+
+training:
+  total_epochs: 10
+  stage1_epochs: 2
+  stage1_lr: 1.0e-4
+  stage2_backbone_lr: 1.5e-5
+  stage2_head_lr: 1.0e-4
+  weight_decay: 1.0e-4
+  optimizer: "adamw"
+  scheduler: "cosine_annealing"
+  eta_min: 1.0e-6
+  amp: true
+  device: "cuda"
+  early_stopping_patience: 4
+
+loss:
+  temperature: 0.07
+  margin: 0.45
+  hard_negative_weight: 1.5
+  hard_negative_percentile: 85.0
+
+calibration:
+  threshold_selection_split: "VALIDATION"
+  test_split_frozen: true
+
+export:
+  onnx_opset: 17
+  onnx_target_tolerance: 1.0e-4
+  target_pytorch_path: "artifacts/weights/convnext_tiny_forensic_multidataset_v5_best.pt"
+  target_onnx_path: "artifacts/weights/convnext_tiny_forensic_multidataset_v5.onnx"

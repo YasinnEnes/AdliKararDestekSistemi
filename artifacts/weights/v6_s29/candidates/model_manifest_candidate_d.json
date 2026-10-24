@@ -1,0 +1,42 @@
+{
+  "model_name": "Candidate_D",
+  "version": "v6.0-s29-mar-candidate",
+  "architecture": "ForensicConvNeXtEncoder",
+  "source_checkpoint": "convnext_tiny_forensic_multidataset_v6_best.pt",
+  "checkpoint_sha256": "515dba544a5425a163f3969be6834001f54d190864d756ec93cb613e15b0be57",
+  "onnx_sha256": "bb9971488d2d11858864f0550fd6b2a496e8bed9781eda707003b5baf68ab069",
+  "preprocessing_strategy": "EXP-F (Multi-Aspect-Ratio Controlled Letterbox)",
+  "augmentation": "Sprint29MARAugmentation (No Flips, Controlled Shear/Blur/Contrast)",
+  "seed": 42,
+  "optimizer": "AdamW",
+  "stage1_lr": 0.0001,
+  "stage2_backbone_lr": 2e-05,
+  "stage2_head_lr": 0.0001,
+  "scheduler": "CosineAnnealingLR (min_lr=1e-6)",
+  "loss": "ForensicHybridLoss (margin=0.50, hard_neg_weight=2.5)",
+  "thresholds": {
+    "eer_threshold": 0.8348,
+    "operating_threshold_far5": 0.873,
+    "strict_threshold_far1": 0.9752
+  },
+  "metrics": {
+    "global_auc": 0.9618,
+    "global_eer": 0.0854,
+    "cedar_auc": 0.9996,
+    "bhsig_auc": 0.9751,
+    "utsig_auc": 0.8318,
+    "cvl_auc": 0.7256,
+    "iam_auc": 0.486,
+    "delta_gg_gf": 0.32
+  },
+  "onnx_parity": {
+    "status": "PASS",
+    "max_abs_error": 3.902241587638855e-07,
+    "mae": 8.835567655296472e-08,
+    "mean_cosine": 0.9999999970197677
+  },
+  "determinism": {
+    "status": "PASS",
+    "max_variation": 0.0
+  }
+}

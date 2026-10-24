@@ -201,3 +201,36 @@ def test_background_noise_cleaning():
     assert bin_res[10, 10] == 255
     assert bin_res[290, 290] == 255
 
+
+def test_isolate_document_boundary_on_camera_photo():
+    """
+    Telefon kamerasıyla koyu bir masa üzerinde çekilmiş belgenin
+    masa zemininden başarıyla izole edildiğini ve temiz belgenin korunduğunu test eder.
+    """
+    preprocessor = ForensicImagePreprocessor()
+
+    # 1. Koyu masa simülasyonu (600x600, gri ton 30)
+    canvas = np.full((600, 600, 3), 30, dtype=np.uint8)
+
+    # 2. Masanın ortasına beyaz bir A4/defter sayfası yerleştir (y=150:550, x=100:500)
+    white_paper = np.full((400, 400, 3), 240, dtype=np.uint8)
+    cv2.putText(white_paper, "Adli Belge", (50, 200), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (20, 20, 20), 2)
+    canvas[150:550, 100:500] = white_paper
+
+    # İzolasyonu çalıştır
+    isolated_doc, meta = preprocessor.isolate_document_boundary(canvas)
+
+    assert meta["isolated"] is True
+    assert meta["dark_border_ratio"] > 0.15
+    # Kırpılan belgenin boyutları masanın dışına çıkmamalı, kağıt boyutlarına yakın olmalıdır
+    doc_h, doc_w = isolated_doc.shape[:2]
+    assert 380 <= doc_h <= 420
+    assert 380 <= doc_w <= 420
+
+    # 3. Zaten kırpılmış temiz beyaz belgede gereksiz kırpma yapılmamalıdır
+    clean_paper = np.full((400, 400, 3), 245, dtype=np.uint8)
+    cv2.putText(clean_paper, "Temiz Tarama", (50, 200), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (20, 20, 20), 2)
+    non_isolated, clean_meta = preprocessor.isolate_document_boundary(clean_paper)
+    assert clean_meta["isolated"] is False
+    assert non_isolated.shape == clean_paper.shape
+

@@ -23,6 +23,7 @@ class PreprocessingArtifacts:
     binarized: np.ndarray
     skeleton: np.ndarray
     normalized_crop: np.ndarray
+    isolated_document: Optional[np.ndarray] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
 
 
@@ -51,6 +52,8 @@ class ForensicImagePreprocessor:
         max_skew_angle_deg: float = 45.0,
         denoise_enabled: bool = True,
         clean_speckle_noise: bool = True,
+        deskew_enabled: bool = False,
+        document_isolation_enabled: bool = True,
     ):
         self.clahe_clip_limit = clahe_clip_limit
         self.clahe_tile_grid_size = clahe_tile_grid_size
@@ -62,6 +65,76 @@ class ForensicImagePreprocessor:
         self.max_skew_angle_deg = max_skew_angle_deg
         self.denoise_enabled = denoise_enabled
         self.clean_speckle_noise = clean_speckle_noise
+        self.deskew_enabled = deskew_enabled
+        self.document_isolation_enabled = document_isolation_enabled
+
+    def isolate_document_boundary(
+        self,
+        image: np.ndarray,
+        dark_border_threshold: float = 0.15,
+        min_document_area_ratio: float = 0.15,
+    ) -> Tuple[np.ndarray, Dict[str, Any]]:
+        """
+        Telefon kamerası çekimlerinde masa, çevre arka plan ve gölgeleri
+        otomatik tespit ederek yalnızca asıl kağıt/belge alanını (ROI) izole eder.
+        Eğer görüntü zaten kırpılmış temiz bir belge ise (örn. telefonun 'belge tara' modu),
+        orijinal görüntüyü korur ve gereksiz kırpma yapmaz.
+        """
+        if image is None or image.size == 0:
+            return image, {"isolated": False, "reason": "empty_image"}
+
+        h, w = image.shape[:2]
+        gray = self.to_grayscale(image)
+
+        # Görüntü kenarlarındaki piksel parlaklığını incele (üst, alt, sol, sağ %3 marjin)
+        margin_y = max(5, int(h * 0.03))
+        margin_x = max(5, int(w * 0.03))
+        top_edge = gray[:margin_y, :]
+        bottom_edge = gray[-margin_y:, :]
+        left_edge = gray[:, :margin_x]
+        right_edge = gray[:, -margin_x:]
+        border_pixels = np.concatenate([
+            top_edge.ravel(),
+            bottom_edge.ravel(),
+            left_edge.ravel(),
+            right_edge.ravel(),
+        ])
+
+        blurred = cv2.GaussianBlur(gray, (7, 7), 0)
+        thresh_val, bin_otsu = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        dark_border_ratio = float(np.mean(border_pixels < thresh_val))
+
+        # Eğer kenarlarda belirgin koyu zemin (masa, klavye, oda sahnesi) varsa
+        if dark_border_ratio >= dark_border_threshold:
+            contours, _ = cv2.findContours(bin_otsu, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            valid_contours = [
+                c for c in contours if cv2.contourArea(c) >= min_document_area_ratio * h * w
+            ]
+            if valid_contours:
+                largest = max(valid_contours, key=cv2.contourArea)
+                bx, by, bw, bh = cv2.boundingRect(largest)
+
+                # Güvenli iç kırpma koordinatları
+                crop_x1 = max(0, bx)
+                crop_y1 = max(0, by)
+                crop_x2 = min(w, bx + bw)
+                crop_y2 = min(h, by + bh)
+
+                cropped_doc = image[crop_y1:crop_y2, crop_x1:crop_x2]
+                metadata = {
+                    "isolated": True,
+                    "original_shape": (h, w),
+                    "crop_box_xyxy": (crop_x1, crop_y1, crop_x2, crop_y2),
+                    "dark_border_ratio": round(dark_border_ratio, 3),
+                    "document_shape": cropped_doc.shape[:2],
+                }
+                return cropped_doc, metadata
+
+        return image, {
+            "isolated": False,
+            "original_shape": (h, w),
+            "dark_border_ratio": round(dark_border_ratio, 3),
+        }
 
     def to_grayscale(self, image: np.ndarray) -> np.ndarray:
         """Görüntüyü 8-bit tek kanallı Gri Seviye (Grayscale) matrise dönüştürür."""
@@ -347,22 +420,30 @@ class ForensicImagePreprocessor:
         self,
         image: np.ndarray,
         binarization_method: Optional[str] = None,
-        deskew_enabled: bool = True,
+        deskew_enabled: Optional[bool] = None,
     ) -> PreprocessingArtifacts:
         """
         Tüm ön işleme adımlarını deterministik ve adli kanıt zincirini bozmayacak şekilde sırayla yürütür.
+        Sprint 21: El yazısı ve imzalarda Hough deskew hatasını önlemek için varsayılan olarak deskew_enabled=False.
         """
         original_copy = image.copy()
+        active_deskew = self.deskew_enabled if deskew_enabled is None else deskew_enabled
 
-        # 1. Grayscale
-        gray = self.to_grayscale(original_copy)
+        # 0. Belge Sınırı ve Masa İzolasyonu (Document Boundary & Clutter Removal)
+        if self.document_isolation_enabled:
+            doc_img, doc_meta = self.isolate_document_boundary(original_copy)
+        else:
+            doc_img, doc_meta = original_copy.copy(), {"isolated": False}
+
+        # 1. Grayscale (İzole edilmiş temiz belge üzerinden)
+        gray = self.to_grayscale(doc_img)
 
         # 2. CLAHE Contrast Normalization
         clahe_img = self.apply_clahe(gray)
 
         # 3. Deskewing
         skew_angle = 0.0
-        if deskew_enabled:
+        if active_deskew:
             deskewed_img, skew_angle = self.deskew(clahe_img)
         else:
             deskewed_img = clahe_img.copy()
@@ -384,6 +465,8 @@ class ForensicImagePreprocessor:
 
         metadata = {
             "original_shape": original_copy.shape,
+            "document_shape": doc_img.shape,
+            "document_isolation": doc_meta,
             "grayscale_shape": gray.shape,
             "clahe_clip_limit": self.clahe_clip_limit,
             "clahe_tile_grid_size": self.clahe_tile_grid_size,
@@ -403,5 +486,6 @@ class ForensicImagePreprocessor:
             binarized=bin_img,
             skeleton=skeleton_img,
             normalized_crop=normalized_crop,
+            isolated_document=doc_img,
             metadata=metadata,
         )

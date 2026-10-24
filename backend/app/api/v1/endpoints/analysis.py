@@ -50,7 +50,7 @@ from ml.models.comparison import (
 )
 from ml.models.disguise import ForensicDisguiseDetector
 from ml.models.fusion import HybridForensicFusion
-from ml.models.siamese import ForensicConvNeXtEncoder, compute_embedding_distance, compute_normalized_similarity
+from ml.models.siamese import ForensicConvNeXtEncoder, compute_embedding_distance, compute_normalized_similarity, compute_cosine_similarity
 from ml.preprocessing.contract import preprocess_for_inference
 
 router = APIRouter()
@@ -366,23 +366,50 @@ async def run_full_pipeline(
     comp_report = _COMPARISON_ENGINE.compare(q_features, ref_features_list)
 
     # 7. ConvNeXt-Tiny Derin Metrik Embedding Çıkarımı (ONNX CPU / PyTorch Fallback)
-    # Sprint 17.4 & 17.5: Ortak Preprocessing Sözleşmesi ve Normalize Benzerlik Standardı
-    q_tensor = preprocess_for_inference(q_artifacts.normalized_crop)
+    # Sprint 31 P0 Düzeltmesi: Derin modele eğitim/çıkarım sözleşmesine uygun olarak
+    # sıkı kırpılmış ve merkezlenmiş imza ROI'si (normalized_crop) verilir.
+    # Boş veya geçersiz ROI durumunda izole belgeye (isolated_document) veya ham görsele fallback yapılır.
+    def _get_roi_for_inference(art, fallback_img):
+        if art is not None:
+            crop = getattr(art, "normalized_crop", None)
+            bbox_meta = getattr(art, "metadata", {}).get("bounding_box_normalization", {})
+            has_content = bbox_meta.get("has_content", True)
+            if crop is not None and crop.size > 0 and has_content:
+                return crop
+            doc = getattr(art, "isolated_document", None)
+            if doc is not None and doc.size > 0:
+                return doc
+        return fallback_img
+
+    q_doc = _get_roi_for_inference(q_artifacts, q_img)
+    q_tensor = preprocess_for_inference(q_doc)
     q_emb_np = _ONNX_ENGINE.encode(q_tensor)
 
     ref_sims = []
-    for r_art in ref_artifacts_list:
-        r_tensor = preprocess_for_inference(r_art.normalized_crop)
+    ref_raw_cosines = []
+    for idx, r_img in enumerate(ref_imgs):
+        r_art = ref_artifacts_list[idx] if idx < len(ref_artifacts_list) else None
+        r_doc = _get_roi_for_inference(r_art, r_img)
+        r_tensor = preprocess_for_inference(r_doc)
         r_emb_np = _ONNX_ENGINE.encode(r_tensor)
         norm_sim = compute_normalized_similarity(q_emb_np[0], r_emb_np[0])
+        raw_cos = compute_cosine_similarity(q_emb_np[0], r_emb_np[0])
         ref_sims.append(norm_sim)
+        ref_raw_cosines.append(raw_cos)
 
-    deep_similarity = float(np.mean(ref_sims)) if ref_sims else 0.5
+    if not ref_sims:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Karşılaştırma için geçerli referans görseli bulunamadı.",
+        )
+    deep_similarity = float(np.mean(ref_sims))
+    raw_cosine_avg = float(np.mean(ref_raw_cosines))
 
     # 8. Adli Gating Destekli Hibrit Füzyon
     fusion_res = _FUSION_LAYER.fuse(
         morphological_report=comp_report,
         deep_similarity_score=deep_similarity,
+        raw_cosine=raw_cosine_avg,
     )
 
     # 9. Taklit ve Gizleme Anomali Tespiti
@@ -410,6 +437,9 @@ async def run_full_pipeline(
         "examiner_id": case_entity.examiner_id,
         "questioned_id": payload.questioned_sample_id,
         "reference_count": len(ref_imgs),
+        "model_id": _ACTIVE_MODEL_META.get("model_id", "convnext_tiny_forensic_multidataset_v5"),
+        "model_sha256": _ACTIVE_MODEL_META.get("model_sha256", "0fe6963acaba48c26817202662907d1d2e52f57115d807d03497fdc33641938f"),
+        "model_version": _ACTIVE_MODEL_META.get("manifest_version", "2.5.0"),
     }
 
     isolation_hash = (
@@ -502,79 +532,6 @@ async def run_full_pipeline(
     )
 
 
-def _get_baseline_comparison_report() -> ComparisonReport:
-    """Henüz analizi tamamlanmamış vakalar için örnek simülasyon karşılaştırma raporu döner."""
-    from ml.models.comparison import DifferenceType, FeatureDifferenceDetail
-    diffs = [
-        FeatureDifferenceDetail(
-            feature_key="slant_angle_deg",
-            feature_name_tr="Yazı Eğim Açısı",
-            questioned_value=18.5,
-            reference_mean=4.2,
-            reference_std=2.1,
-            absolute_difference=14.3,
-            z_score=6.81,
-            diff_type=DifferenceType.SIGNIFICANT_DIFFERENCE,
-            explanation="Belirgin eğim açısı sapması (18.5° vs 4.2°)",
-        ),
-        FeatureDifferenceDetail(
-            feature_key="tremor_index_psd",
-            feature_name_tr="FFT Titreme İndeksi",
-            questioned_value=0.12,
-            reference_mean=0.03,
-            reference_std=0.01,
-            absolute_difference=0.09,
-            z_score=9.0,
-            diff_type=DifferenceType.SIGNIFICANT_DIFFERENCE,
-            explanation="Mikroskobik duraksama ve titreme anomalisi",
-        ),
-        FeatureDifferenceDetail(
-            feature_key="smoothness_energy",
-            feature_name_tr="Kinematik Pürüzsüzlük",
-            questioned_value=0.42,
-            reference_mean=0.78,
-            reference_std=0.08,
-            absolute_difference=0.36,
-            z_score=-4.5,
-            diff_type=DifferenceType.SIGNIFICANT_DIFFERENCE,
-            explanation="Düşük akıcılık ve kinematik tutukluk",
-        ),
-        FeatureDifferenceDetail(
-            feature_key="loop_count",
-            feature_name_tr="Halka / İlik Sayısı",
-            questioned_value=3.0,
-            reference_mean=5.2,
-            reference_std=0.8,
-            absolute_difference=2.2,
-            z_score=-2.75,
-            diff_type=DifferenceType.NATURAL_VARIATION,
-            explanation="Doğal varyasyon sınırında ilik sayısı farkı",
-        ),
-        FeatureDifferenceDetail(
-            feature_key="baseline_deviation_px",
-            feature_name_tr="Taban Çizgisi Sapması",
-            questioned_value=6.4,
-            reference_mean=5.8,
-            reference_std=1.2,
-            absolute_difference=0.6,
-            z_score=0.5,
-            diff_type=DifferenceType.CONCORDANT,
-            explanation="Taban çizgisi referansla tam uyumlu",
-        ),
-    ]
-    return ComparisonReport(
-        similarity_score=0.48,
-        euclidean_distance=8.2,
-        mahalanobis_distance=8.2,
-        concordant_features=[d for d in diffs if d.diff_type == DifferenceType.CONCORDANT],
-        natural_variations=[d for d in diffs if d.diff_type == DifferenceType.NATURAL_VARIATION],
-        significant_differences=[d for d in diffs if d.diff_type == DifferenceType.SIGNIFICANT_DIFFERENCE],
-        preliminary_opinion="Kısmi Uyuşmazlık ve Adli Gating Tetiklendi",
-        reference_count=3,
-        audit_hash_sha256="BASELINE_DEMO_HASH",
-    )
-
-
 @router.post(
     "/counterfactual",
     response_model=CounterfactualResponse,
@@ -587,33 +544,36 @@ async def simulate_counterfactual(
 ):
     """
     Bilirkişiye öznitelik değişimlerinin model kararına etkisini anlık (<250ms) simüle eder.
-    Vaka henüz analiz edilmemişse otomatik olarak temel adli kalibrasyon profili üzerinden simülasyon sunar.
+    Sprint 21: Yalnızca gerçek tamamlanmış vaka analizi üzerinden çalışır, mock/demo rapor üretmez.
     """
     case_id = payload.case_id
     stmt = select(AnalysisResultEntity).where(AnalysisResultEntity.case_id == case_id).order_by(AnalysisResultEntity.created_at_utc.desc())
     res = await db.execute(stmt)
     analysis_entity = res.scalar_one_or_none()
 
-    if analysis_entity and analysis_entity.comparison_json:
-        comp_report = ComparisonReport(**analysis_entity.comparison_json)
-        current_hybrid_score = float(analysis_entity.fusion_json.get("hybrid_similarity_score", 0.65)) if analysis_entity.fusion_json else 0.65
-    else:
-        # Vaka yeni oluşturulduysa veya henüz analiz çalıştırılmadıysa kalibre edilmiş varsayılan simülasyon profili kullan
-        comp_report = _get_baseline_comparison_report()
-        current_hybrid_score = 0.48
+    if not (analysis_entity and analysis_entity.comparison_json):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Bu vaka için henüz analiz çalıştırılmamıştır. Kontrafaktüel simülasyon öncesinde vaka analizini tamamlayınız.",
+        )
+
+    comp_report = ComparisonReport(**analysis_entity.comparison_json)
+    current_hybrid_score = float(analysis_entity.fusion_json.get("hybrid_similarity_score", 0.5)) if analysis_entity.fusion_json else 0.5
+    actual_deep_score = float(analysis_entity.fusion_json.get("deep_metric_similarity", 0.5)) if analysis_entity.fusion_json else 0.5
+    deep_sim = payload.deep_similarity_score if payload.deep_similarity_score is not None else actual_deep_score
 
     # 1. Ne Olurdu simülasyonu
     sim_res = _COUNTERFACTUAL_EXPLAINER.simulate_what_if(
         comparison_report=comp_report,
         custom_perturbations=payload.custom_perturbations or {},
-        deep_similarity_score=payload.deep_similarity_score or 0.85,
+        deep_similarity_score=deep_sim,
     )
 
     # 2. Otomatik en iyi 2 senaryo
     scenarios_res = _COUNTERFACTUAL_EXPLAINER.generate_counterfactual_scenarios(
         comparison_report=comp_report,
         current_hybrid_score=current_hybrid_score,
-        deep_similarity_score=payload.deep_similarity_score or 0.85,
+        deep_similarity_score=deep_sim,
     )
 
     return CounterfactualResponse(
@@ -763,14 +723,16 @@ async def get_multi_sample_clustering(
     target_q = q_samples[0]
     q_data = await _load_sample_image(db, target_q.sample_id)
     q_art = _PREPROCESSOR.process(q_data["image"])
-    q_tensor = preprocess_for_inference(q_art.normalized_crop)
+    q_doc = _get_roi_for_inference(q_art, q_data["image"])
+    q_tensor = preprocess_for_inference(q_doc)
     q_emb = _ONNX_ENGINE.encode(q_tensor)[0]
 
     ref_payload = []
     for r in ref_samples:
         r_data = await _load_sample_image(db, r.sample_id)
         r_art = _PREPROCESSOR.process(r_data["image"])
-        r_tensor = preprocess_for_inference(r_art.normalized_crop)
+        r_doc = _get_roi_for_inference(r_art, r_data["image"])
+        r_tensor = preprocess_for_inference(r_doc)
         r_emb = _ONNX_ENGINE.encode(r_tensor)[0]
         ref_payload.append({
             "sample_id": r.sample_id,

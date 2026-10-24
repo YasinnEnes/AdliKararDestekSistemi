@@ -48,13 +48,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const verificationAbortControllerRef = useRef<AbortController | null>(null);
   const isVerifyingRef = useRef<boolean>(false);
 
   const clearError = () => setError(null);
 
   // Oturumu Güvenli Şekilde Temizle (Logout)
   const logout = useCallback(() => {
+    isVerifyingRef.current = false;
     if (typeof window !== "undefined") {
       const storedRefreshToken = localStorage.getItem(REFRESH_TOKEN_STORAGE_KEY);
       if (storedRefreshToken) {
@@ -67,9 +67,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     setToken(null);
     setError(null);
-    setSessionState("idle");
+    setSessionState("unauthorized");
     setLoading(false);
-    router.push("/login");
+    router.replace("/login");
   }, [router]);
 
   // Giriş Yap (Login)
@@ -89,14 +89,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setToken(res.access_token);
       setUser(res.user);
       setSessionState("verified");
-      router.push("/");
+      setLoading(false);
+      router.replace("/");
     } catch (err: any) {
       const msg = formatApiError(err);
       setError(msg);
       setSessionState("unauthorized");
-      throw err;
-    } finally {
       setLoading(false);
+      throw err;
     }
   };
 
@@ -109,10 +109,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     [user]
   );
 
-  // Oturum Doğrulama Fonksiyonu (Deterministik State Machine + Timeout Koruması)
-  const verifySession = useCallback(async () => {
+  // Oturum Doğrulama (Akıllı Arka Plan Revalidasyonu & Kesin Timeout Koruması)
+  const verifySession = useCallback(async (isSilentBackground: boolean = false) => {
     if (typeof window === "undefined") {
-      setSessionState("idle");
+      setSessionState("unauthorized");
       setLoading(false);
       return;
     }
@@ -129,27 +129,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!storedToken) {
       setUser(null);
       setToken(null);
-      setSessionState("idle");
+      setSessionState("unauthorized");
       setLoading(false);
       isVerifyingRef.current = false;
       return;
     }
 
-    setToken(storedToken);
-    setSessionState("verifying");
-    setLoading(true);
-
-    if (storedUserStr) {
-      try {
-        setUser(JSON.parse(storedUserStr));
-      } catch {
-        // Hatalı JSON durumunda yut
-      }
+    // Sessiz modda değilse (kullanıcı 'Tekrar Dene' yaptıysa) yükleme durumunu aktifleştir
+    if (!isSilentBackground) {
+      setLoading(true);
+      setSessionState("verifying");
     }
 
-    // Zaman Aşımı Emniyeti (Timeout): 8 saniye içinde yanıt alınamazsa kilitlenmeyi engelle
+    // Maksimum 4 saniye timeout emniyeti
     const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("SESSION_TIMEOUT")), 8000)
+      setTimeout(() => reject(new Error("SESSION_TIMEOUT")), 4000)
     );
 
     try {
@@ -163,13 +157,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSessionState("verified");
       setError(null);
     } catch (err: any) {
-      console.warn("Oturum doğrulama hatası:", err?.message || err);
+      console.warn("Oturum doğrulama bildirimi:", err?.message || err);
 
-      if (err?.message === "SESSION_TIMEOUT") {
-        setSessionState("error");
-        setError("Adli oturum sunucudan zamanında doğrulanamadı. Lütfen ağ bağlantınızı veya sunucu durumunu kontrol edin.");
-      } else if (err?.response?.status === 401 || err?.response?.status === 403) {
-        // Refresh token ile kurtarma dene
+      const status = err?.response?.status;
+      if (status === 401 || status === 403) {
+        // Token geçersiz veya süresi dolmuş
         if (storedRefreshToken) {
           try {
             const refreshRes = await api.refreshToken(storedRefreshToken);
@@ -183,26 +175,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(verifiedUser));
             setSessionState("verified");
             setError(null);
-            isVerifyingRef.current = false;
-            setLoading(false);
             return;
           } catch (rfErr) {
-            console.warn("Refresh token yenileme de başarısız oldu:", rfErr);
+            console.warn("Refresh token ile yenileme başarısız:", rfErr);
           }
         }
 
-        // Kurtarılamaz 401/403
+        // Kurtarılamaz 401: Oturumu temizle ve yetkisiz yap
         localStorage.removeItem(TOKEN_STORAGE_KEY);
         localStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
         localStorage.removeItem(USER_STORAGE_KEY);
         setUser(null);
         setToken(null);
         setSessionState("unauthorized");
-        setError("Oturum süresi doldu veya yetkisiz erişim. Lütfen tekrar giriş yapın.");
+        setError("Oturum süreniz doldu. Lütfen tekrar giriş yapınız.");
       } else {
-        // Ağ veya sunucu bağlantı hatası
-        setSessionState("error");
-        setError(formatApiError(err));
+        // Ağ hatası veya timeout durumunda: Eğer yerel kullanıcı bilgisi varsa oturumu bozma!
+        if (storedUserStr) {
+          try {
+            const cachedUser = JSON.parse(storedUserStr);
+            setUser(cachedUser);
+            setSessionState("verified");
+            // Kullanıcıyı engelleme, arka planda cached oturum ile devam et
+          } catch {
+            setSessionState("error");
+            setError(formatApiError(err));
+          }
+        } else {
+          setSessionState("error");
+          setError(formatApiError(err));
+        }
       }
     } finally {
       setLoading(false);
@@ -210,28 +212,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  // Sayfa İlk Yüklendiğinde Oturum Durumunu Doğrula
+  // 1. ANLIK EŞZAMANLI YEREL HYDRATION (Sayfa açılır açılmaz spinner olmadan anında açılış)
   useEffect(() => {
-    verifySession();
+    if (typeof window === "undefined") return;
+
+    const storedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
+    const storedUserStr = localStorage.getItem(USER_STORAGE_KEY);
+
+    if (storedToken && storedUserStr) {
+      try {
+        const cachedUser = JSON.parse(storedUserStr);
+        setUser(cachedUser);
+        setToken(storedToken);
+        setSessionState("verified");
+        setLoading(false);
+      } catch {
+        localStorage.removeItem(USER_STORAGE_KEY);
+        setLoading(false);
+      }
+    } else if (!storedToken) {
+      setUser(null);
+      setToken(null);
+      setSessionState("unauthorized");
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
+
+    // 2. Arka planda sessiz revalidasyon
+    verifySession(true);
+
+    // 3. Global acil durum güvenlik zamanlayıcısı (loading asla 2 saniyeden uzun kalamaz)
+    const safetyTimer = setTimeout(() => {
+      setLoading(false);
+      isVerifyingRef.current = false;
+    }, 2000);
 
     return () => {
-      if (verificationAbortControllerRef.current) {
-        verificationAbortControllerRef.current.abort();
-      }
+      clearTimeout(safetyTimer);
     };
   }, [verifySession]);
 
-  // Protected Routes Yönlendirmesi
+  // Korumalı Rota Yönlendirmesi
   useEffect(() => {
     if (loading) return;
 
     const isLoginPage = pathname === "/login";
-    const isPublic = isLoginPage;
 
-    if (!user && !isPublic && (sessionState === "idle" || sessionState === "unauthorized" || sessionState === "expired")) {
-      router.push("/login");
+    if (!user && !isLoginPage && (sessionState === "unauthorized" || sessionState === "idle" || sessionState === "expired")) {
+      router.replace("/login");
     } else if (user && isLoginPage && sessionState === "verified") {
-      router.push("/");
+      router.replace("/");
     }
   }, [user, loading, pathname, router, sessionState]);
 
@@ -250,7 +281,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         logout,
         hasRole,
         clearError,
-        retrySessionVerification: verifySession,
+        retrySessionVerification: () => verifySession(false),
       }}
     >
       {children}

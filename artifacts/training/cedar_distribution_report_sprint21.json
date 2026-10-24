@@ -1,0 +1,63 @@
+{
+  "validation_metrics": {
+    "val_auc": 0.9926932911498979,
+    "optimal_val_threshold": 0.75,
+    "val_eer": 0.041205058528428096
+  },
+  "logistic_calibration_params": {
+    "intercept": -15.149995687076126,
+    "coef": 20.17732201538936
+  },
+  "test_distribution_stats": {
+    "genuine_genuine": {
+      "count": 2484,
+      "mean": 0.9034,
+      "std": 0.074,
+      "median": 0.9257,
+      "p05": 0.7329,
+      "p25": 0.8897,
+      "p50": 0.9257,
+      "p75": 0.948,
+      "p95": 0.9711,
+      "min": 0.4314,
+      "max": 0.9904
+    },
+    "genuine_forgery": {
+      "count": 5184,
+      "mean": 0.6549,
+      "std": 0.1471,
+      "median": 0.671,
+      "p05": 0.363,
+      "p25": 0.5647,
+      "p50": 0.671,
+      "p75": 0.7681,
+      "p95": 0.8635,
+      "min": 0.2518,
+      "max": 0.9364
+    },
+    "different_writer": {
+      "count": 3456,
+      "mean": 0.5636,
+      "std": 0.1422,
+      "median": 0.5536,
+      "p05": 0.3498,
+      "p25": 0.4622,
+      "p50": 0.5536,
+      "p75": 0.6505,
+      "p95": 0.8362,
+      "min": 0.2033,
+      "max": 0.9569
+    }
+  },
+  "test_metrics_at_val_threshold": {
+    "test_auc": 0.96042,
+    "calibrated_auc": 0.96042,
+    "accuracy": 0.81589,
+    "far": 0.21968,
+    "frr": 0.06039,
+    "precision": 0.55151,
+    "recall": 0.93961,
+    "f1_score": 0.69506,
+    "total_pairs": 11124
+  }
+}

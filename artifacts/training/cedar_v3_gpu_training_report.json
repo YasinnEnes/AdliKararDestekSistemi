@@ -1,0 +1,97 @@
+{
+  "model_version": "v3.0.0-gpu-hard-negatives",
+  "gpu_device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "vram_gb": 8.0,
+  "training_history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.0373,
+      "val_auc": 0.99718,
+      "val_eer": 0.02482,
+      "opt_threshold": 0.7413
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.0202,
+      "val_auc": 0.99581,
+      "val_eer": 0.03147,
+      "opt_threshold": 0.7595
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.0177,
+      "val_auc": 0.99463,
+      "val_eer": 0.03535,
+      "opt_threshold": 0.772
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.0042,
+      "val_auc": 0.99231,
+      "val_eer": 0.042,
+      "opt_threshold": 0.7888
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.0033,
+      "val_auc": 0.9974,
+      "val_eer": 0.02759,
+      "opt_threshold": 0.7479
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.0055,
+      "val_auc": 0.9956,
+      "val_eer": 0.03302,
+      "opt_threshold": 0.7424
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.0033,
+      "val_auc": 0.99408,
+      "val_eer": 0.03712,
+      "opt_threshold": 0.7521
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.0025,
+      "val_auc": 0.99722,
+      "val_eer": 0.02515,
+      "opt_threshold": 0.7482
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.0021,
+      "val_auc": 0.99823,
+      "val_eer": 0.02072,
+      "opt_threshold": 0.7181
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.0028,
+      "val_auc": 0.99782,
+      "val_eer": 0.02394,
+      "opt_threshold": 0.7183
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.0011,
+      "val_auc": 0.99764,
+      "val_eer": 0.02571,
+      "opt_threshold": 0.7147
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.002,
+      "val_auc": 0.99727,
+      "val_eer": 0.02626,
+      "opt_threshold": 0.7233
+    }
+  ],
+  "best_val_auc": 0.998228309619062,
+  "best_val_eer": 0.02072482638888891,
+  "test_auc": 0.9651157842289416,
+  "test_eer": 0.0964296497584541,
+  "onnx_parity_passed": true,
+  "onnx_max_abs_diff": 4.591420292854309e-07
+}

@@ -1,0 +1,326 @@
+{
+  "sprint": "SPRINT 24",
+  "model_id": "convnext_tiny_forensic_multidataset_v5",
+  "model_version": "v5.0.0-multidomain",
+  "training_completed_utc": "2026-10-05T08:17:08Z",
+  "corpora": [
+    "CEDAR",
+    "BHSig-260",
+    "UTSig",
+    "CVL Database",
+    "IAM_HW"
+  ],
+  "warm_start": {
+    "source_model": "convnext_tiny_forensic_multidataset_v4",
+    "source_checkpoint": "convnext_tiny_forensic_multidataset_v4_best.pt",
+    "source_sha256": "3f0640047c170874cd0369f9c19451dd9fa857a24f8410d7c3f5c2393b5e2e5e"
+  },
+  "hardware": {
+    "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "vram_gb": 8.0,
+    "amp": true
+  },
+  "weights": {
+    "pytorch_checkpoint": {
+      "filename": "convnext_tiny_forensic_multidataset_v5_best.pt",
+      "sha256": "0fe6963acaba48c26817202662907d1d2e52f57115d807d03497fdc33641938f",
+      "size_bytes": 112269513
+    },
+    "onnx_model": {
+      "filename": "convnext_tiny_forensic_multidataset_v5.onnx",
+      "sha256": "ddb89311ad2681fb0e4f88e6ecfe3a7ef3850855d692bc91749a53a7fb52d066",
+      "size_bytes": 713144
+    }
+  },
+  "onnx_parity": {
+    "passed": true,
+    "max_abs_diff": 6.138905882835388e-05,
+    "tolerance": 0.0001
+  },
+  "validation_metrics": {
+    "best_val_auc": 0.9696673952903299,
+    "best_val_eer": 0.09215533102288159
+  },
+  "test_metrics": {
+    "global_test_auc": 0.9746648628461488,
+    "global_test_eer": 0.08744632580492956,
+    "domains": {
+      "CEDAR": {
+        "test_auc": 0.99059,
+        "test_eer": 0.05682,
+        "opt_threshold": 0.8284,
+        "gg_mean": 0.9331,
+        "gf_mean": 0.6013,
+        "gdw_mean": 0.6669,
+        "total_pairs": 7704
+      },
+      "BHSig-260": {
+        "test_auc": 0.97393,
+        "test_eer": 0.08576,
+        "opt_threshold": 0.819,
+        "gg_mean": 0.9138,
+        "gf_mean": 0.5648,
+        "gdw_mean": 0.6112,
+        "total_pairs": 39285
+      },
+      "UTSig": {
+        "test_auc": 0.89621,
+        "test_eer": 0.18784,
+        "opt_threshold": 0.8251,
+        "gg_mean": 0.88,
+        "gf_mean": 0.6844,
+        "gdw_mean": 0.5876,
+        "total_pairs": 28335
+      },
+      "CVL Database": {
+        "test_auc": 0.8789,
+        "test_eer": 0.16173,
+        "opt_threshold": 0.945,
+        "gg_mean": 0.9644,
+        "gf_mean": 0.0,
+        "gdw_mean": 0.9303,
+        "total_pairs": 2742
+      },
+      "IAM_HW": {
+        "test_auc": 0.60702,
+        "test_eer": 0.37875,
+        "opt_threshold": 0.9663,
+        "gg_mean": 0.9679,
+        "gf_mean": 0.0,
+        "gdw_mean": 0.9643,
+        "total_pairs": 14766
+      }
+    }
+  },
+  "training_history": [
+    {
+      "epoch": 1,
+      "stage": "Stage 1 (Head Only, LR=1e-4)",
+      "train_loss": 1.0311,
+      "val_auc": 0.933,
+      "val_eer": 0.13934,
+      "cedar_val_auc": 0.99991,
+      "cedar_val_eer": 0.00464,
+      "opt_threshold": 0.8091,
+      "gg_mean": 0.8816,
+      "gf_mean": 0.6208,
+      "delta_gg_gf": 0.2608,
+      "l2_norm_mean": 1.0,
+      "elapsed_seconds": 109.83
+    },
+    {
+      "epoch": 2,
+      "stage": "Stage 1 (Head Only, LR=1e-4)",
+      "train_loss": 0.8379,
+      "val_auc": 0.94703,
+      "val_eer": 0.11727,
+      "cedar_val_auc": 0.99993,
+      "cedar_val_eer": 0.0031,
+      "opt_threshold": 0.8245,
+      "gg_mean": 0.8955,
+      "gf_mean": 0.6235,
+      "delta_gg_gf": 0.2719,
+      "l2_norm_mean": 1.0,
+      "elapsed_seconds": 108.6
+    },
+    {
+      "epoch": 3,
+      "stage": "Stage 1 (Head Only, LR=1e-4)",
+      "train_loss": 0.8326,
+      "val_auc": 0.95963,
+      "val_eer": 0.10839,
+      "cedar_val_auc": 0.99994,
+      "cedar_val_eer": 0.00343,
+      "opt_threshold": 0.8366,
+      "gg_mean": 0.9167,
+      "gf_mean": 0.6248,
+      "delta_gg_gf": 0.2919,
+      "l2_norm_mean": 1.0,
+      "elapsed_seconds": 116.16
+    },
+    {
+      "epoch": 4,
+      "stage": "Stage 1 (Head Only, LR=1e-4)",
+      "train_loss": 0.8237,
+      "val_auc": 0.96463,
+      "val_eer": 0.10034,
+      "cedar_val_auc": 0.99998,
+      "cedar_val_eer": 0.00265,
+      "opt_threshold": 0.8313,
+      "gg_mean": 0.9192,
+      "gf_mean": 0.6073,
+      "delta_gg_gf": 0.3119,
+      "l2_norm_mean": 1.0,
+      "elapsed_seconds": 109.69
+    },
+    {
+      "epoch": 5,
+      "stage": "Stage 1 (Head Only, LR=1e-4)",
+      "train_loss": 0.79,
+      "val_auc": 0.96682,
+      "val_eer": 0.09663,
+      "cedar_val_auc": 0.99995,
+      "cedar_val_eer": 0.0031,
+      "opt_threshold": 0.8223,
+      "gg_mean": 0.9229,
+      "gf_mean": 0.6046,
+      "delta_gg_gf": 0.3182,
+      "l2_norm_mean": 1.0,
+      "elapsed_seconds": 108.52
+    },
+    {
+      "epoch": 6,
+      "stage": "Stage 1 (Head Only, LR=1e-4)",
+      "train_loss": 0.7472,
+      "val_auc": 0.96711,
+      "val_eer": 0.09725,
+      "cedar_val_auc": 0.99969,
+      "cedar_val_eer": 0.00961,
+      "opt_threshold": 0.8338,
+      "gg_mean": 0.9289,
+      "gf_mean": 0.6022,
+      "delta_gg_gf": 0.3267,
+      "l2_norm_mean": 1.0,
+      "elapsed_seconds": 111.25
+    },
+    {
+      "epoch": 7,
+      "stage": "Stage 1 (Head Only, LR=1e-4)",
+      "train_loss": 0.726,
+      "val_auc": 0.96967,
+      "val_eer": 0.09216,
+      "cedar_val_auc": 0.99992,
+      "cedar_val_eer": 0.00398,
+      "opt_threshold": 0.8364,
+      "gg_mean": 0.9287,
+      "gf_mean": 0.6093,
+      "delta_gg_gf": 0.3194,
+      "l2_norm_mean": 1.0,
+      "elapsed_seconds": 108.08
+    },
+    {
+      "epoch": 8,
+      "stage": "Stage 1 (Head Only, LR=1e-4)",
+      "train_loss": 0.6603,
+      "val_auc": 0.9653,
+      "val_eer": 0.10299,
+      "cedar_val_auc": 0.9999,
+      "cedar_val_eer": 0.00465,
+      "opt_threshold": 0.8192,
+      "gg_mean": 0.9267,
+      "gf_mean": 0.5785,
+      "delta_gg_gf": 0.3481,
+      "l2_norm_mean": 1.0,
+      "elapsed_seconds": 114.1
+    },
+    {
+      "epoch": 9,
+      "stage": "Stage 1 (Head Only, LR=1e-4)",
+      "train_loss": 0.7076,
+      "val_auc": 0.96268,
+      "val_eer": 0.10409,
+      "cedar_val_auc": 0.99929,
+      "cedar_val_eer": 0.01027,
+      "opt_threshold": 0.8245,
+      "gg_mean": 0.9278,
+      "gf_mean": 0.5877,
+      "delta_gg_gf": 0.34,
+      "l2_norm_mean": 1.0,
+      "elapsed_seconds": 108.23
+    },
+    {
+      "epoch": 10,
+      "stage": "Stage 1 (Head Only, LR=1e-4)",
+      "train_loss": 0.6906,
+      "val_auc": 0.96646,
+      "val_eer": 0.10152,
+      "cedar_val_auc": 0.99991,
+      "cedar_val_eer": 0.00276,
+      "opt_threshold": 0.8272,
+      "gg_mean": 0.93,
+      "gf_mean": 0.5889,
+      "delta_gg_gf": 0.3412,
+      "l2_norm_mean": 1.0,
+      "elapsed_seconds": 110.24
+    }
+  ],
+  "distribution_summary": {
+    "model_version": "v5.0.0-multidomain",
+    "genuine_genuine_gg": {
+      "count": 37002,
+      "mean": 0.9346,
+      "median": 0.9569,
+      "std": 0.0603,
+      "p05": 0.8074,
+      "p95": 0.9849
+    },
+    "genuine_forgery_gf": {
+      "count": 55134,
+      "mean": 0.6157,
+      "median": 0.6196,
+      "std": 0.1665,
+      "p05": 0.3471,
+      "p95": 0.8749
+    },
+    "genuine_different_writer_gdw": {
+      "count": 693,
+      "mean": 0.6271,
+      "median": 0.5997,
+      "std": 0.1769,
+      "p05": 0.3805,
+      "p95": 0.9627
+    },
+    "margins": {
+      "delta_gg_gf": 0.3189,
+      "delta_gg_gdw": 0.3075,
+      "delta_gf_gdw": -0.0114
+    },
+    "domain_metrics": {
+      "CEDAR": {
+        "test_auc": 0.99059,
+        "test_eer": 0.05682,
+        "opt_threshold": 0.8284,
+        "gg_mean": 0.9331,
+        "gf_mean": 0.6013,
+        "gdw_mean": 0.6669,
+        "total_pairs": 7704
+      },
+      "BHSig-260": {
+        "test_auc": 0.97393,
+        "test_eer": 0.08576,
+        "opt_threshold": 0.819,
+        "gg_mean": 0.9138,
+        "gf_mean": 0.5648,
+        "gdw_mean": 0.6112,
+        "total_pairs": 39285
+      },
+      "UTSig": {
+        "test_auc": 0.89621,
+        "test_eer": 0.18784,
+        "opt_threshold": 0.8251,
+        "gg_mean": 0.88,
+        "gf_mean": 0.6844,
+        "gdw_mean": 0.5876,
+        "total_pairs": 28335
+      },
+      "CVL Database": {
+        "test_auc": 0.8789,
+        "test_eer": 0.16173,
+        "opt_threshold": 0.945,
+        "gg_mean": 0.9644,
+        "gf_mean": 0.0,
+        "gdw_mean": 0.9303,
+        "total_pairs": 2742
+      },
+      "IAM_HW": {
+        "test_auc": 0.60702,
+        "test_eer": 0.37875,
+        "opt_threshold": 0.9663,
+        "gg_mean": 0.9679,
+        "gf_mean": 0.0,
+        "gdw_mean": 0.9643,
+        "total_pairs": 14766
+      }
+    }
+  }
+}

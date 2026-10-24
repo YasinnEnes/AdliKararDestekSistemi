@@ -4,12 +4,12 @@ import random
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple, Union
 
 import cv2
 import numpy as np
 import torch
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader, Dataset, Sampler
 import torchvision.transforms as T
 
 
@@ -102,9 +102,11 @@ class ForensicWriterDataset(Dataset):
         self,
         samples: List[ForensicSample],
         transform: Optional[Callable[[np.ndarray], torch.Tensor]] = None,
+        return_forgery_flag: bool = False,
     ):
         self.samples = samples
         self.transform = transform or ForensicAugmentation(is_training=False)
+        self.return_forgery_flag = return_forgery_flag
 
         # Yazarları tamsayı etiketlere eşle
         unique_writers = sorted(list(set(s.writer_id for s in samples)))
@@ -132,12 +134,116 @@ class ForensicWriterDataset(Dataset):
                 return img
         raise ValueError(f"Görsel yüklenemedi: {sample.sample_id}")
 
-    def __getitem__(self, idx: int) -> Tuple[torch.Tensor, int, str]:
+    def __getitem__(self, idx: int) -> Union[Tuple[torch.Tensor, int, str], Tuple[torch.Tensor, int, str, bool]]:
         sample = self.samples[idx]
         image_np = self._load_image(sample)
         tensor = self.transform(image_np)
         label = self.writer_to_label[sample.writer_id]
+        if self.return_forgery_flag:
+            return tensor, label, sample.sample_id, sample.is_forgery
         return tensor, label, sample.sample_id
+
+
+class ForensicStructuredBatchSampler(Sampler[List[int]]):
+    """
+    Adli Bilişim İçin Yapılandırılmış Batch Örnekleyici (Forensic Structured Batch Sampler).
+    
+    Her batch tam olarak:
+    - P adet farklı yazar (varsayılan: 4 yazar)
+    - Her yazar için tam 2 adet orijinal (genuine) numune
+    - Her yazar için tam 2 adet yetenekli sahte (skilled forgery) numune
+    = P * (2 + 2) = 16 numune içerir.
+    
+    Garanti edilen özellikler:
+    1. Her batch: 4 writer x 2 genuine x 2 forgery = 16 samples.
+    2. Her writer için batch içinde tam 2 genuine ve 2 forgery bulunur.
+    3. Aynı writer'ın genuine ve forgery örnekleri eşleştirilir.
+    """
+    def __init__(
+        self,
+        dataset: ForensicWriterDataset,
+        p_writers: int = 4,
+        genuines_per_writer: int = 2,
+        forgeries_per_writer: int = 2,
+        num_batches: Optional[int] = None,
+        seed: int = 42,
+    ):
+        super().__init__()
+        self.dataset = dataset
+        self.p_writers = p_writers
+        self.genuines_per_writer = genuines_per_writer
+        self.forgeries_per_writer = forgeries_per_writer
+        self.batch_size = p_writers * (genuines_per_writer + forgeries_per_writer)
+        self.seed = seed
+        self.epoch = 0
+
+        # Yazar bazında orijinal ve sahte indekslerini ayır
+        self.writer_to_genuines: Dict[str, List[int]] = {}
+        self.writer_to_forgeries: Dict[str, List[int]] = {}
+
+        for idx, sample in enumerate(dataset.samples):
+            w_id = sample.writer_id
+            if sample.is_forgery:
+                self.writer_to_forgeries.setdefault(w_id, []).append(idx)
+            else:
+                self.writer_to_genuines.setdefault(w_id, []).append(idx)
+
+        # Hem genuine hem de forgery numuneleri olan yazarlar
+        self.eligible_writers = [
+            w for w in self.writer_to_genuines
+            if len(self.writer_to_genuines[w]) >= 1 and len(self.writer_to_forgeries.get(w, [])) >= 1
+        ]
+        self.eligible_writers.sort()
+
+        if len(self.eligible_writers) < self.p_writers:
+            self.eligible_writers = sorted(list(self.writer_to_genuines.keys()))
+
+        if num_batches is not None:
+            self.num_batches = num_batches
+        else:
+            total_gen = sum(len(v) for v in self.writer_to_genuines.values())
+            self.num_batches = max(1, total_gen // (self.p_writers * self.genuines_per_writer))
+
+    def set_epoch(self, epoch: int) -> None:
+        """Her epoch için deterministik tohum kaydırma sağlar."""
+        self.epoch = epoch
+
+    def __iter__(self) -> Iterator[List[int]]:
+        rng = random.Random(self.seed + getattr(self, "epoch", 0))
+        for _ in range(self.num_batches):
+            batch_indices: List[int] = []
+
+            # P adet yazar seç
+            if len(self.eligible_writers) >= self.p_writers:
+                selected_writers = rng.sample(self.eligible_writers, self.p_writers)
+            else:
+                selected_writers = rng.choices(self.eligible_writers, k=self.p_writers)
+
+            for w in selected_writers:
+                gen_pool = self.writer_to_genuines.get(w, [])
+                forg_pool = self.writer_to_forgeries.get(w, [])
+
+                # 2 genuine seç
+                if len(gen_pool) >= self.genuines_per_writer:
+                    sampled_gen = rng.sample(gen_pool, self.genuines_per_writer)
+                else:
+                    sampled_gen = rng.choices(gen_pool, k=self.genuines_per_writer)
+
+                # 2 forgery seç (aynı yazara ait)
+                if len(forg_pool) >= self.forgeries_per_writer:
+                    sampled_forg = rng.sample(forg_pool, self.forgeries_per_writer)
+                elif len(forg_pool) > 0:
+                    sampled_forg = rng.choices(forg_pool, k=self.forgeries_per_writer)
+                else:
+                    sampled_forg = rng.choices(gen_pool, k=self.forgeries_per_writer)
+
+                batch_indices.extend(sampled_gen)
+                batch_indices.extend(sampled_forg)
+
+            yield batch_indices
+
+    def __len__(self) -> int:
+        return self.num_batches
 
 
 # ==============================================================================

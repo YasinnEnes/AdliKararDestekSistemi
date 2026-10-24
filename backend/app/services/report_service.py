@@ -148,6 +148,8 @@ def generate_reportlab_pdf(
          Paragraph("<b>İnceleme Tarihi:</b>", body_style), Paragraph(date_str, body_style)],
         [Paragraph("<b>Bilirkişi / Uzman:</b>", body_style), Paragraph(examiner, body_style),
          Paragraph("<b>Rapor Mührü (SHA-256):</b>", body_style), Paragraph(f"{report_sha256[:16]}...", seal_style)],
+        [Paragraph("<b>Adli AI Modeli:</b>", body_style), Paragraph(str(case_info.get("model_id", "convnext_tiny_forensic_multidataset_v5")), bold_style),
+         Paragraph("<b>Model SHA-256:</b>", body_style), Paragraph(str(case_info.get("model_sha256", "0fe6963acaba48c2..."))[:16] + "...", seal_style)],
     ]
     t_meta = Table(case_meta_data, colWidths=[3.2 * cm, 5.5 * cm, 3.8 * cm, 5.0 * cm])
     t_meta.setStyle(TableStyle([

@@ -97,16 +97,25 @@ class ForensicBenchmarkEngine:
             except Exception as e:
                 pass
         else:
-            default_weights = Path(__file__).resolve().parent.parent.parent / "artifacts" / "weights" / "convnext_tiny_forensic_best.pt"
-            if default_weights.exists():
-                try:
-                    ckpt = torch.load(str(default_weights), map_location=self.device)
-                    if "model_state_dict" in ckpt:
-                        self.convnext_encoder.load_state_dict(ckpt["model_state_dict"])
-                    else:
-                        self.convnext_encoder.load_state_dict(ckpt)
-                except Exception:
-                    pass
+            weights_dir = Path(__file__).resolve().parent.parent.parent / "artifacts" / "weights"
+            candidate_weights = [
+                weights_dir / "convnext_tiny_forensic_cedar_v2_best.pt",
+                weights_dir / "convnext_tiny_forensic_cedar_real_best.pt",
+                weights_dir / "convnext_tiny_forensic_best.pt",
+            ]
+            for cw in candidate_weights:
+                if cw.exists():
+                    try:
+                        ckpt = torch.load(str(cw), map_location=self.device)
+                        if isinstance(ckpt, dict) and "model_state_dict" in ckpt:
+                            self.convnext_encoder.load_state_dict(ckpt["model_state_dict"])
+                        elif isinstance(ckpt, dict) and "encoder_state_dict" in ckpt:
+                            self.convnext_encoder.load_state_dict(ckpt["encoder_state_dict"])
+                        else:
+                            self.convnext_encoder.load_state_dict(ckpt)
+                        break
+                    except Exception:
+                        pass
 
         self.convnext_encoder.eval()
         self.transform = ForensicAugmentation(is_training=False)

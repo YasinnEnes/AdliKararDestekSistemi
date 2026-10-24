@@ -57,31 +57,41 @@ class ForensicConvNeXtEncoder(nn.Module):
         super().__init__()
         self.embedding_dim = embedding_dim
         self.in_channels = in_channels
+        self.is_pretrained = pretrained
 
         # 1. ConvNeXt-Tiny Omurga Yapılandırması
-        backbone_loaded = False
-        in_features = 768
-
-        if HAS_TIMM:
+        if pretrained:
             try:
-                self.backbone = timm.create_model(
-                    "convnext_tiny",
-                    pretrained=pretrained,
-                    num_classes=0,
-                    in_chans=in_channels,
+                weights = models.ConvNeXt_Tiny_Weights.DEFAULT
+                convnext = models.convnext_tiny(weights=weights)
+                in_features = convnext.classifier[2].in_features
+                convnext.classifier = nn.Identity()
+                self.backbone = convnext
+            except Exception as e:
+                raise RuntimeError(
+                    f"KRİTİK HATA: ConvNeXt_Tiny_Weights.DEFAULT ağırlıkları yüklenemedi: {e}. "
+                    "Pretrained=False fallback reddedildi!"
                 )
-                in_features = getattr(self.backbone, "num_features", 768)
-                backbone_loaded = True
-            except Exception:
-                backbone_loaded = False
-
-        if not backbone_loaded:
-            # Torchvision ConvNeXt-Tiny Fallback
-            weights = models.ConvNeXt_Tiny_Weights.DEFAULT if pretrained else None
-            convnext = models.convnext_tiny(weights=weights)
-            in_features = convnext.classifier[2].in_features
-            convnext.classifier = nn.Identity()
-            self.backbone = convnext
+        else:
+            if HAS_TIMM:
+                try:
+                    self.backbone = timm.create_model(
+                        "convnext_tiny",
+                        pretrained=False,
+                        num_classes=0,
+                        in_chans=in_channels,
+                    )
+                    in_features = getattr(self.backbone, "num_features", 768)
+                except Exception:
+                    convnext = models.convnext_tiny(weights=None)
+                    in_features = convnext.classifier[2].in_features
+                    convnext.classifier = nn.Identity()
+                    self.backbone = convnext
+            else:
+                convnext = models.convnext_tiny(weights=None)
+                in_features = convnext.classifier[2].in_features
+                convnext.classifier = nn.Identity()
+                self.backbone = convnext
 
         # 2. 128 Boyutlu L2-Normalize Projeksiyon Başlığı
         self.projection_head = nn.Sequential(
@@ -91,6 +101,16 @@ class ForensicConvNeXtEncoder(nn.Module):
             nn.Dropout(p=dropout_p),
             nn.Linear(256, embedding_dim),
         )
+
+    def freeze_backbone(self) -> None:
+        """Omurga (backbone) ağırlıklarını dondurur; yalnızca projeksiyon başlığı güncellenir."""
+        for param in self.backbone.parameters():
+            param.requires_grad = False
+
+    def unfreeze_backbone(self) -> None:
+        """Omurga (backbone) ağırlıklarını çözer; uçtan uca ince ayar (fine-tuning) yapılır."""
+        for param in self.backbone.parameters():
+            param.requires_grad = True
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -150,7 +170,8 @@ class ForensicConvNeXtEncoder(nn.Module):
     ) -> str:
         """PyTorch ForensicConvNeXtEncoder modelini optimize edilmiş ONNX formatına dönüştürür."""
         model.eval()
-        dummy_input = torch.randn(1, in_channels, image_size, image_size)
+        device = next(model.parameters()).device if list(model.parameters()) else torch.device("cpu")
+        dummy_input = torch.randn(1, in_channels, image_size, image_size, device=device)
         out_p = Path(output_path)
         out_p.parent.mkdir(parents=True, exist_ok=True)
 
@@ -297,6 +318,111 @@ class SupervisedContrastiveLoss(nn.Module):
 
         loss = -mean_log_prob_pos[valid_mask].mean()
         return loss
+
+
+class ForensicHybridLoss(nn.Module):
+    """
+    Adli Bilişim İçin Hibrit Kayıp Fonksiyonu (Forensic Hybrid Loss).
+    
+    Adli imza/el yazısı incelemesinde label collision (etiket çatışması) sorununu kesin olarak önler:
+    - Orijinal (genuine) imzalar yazar kimliğine (writer identity) göre pozitif çift olarak kümelenir.
+    - Yetenekli taklitler / sahte örnekler (skilled forgeries) asla yazar sınıfına pozitif dahil edilmez;
+      aksine 'HARD NEGATIVE' olarak kayba iletilir ve marjin cezasıyla bastırılır.
+    
+    Bileşenler:
+    1. L_genuine: Yalnızca orijinal numuneler arasındaki Supervised Contrastive Loss.
+       sim(Genuine_A, Genuine_B) -> 1.0 (arttırılır).
+    2. L_hard_neg: Aynı yazarın orijinali ile taklidi arasındaki marjin cezası.
+       sim(Genuine_A, Forgery_A) -> 0.0 (azaltılır, en azından pos_sim - margin altına itilir).
+    """
+    def __init__(
+        self,
+        temperature: float = 0.07,
+        margin: float = 0.40,
+        hard_neg_weight: float = 1.0,
+    ):
+        super().__init__()
+        self.temperature = temperature
+        self.margin = margin
+        self.hard_neg_weight = hard_neg_weight
+        self.supcon = SupervisedContrastiveLoss(temperature=temperature)
+
+    def forward(
+        self,
+        embeddings: torch.Tensor,
+        labels: torch.Tensor,
+        is_forgery: Optional[torch.Tensor] = None,
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """
+        Args:
+            embeddings: (B, D) L2-normalize tensör
+            labels: (B,) Yazar etiketleri
+            is_forgery: (B,) Boole tensörü (True: Sahte, False: Orijinal)
+        Returns:
+            (total_loss, genuine_loss, hard_neg_loss)
+        """
+        device = embeddings.device
+        batch_size = embeddings.shape[0]
+
+        if is_forgery is None:
+            loss = self.supcon(embeddings, labels)
+            return loss, loss, torch.tensor(0.0, device=device)
+
+        is_forgery_bool = is_forgery.bool()
+        gen_mask = ~is_forgery_bool
+        forg_mask = is_forgery_bool
+
+        # 1. Component A: Genuine SupCon Loss (Yalnızca Orijinal Örnekler)
+        gen_embeddings = embeddings[gen_mask]
+        gen_labels = labels[gen_mask]
+
+        if gen_embeddings.shape[0] >= 2 and len(torch.unique(gen_labels)) >= 1:
+            gen_loss = self.supcon(gen_embeddings, gen_labels)
+        else:
+            gen_loss = torch.tensor(0.0, device=device, requires_grad=True)
+
+        # 2. Component B: Hard Negative Triplet / Margin Loss (Orijinal vs Taklit)
+        hard_neg_losses = []
+        unique_writers = torch.unique(labels)
+
+        for w in unique_writers:
+            w_gen_idx = (labels == w) & gen_mask
+            w_forg_idx = (labels == w) & forg_mask
+
+            w_gen_emb = embeddings[w_gen_idx]
+            w_forg_emb = embeddings[w_forg_idx]
+
+            n_gen = w_gen_emb.shape[0]
+            n_forg = w_forg_emb.shape[0]
+
+            if n_gen >= 1 and n_forg >= 1:
+                # Orijinal-orijinal pozitif referans benzerliği
+                if n_gen >= 2:
+                    sim_gg = torch.matmul(w_gen_emb, w_gen_emb.T)
+                    diag_mask = torch.eye(n_gen, dtype=torch.bool, device=device)
+                    pos_sim = sim_gg[~diag_mask].mean()
+                else:
+                    pos_sim = torch.tensor(1.0, device=device)
+
+                # Orijinal vs Sahte benzerlikleri: (n_gen, n_forg)
+                sim_gf = torch.matmul(w_gen_emb, w_forg_emb.T)
+
+                # sim(G, F) - sim(G, G) + margin <= 0 kuralı
+                triplet_violations = F.relu(sim_gf - pos_sim + self.margin)
+                
+                # Doğrudan sahte benzerliğini baskılama
+                push_down = F.relu(sim_gf - 0.20)
+
+                loss_w = triplet_violations.mean() + 0.5 * push_down.mean()
+                hard_neg_losses.append(loss_w)
+
+        if hard_neg_losses:
+            hard_neg_loss = torch.stack(hard_neg_losses).mean()
+        else:
+            hard_neg_loss = torch.tensor(0.0, device=device, requires_grad=True)
+
+        total_loss = gen_loss + self.hard_neg_weight * hard_neg_loss
+        return total_loss, gen_loss, hard_neg_loss
 
 
 def compute_cosine_similarity(

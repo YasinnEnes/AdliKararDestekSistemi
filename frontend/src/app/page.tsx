@@ -22,11 +22,61 @@ export default function HomePage() {
   const [viewState, setViewState] = useState<ViewState>("SELECTION");
   const { user, logout, loading, sessionState, error, retrySessionVerification } = useAuth();
 
+  const [showEscapeHatch, setShowEscapeHatch] = useState(false);
+
+  // Eğer doğrulama 2.5 saniyeden uzun sürerse kullanıcıya kaçış butonu sun
+  React.useEffect(() => {
+    if (loading || sessionState === "verifying" || sessionState === "initializing") {
+      const timer = setTimeout(() => {
+        setShowEscapeHatch(true);
+      }, 2500);
+      return () => clearTimeout(timer);
+    } else {
+      setShowEscapeHatch(false);
+    }
+  }, [loading, sessionState]);
+
   if (loading || sessionState === "verifying" || sessionState === "initializing") {
     return (
-      <div className="fixed inset-0 w-full h-full min-h-screen bg-[#18120F] flex flex-col items-center justify-center space-y-4">
+      <div className="fixed inset-0 w-full h-full min-h-screen bg-[#18120F] flex flex-col items-center justify-center space-y-4 p-4">
         <div className="w-10 h-10 rounded-full border-2 border-burgundy-600 border-t-transparent animate-spin" />
         <p className="text-xs text-[#D4C5A9] font-medium">Güvenli adli oturum doğrulanıyor...</p>
+        
+        {showEscapeHatch && (
+          <div className="flex items-center gap-3 pt-4 animate-fade-in">
+            <button
+              type="button"
+              onClick={() => retrySessionVerification()}
+              className="px-3 py-1.5 bg-[#2A2019] hover:bg-[#3D2E24] text-[#D4C5A9] hover:text-[#FAF7F0] text-xs font-semibold rounded-lg border border-[#B8A484]/20 transition flex items-center gap-1.5"
+            >
+              <RotateCw className="w-3.5 h-3.5" />
+              Tekrar Dene
+            </button>
+            <button
+              type="button"
+              onClick={logout}
+              className="px-3 py-1.5 bg-gradient-to-r from-[#7B1E34] to-[#5C1425] hover:from-[#5C1425] hover:to-[#7B1E34] text-[#FAF7F0] text-xs font-semibold rounded-lg transition shadow-md"
+            >
+              Giriş Ekranına Git
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (!loading && (!user || sessionState === "unauthorized" || sessionState === "idle")) {
+    return (
+      <div className="fixed inset-0 w-full h-full min-h-screen bg-[#18120F] flex flex-col items-center justify-center space-y-4 p-4">
+        <div className="w-10 h-10 rounded-full border-2 border-burgundy-600 border-t-transparent animate-spin" />
+        <p className="text-xs text-[#D4C5A9] font-medium">Giriş ekranına yönlendiriliyor...</p>
+        <button
+          type="button"
+          onClick={logout}
+          className="mt-2 text-xs text-[#D4C5A9]/70 underline hover:text-[#FAF7F0]"
+        >
+          Doğrudan Giriş Yap
+        </button>
       </div>
     );
   }
